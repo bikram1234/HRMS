@@ -30,7 +30,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('work_structure.department.departmentAdd');
+        return view('work_structure.department');
     }
 
     /**
@@ -43,7 +43,12 @@ class DepartmentController extends Controller
         }
         
         Department::create($request->validated());
-        return redirect()->back()->with('success', 'Section added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Department Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with('department')->with($notification);
     }
 
     /**
@@ -63,7 +68,8 @@ class DepartmentController extends Controller
             abort(403, 'Unauthorized action.');
         }
         
-        return view('work_structure.department.departmentEdit', compact('department'));
+        return view('work_structure.department', compact('department'));
+        
     }
 
     /**
@@ -74,13 +80,17 @@ class DepartmentController extends Controller
         if (!Gate::allows('update: department')) {
             abort(403, 'Unauthorized action.');
         }
-        
         $department->update([
             'name' => $request->input('name'), 
             'status' => $request->input('status'),
         ]);
-        return redirect()->route('department.index')
-        ->with('success', 'Department updated successfully.');
+
+        //display the message 
+        $notification = array(
+            'message' => 'Department Updated successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('department.index')->with($notification);
     }
 
     /**
@@ -93,6 +103,11 @@ class DepartmentController extends Controller
         }
         
         $department->delete();
-        return redirect()->route('department.index')->with('success', 'Department Deleted Successfully!!!');
+         //display the message 
+         $notification = array(
+            'message' => 'Department Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('department.index')->with($notification);
     }
 }
