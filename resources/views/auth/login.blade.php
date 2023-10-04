@@ -1,5 +1,5 @@
-@extends('layout') <!-- Assuming you have an app.blade.php layout -->
 
+@extends('auth.partial.login_app')
 @section('content')
 
 @if(session('success'))
@@ -12,77 +12,46 @@
                 {{ session('error') }}
             </div>
         @endif
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Login') }}</div>
-
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
-
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+          <!-- Account Form -->
+                    <form method="POST" action="{{route('login')}}">
+		                    @csrf
+								<div class="form-group">
+									<input class="form-control"type="text" id="email"  placeholder="Email" name="email">
+									@error('email')<span class="text-danger">{{ $message }}</span>
                                     @enderror
+								</div>
+
+								<div>
+								<div class="form-group position-relative">
+									<input class="form-control" type="password" id="password" name="password" placeholder="Password">
+									<i class="bi bi-eye-slash-fill eye-icon"></i>
+									@error('password')<span class="text-danger">{{ $message }}</span>
+                       				 @enderror
+								</div>
+							    </div>
+
+								<div class="row">
+										<div class="col-auto ml-auto">
+                                            @if (Route::has('password.request'))
+											<a class="text-muted" href="{{ route('password.request') }}">
+												{{__('Forgot Your Password?')}}
+											</a>
+                                            @endif
+                                            
+										</div>
+									</div>
+								</div>
+								<div class="form-group text-center justify-content-center">
+									<button class="btn btn-primary account-btn" type="submit">Login</button>
+								</div>
+
+                                <div class="justify-content-center">
+                                <a href="{{ route('register') }}">Register</a>
                                 </div>
-                            </div>
-
-                            <div class="form-group row mt-4">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="block mt-4">
-                                <label for="remember_me" class="inline-flex items-center">
-                                    <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-                                </label>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Login') }}
-                                    </button>
-
-                                    @if($userCount === 0)
-                                    <a href="/register" class="btn btn-primary">Register</a>
-                                    @endif
-                                    <div class="flex items-center justify-end mt-4">
-                                        @if (Route::has('password.request'))
-                                            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                                                {{ __('Forgot your password?') }}
-                                            </a>
-                                        @endif
-                               
-
-                                </div>
-                               
-                            </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+							<!-- /Account Form -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
         // Auto-hide the success message after 5 seconds (5000 milliseconds)
         setTimeout(function() {
             var successMessage = document.getElementById('success-message');
@@ -91,6 +60,5 @@
             }
         }, 5000);
     </script>
-    </div>
-@endsection
 
+@endsection

@@ -41,14 +41,13 @@ use App\Http\Controllers\Expense\dsa_claim\dsa_settlement;
 |
 */
 
+
 Route::middleware(['auth'])->get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->name('dashboard');
 
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/home', [HomeController::class, 'index'])
 ->middleware(['auth', 'verified']) // Middleware list goes here, if needed
@@ -63,6 +62,12 @@ Route::get('/logout', [RegisteredUserController::class, 'logout'])->name(name:'l
 
 //Route for WorkStructure
 Route::namespace('WorkStructure')->group(function () {
+
+    //Bussiness Routes
+    Route::get('/bussiness_unit', function () {
+        return view('work_structure.bussiness.bussiness_unit'); 
+    })->name('bussiness_unit');
+    
     // Designation routes
     Route::get('/designation', [DesignationController::class, 'index'])->name('designation.index');
     Route::get('/add-designation', [DesignationController::class, 'create'])->name('designation.create');
