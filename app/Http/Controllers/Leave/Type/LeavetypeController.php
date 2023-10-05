@@ -23,7 +23,7 @@ class LeavetypeController extends Controller
      */
     public function create()
     {
-        return view('leave.type.leaveTypeAdd');
+        return view('leave.type');
     }
 
     /**
@@ -32,7 +32,12 @@ class LeavetypeController extends Controller
     public function store(StoreleavetypeRequest $request)
     {
         leavetype::create($request->validated());
-        return redirect()->back()->with('success', 'LeaveType added successfully.');
+          //display the message 
+          $notification = array(
+            'message' => 'LeaveType Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -48,7 +53,7 @@ class LeavetypeController extends Controller
      */
     public function edit(leavetype $leavetype)
     {
-        return view('leave.type.leaveTypeEdit', compact('leavetype'));
+        return view('leave.type', compact('leavetype'));
     }
 
     /**
@@ -66,8 +71,13 @@ class LeavetypeController extends Controller
     
         // Update the attributes using the validated request data
         $leavetypeInstance->update($request->validated());
+          //display the message 
+          $notification = array(
+            'message' => 'LeaveType Updated successfully',
+            'alert-type' =>'success'
+        );
     
-        return redirect()->route('leavetype.index')->with('success', 'LeaveType Updated successfully.');
+        return redirect()->route('leavetype.index')->with($notification);
     }
     
 
@@ -76,7 +86,20 @@ class LeavetypeController extends Controller
      */
     public function destroy(leavetype $leavetype)
     {
-        //
-    }
+        if (!Gate::allows('delete: leavetype')) {
+            abort(403, 'Unauthorized action.');
+        }
 
-}
+        $leavetype->delete();
+         //display the message 
+         $notification = array(
+            'message' => 'Leavetype Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('leavetype.index')->with($notification);
+    }
+ }
+
+
+
+

@@ -15,8 +15,10 @@ class LeavePolicyController extends Controller
      */
     public function index()
     {
+        $leavetypes = leavetype::all();
+
         $leave_policies = leave_policy::all();
-        return view('leave.policy.leavePolicy', compact('leave_policies'));
+        return view('leave.policy.leavePolicy', compact('leave_policies', 'leavetypes'));
     }
 
     /**
@@ -25,7 +27,7 @@ class LeavePolicyController extends Controller
     public function create()
     {
         $leavetypes = leavetype::all();
-        return view('leave.policy.leavePolicyAdd', compact('leavetypes'));
+        return view('leave.policy.leavePolicy', compact('leavetypes'));
     }
 
     /**
@@ -39,13 +41,17 @@ class LeavePolicyController extends Controller
         $data['is_information_only'] = $request->has('is_information_only') ? 1 : 0;
     
         $leavePolicy = leave_policy::create($data);
-    
         // Retrieve the leave_id from the created leave_policy
         $leave_id = $leavePolicy->leave_id;
     
         // Redirect to the leave-plan create page with the leave_id parameter
-        return redirect()->route('leaveplan.create', ['leave_id' => $leave_id])
-            ->with('success', 'Leave Policy added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Leave Policy Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('leaveplan.create', ['leave_id' => $leave_id])->with($notification);
+        
     }
     
 

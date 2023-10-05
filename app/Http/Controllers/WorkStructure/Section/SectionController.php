@@ -19,9 +19,9 @@ class SectionController extends Controller
         if (!Gate::allows('read: section')) {
             abort(403, 'Unauthorized action.');
         }
-
+        $departments = department::all();
         $sections = section::all();
-        return view('work_structure.section.section', compact('sections'));
+        return view('work_structure.section.section', compact('sections', 'departments'));
     }
 
     /**
@@ -34,7 +34,7 @@ class SectionController extends Controller
         }
 
         $departments = department::all();
-        return view('work_structure.section.sectionAdd', compact('departments'));
+        return view('work_structure.section', compact('departments'));
     }
 
     /**
@@ -47,8 +47,13 @@ class SectionController extends Controller
         }
 
         Section::create($request->validated());
-    
-        return redirect()->back()->with('success', 'Section added successfully.');
+        
+          //display the message 
+          $notification = array(
+            'message' => 'Section Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -69,7 +74,7 @@ class SectionController extends Controller
         }
 
         $departments = department::all();
-        return view('work_structure.section.sectionEdit', compact('departments', 'section'));
+        return view('work_structure.section', compact('departments', 'section'));
     }
 
     /**
@@ -82,8 +87,13 @@ class SectionController extends Controller
         }
 
         $section->update($request->validated());
-        return redirect()->route('section.index')
-        ->with('success', 'Section updated successfully.');
+
+            //display the message 
+            $notification = array(
+                'message' => 'Section Updated successfully',
+                'alert-type' =>'success'
+            );
+            return redirect()->route('section.index')->with($notification);
     }
 
     /**
@@ -96,7 +106,13 @@ class SectionController extends Controller
         }
 
         $section->delete();
-        return redirect()->route('section.index')->with('success', 'Section Deleted Successfully!!!');
+          //display the message 
+          $notification = array(
+            'message' => 'Section Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('section.index')->with($notification);
+
     }
 
     public function getSectionsByDepartment($department)

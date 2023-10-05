@@ -76,6 +76,8 @@
 							<li class="submenu">
 								<a href="#"style="text-decoration: none;"><i class="bi bi-cash-coin" style="font-size:20px"></i><span>Expense</span> <span class="menu-arrow"></span></a>
 								<ul style="display: none;">
+									<li><a href="{{ route ('expense-types') }}"style="text-decoration: none;">{{__('Types')}}</a></li>
+									<li><a href="{{ route ('add-policy')}}"style="text-decoration: none;">{{__('Policy')}}</a></li>
 									<li><a href=""style="text-decoration: none;">Apply </a></li>
 									<li><a href=""style="text-decoration: none;">DSA Claim/Settlement</a></li>
 									<li><a href=""style="text-decoration: none;">Expense Fuel/Fuel Claim </a></li>

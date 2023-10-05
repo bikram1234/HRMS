@@ -31,7 +31,12 @@ class LeaveRuleController extends Controller
     public function store(Storeleave_ruleRequest $request)
     {
         leave_rule::create($request->validated());
-        return redirect()->back()->with('success', 'LeaveRule added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'LeaveRule Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**

@@ -84,6 +84,7 @@ Route::namespace('WorkStructure')->group(function () {
     Route::patch('/department/{department}', [DepartmentController::class, 'update'])->name('department.update');
     Route::delete('/department/{department}', [DepartmentController::class, 'destroy'])->name('department.delete');
 
+    // Section Routes
     Route::get('/section', [SectionController::class, 'index'])->name('section.index');
     Route::get('/addsection', [SectionController::class, 'create'])->name('section.create');
     Route::post('/section', [SectionController::class, 'store'])->name('section.store');
@@ -92,6 +93,7 @@ Route::namespace('WorkStructure')->group(function () {
     Route::delete('/section/{section}', [SectionController::class, 'destroy'])->name('section.delete');
     Route::get('/sections/{department}', [SectionController::class, 'getSectionsByDepartment'])->name('sections.getSectionsByDepartment');
 
+    // Role route
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
     Route::get('/addrole', [RoleController::class, 'create'])->name('role.create');
     Route::post('/role', [RoleController::class, 'store'])->name('role.store');
@@ -99,6 +101,7 @@ Route::namespace('WorkStructure')->group(function () {
     Route::patch('/role/{role}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.delete');
 
+    // Grade route
     Route::get('/grade', [GradeController::class, 'index'])->name('grade.index');
     Route::get('/add-grade', [GradeController::class, 'create'])->name('grade.create');
     Route::post('/grade', [GradeController::class, 'store'])->name('grade.store');
@@ -108,6 +111,7 @@ Route::namespace('WorkStructure')->group(function () {
 
 });
 
+// Setting Route
 Route::namespace('Settings')->group(function () {
     Route::get('/hierarchy',[HierarchyController::class, 'index'])->name('hierarchy.index');
     Route::get('/hierarchyAdd', [HierarchyController::class, 'create'])->name('hierarchy.create');
@@ -119,6 +123,7 @@ Route::namespace('Settings')->group(function () {
     Route::delete('/hierarchy/{hierarchy}', [HierarchyController::class, 'delete'])->name('hierarchy.delete');
     Route::get('/levels/{hierarchyId}', [HierarchyController::class, 'getLevels']);
 
+    // Approval Route
     Route::get('/approval', [ApprovalRuleController::class, 'index'])->name('approval.index');
     Route::get('/approvalAdd', [ApprovalRuleController::class, 'create'])->name('approval.create');
     Route::post('/approval', [ApprovalRuleController::class, 'store'])->name('approval.store');
@@ -139,14 +144,14 @@ Route::namespace('Settings')->group(function () {
 
 });
 
-
+// Leave Route
 Route::namespace('Leave')->group(function () {
     Route::get('/leavetype',[LeavetypeController::class, 'index'])->name('leavetype.index');
     Route::get('/leavetypeAdd', [LeavetypeController::class, 'create'])->name('leavetype.create');
     Route::post('/leavetype', [LeavetypeController::class, 'store'])->name('leavetype.store');
     Route::get('/leavetype/{leavetype}/edit', [LeavetypeController::class, 'edit'])->name('leavetype.edit');
     Route::patch('/leavetype/{leavetype}', [LeavetypeController::class, 'update'])->name('leavetype.update');  
-
+    Route::delete('/leavetype/{leavetype}', [LeavetypeController::class, 'destroy'])->name('leavetype.delete'); 
     
     Route::get('/leavepolicy', [LeavePolicyController::class, 'index'])->name('leavepolicy.index');
     Route::get('/leavepolicyAdd', [LeavePolicyController::class, 'create'])->name('leavepolicy.create');

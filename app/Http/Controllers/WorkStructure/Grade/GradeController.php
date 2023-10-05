@@ -32,7 +32,7 @@ class GradeController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('work_structure.grade.gradeAdd');
+        return view('work_structure.grade');
     }
 
     /**
@@ -45,7 +45,12 @@ class GradeController extends Controller
         }
 
         Grade::create($request->validated());
-        return redirect()->back()->with('success', 'Grade added successfully');
+          //display the message 
+          $notification = array(
+            'message' => 'Grade Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -65,7 +70,7 @@ class GradeController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('work_structure.grade.gradeEdit', compact('grade'));
+        return view('work_structure.grade', compact('grade'));
     }
 
     /**
@@ -78,7 +83,12 @@ class GradeController extends Controller
         }
 
         $grade->update($request->validated());
-        return redirect()->route('grade.index')->with('success', 'Grade added Successfully');
+         //display the message 
+         $notification = array(
+            'message' => 'Grade Updated successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('grade.index')->with($notification);
     }
 
     /**
@@ -91,6 +101,11 @@ class GradeController extends Controller
         }
 
         $grade->delete();
-        return redirect()->route('grade.index')->with('success', 'Grade Deleted Successfully');
+         //display the message 
+         $notification = array(
+            'message' => 'Grade Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('grade.index')->with($notification);
     }
 }

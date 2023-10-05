@@ -50,10 +50,12 @@ class LeavePlanController extends Controller
         }
     
         leave_plan::create($data);
-       
-    
-        return redirect()->route('yearendprocessing.create', ['leave_id' => $leave_id])
-            ->with('success', 'Leave Plan added successfully.');
+         //display the message 
+         $notification = array(
+            'message' => 'Leave Plan Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('yearendprocessing.create', ['leave_id' => $leave_id])->with($notification);
 
     }
 

@@ -40,11 +40,9 @@
         <!-- Datetimepicker CSS -->
         <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
     </head>
-	
     <body>
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
-
             <!-- header -->
             @include('layouts.header')
             <!-- header -->
@@ -58,7 +56,6 @@
             <!-- /Main Wrapper -->
 
         <!-- Footer -->
-
         @include('layouts.footer')
 	    <!-- footer -->
 		
@@ -73,10 +70,12 @@
 
 		<!-- Slimscroll JS -->
 		<script src="{{asset('assets/js/jquery.slimscroll.min.js')}}"></script>
+
 		<!-- Chart JS -->
 		<script src="{{asset('assets/plugins/morris/morris.min.js')}}"></script>
 		<script src="{{asset('assets/plugins/raphael/raphael.min.js')}}"></script>
 		<script src="{{asset('assets/js/chart.js')}}"></script>
+
 		<!-- Custom JS -->
 		<script src="{{asset('assets/js/app.js')}}"></script>
 		<script src="{{asset('assets/js/datatable.js')}}"></script>
@@ -92,7 +91,7 @@
         <!-- Toaster -->
 	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-	<script>
+<script>
  @if(Session::has('message'))
  var type = "{{ Session::get('alert-type','info') }}"
  switch(type){

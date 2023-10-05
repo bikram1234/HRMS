@@ -32,7 +32,7 @@ class DesignationController extends Controller
             abort(403, 'Unauthorized action.');
         }
         
-        return view('work_structure.designation.designationAdd');
+        return view('work_structure.designation');
     }
 
     /**
@@ -45,7 +45,12 @@ class DesignationController extends Controller
         }
         
         Designation::create($request->validated());
-        return redirect()->back()->with('success', 'Designation added successfully.');
+         //display the message 
+         $notification = array(
+            'message' => 'Designation Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -64,8 +69,7 @@ class DesignationController extends Controller
         if (!Gate::allows('update: designation')) {
             abort(403, 'Unauthorized action.');
         }
-        
-        return view('work_structure.designation.designationEdit', compact('designation'));
+        return view('work_structure.designation', compact('designation'));
     }
 
     /**
@@ -78,8 +82,14 @@ class DesignationController extends Controller
         }
         
         $designation->update($request->validated());
-        return redirect()->route('designation.index')
-        ->with('success', 'Designation updated successfully.');
+
+        //display the message 
+        $notification = array(
+            'message' => 'Designation Updated successfully',
+            'alert-type' =>'success'
+        );
+        
+        return redirect()->route('designation.index')->with($notification);
     }
 
     /**
@@ -92,6 +102,12 @@ class DesignationController extends Controller
         }
         
         $designation->delete();
-        return redirect()->route('designation.index')->with('success', 'Designation Deleted Successfully!!!');
+         //display the message 
+         $notification = array(
+            'message' => 'Designation Deleted successfully',
+            'alert-type' =>'success'
+        );
+        
+        return redirect()->route('designation.index')->with($notification);
     }
 }

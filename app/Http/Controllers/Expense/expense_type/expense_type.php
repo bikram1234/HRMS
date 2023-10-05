@@ -25,10 +25,9 @@ use App\Models\RateLimit;
 use App\Models\Grade;
 use App\Models\EnforcementOption;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+// use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
 
@@ -55,9 +54,12 @@ class expense_type  extends Controller
     
             // Create a new expense type
             ExpenseType::create($validatedData);
-    
-            return redirect()->route('expense-types')
-                ->with('success', 'Expense type added successfully');
+                //display the message 
+            $notification = array(
+                'message' => 'Expense Type Added successfully',
+                'alert-type' =>'success'
+            );
+            return redirect()->route('expense-types')->with($notification);
     
             } catch (\Exception $e) {
                 $errorMessage = 'An error occurred while saving the expense type';
