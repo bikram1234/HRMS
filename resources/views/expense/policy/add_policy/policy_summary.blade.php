@@ -1,101 +1,288 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Policy Summary') }}
-        </h2>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <!-- Policy Details -->
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold mb-2">Policy Details</h3>
-                        <ul>
-                            <li><strong>Name:</strong> {{ $policy->name }}</li>
-                            <li><strong>Description:</strong> {{ $policy->description }}</li>
-                            <li><strong>Start Date:</strong> {{ $policy->start_date }}</li>
-                            <li><strong>End Date:</strong> {{ $policy->end_date }}</li>
-                            <li><strong>Status:</strong> {{ $policy->status }}</li>
-                        </ul>
-                    </div>
 
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold mb-2">Rate Definitions</h3>
-                        @if ($rateDefinitions->count() > 0)
-                        <ul>
-                            @foreach ($rateDefinitions as $rateDefinition)
-                            <li>
-                                <strong>Attachment:</strong> {{ $rateDefinition->attachment_required ? 'Yes' : 'No' }}
-                            </li>
-                            <li><strong>Travel Type:</strong> {{ $rateDefinition->travel_type }}</li>
-                            <li><strong>Rate Currency(Type):</strong> {{ $rateDefinition->type }}</li>
-                            <li><strong>Rate Currency(Name):</strong> {{ $rateDefinition->name }}</li>
-                            <li><strong>Rate Limit:</strong> {{ $rateDefinition->rate_limit }}</li>
-                            @endforeach
-                        </ul>
-                        @else
-                        <p>No Rate Definitions found.</p>
-                        @endif
-                    </div>
-                    
-                    <!-- Rate Limits Fields -->
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold mb-2">Rate Limits</h3>
-                        @if ($rateLimits->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Region</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Limit Amount</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($rateLimits as $rateLimit)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->gradeName->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->region }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->limit_amount }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->start_date }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->end_date }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rateLimit->status }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        @else
-                        <p>No Rate Limits found.</p>
-                        @endif
-                    </div>
+@extends('layouts.index')
+@section('content')
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
 
-                    <!-- Policy Enforcement Fields -->
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold mb-2">Policy Enforcement</h3>
-                        @if ($policyEnforcements)
-                        <ul>
-                            <li>Prevent Submission: {{ $policyEnforcements->prevent_submission ? 'Yes' : 'No' }}</li>
-                            <li>Display Warning: {{ $policyEnforcements->display_warning ? 'Yes' : 'No' }}</li>
-                        </ul>
-                        @else
-                        <p>No Policy Enforcement details found.</p>
-                        @endif
-                    </div>
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
 
-                    <!-- Save and Cancel Buttons -->
-                    <div class="flex items-center justify-end mt-4">
-                        <form method="post" action="{{ route('policy.details.saveOrCancel', ['policy' => $policy->id]) }}">
-                            @csrf
-                            <button type="submit" name="cancel" class="bg-red-500 text-white font-bold py-2 px-4 rounded mr-2">Cancel</button>
-                            <button type="submit" name="save" class="bg-gray-500 text-white font-bold py-2 px-4 rounded">Save</button>
-                        </form>
+.inactive-button:hover{
+    background-color:#f5a524;
+}
+
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
+
+
+.word {
+ margin-left: 10px; 
+ }
+                            
+
+</style>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+<!-- Page Content -->
+<div class="content container-fluid">
+<!-- row -->
+    <div class="row">
+        <div class="col-md-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Complete</h5>
+                            </div>
+                        <div class="modal-body">
+                            <div class="card tab-box">
+                                <div class="row user-tabs">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+                                        <ul class="nav nav-tabs nav-tabs-bottom">
+                                            <li class="nav-item"><a href="#emp_profile" data-toggle="tab" class="nav-link">Expense Policy</a></li>
+                                            <li class="nav-item"><a href="#leave_plan" data-toggle="tab" class="nav-link">Rate Definition</a></li>
+                                            <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link">Policy Enforcement</a></li>
+                                            <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link active">Complete</a></li>
+                                        </ul>
+                                    </div>
+                                </div> 
+                            </div>
+
+                            <!-- ===========================================COMPLETE============================================================================== -->
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                 <!--======================== Leave Policy ============================-->
+                                <div id="divleavepolicy">
+                                    <h4>Expense Policy</h4>
+                                    <div class="row">
+                                        <span class="col-sm-3">Expense Type</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">DSA Settlement</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Policy Name</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $policy->name}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Policy Description</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $policy->description }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Start Date</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $policy->start_date}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">End Date</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $policy->end_date}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Status</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $policy->status}}</div>
+                                        </div>
+                                    </div>
+
+                                   
+                                 </div>
+                                 <!--====================== End Leave Policy============================ -->
+
+
+                                 <!-- ========================LEAVE PLAN============================================= -->
+                                 <div id="divleavepolicy mt-3">
+                                    <h4>Rate Definition</h4>
+                                    <div class="row">
+                                        <span class="col-sm-3">Attachement Required</span>
+                                        <div class="col-sm-9">
+                                        <label>
+                                        <input type="checkbox" id="selectAllCheckbox">
+                                        </label>
+                                        </div>
+                                    </div>
+                                    @foreach ($rateDefinitions as $rateDefinition)
+
+                                    <div class="row">
+                                        <span class="col-sm-3">Travel Type</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign"> {{ $rateDefinition->travel_type }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Rate Currency(Type)</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign"> {{ $rateDefinition->type }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Rate Currency(Name)</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign"> {{ $rateDefinition->name }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-sm-3">Rate Limit</span>
+                                        <div class="col-sm-9">
+                                            <div id="leavetype" class="cmplitetexalign">{{ $rateDefinition->rate_limit }}</div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
+                                    <!-- =================================TABLE====================================== -->
+
+                                        <div class="row mt-5">
+                                        <div class="col-md-12 stretch-card">
+                                        <div class="card">
+                                        <div class="card-body">
+                                        <div class="col-md-12">
+                                        <div class="container table-responsive">  
+                                        <table id="example" class="table table-striped custom-table" style="width: 100%">
+                                            <thead>
+                                                @foreach ($rateLimits as $rateLimit)
+                                            <tr>
+                                                <th style="width: 30px;">
+                                                <label>
+                                                <input type="checkbox" id="selectAllCheckbox">
+                                            <span>SI</span>
+                                            </label>
+                                            </th>
+                                                <th>Grade</th>
+                                                <th>Region</th>
+                                                <th>Limit Amount</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                            <th style="width: 30px;">
+                                            <label>
+                                                <input type="checkbox" id="selectAllCheckbox">
+                                                <span>1</span>
+                                                </label>
+                                                </th>
+                                                <td>{{ $rateLimit->gradeName->name }}</td>
+                                                <td>{{ $rateLimit->region }}</td>
+                                                <td>{{ $rateLimit->limit_amount }}</td>
+                                                <td>{{ $rateLimit->start_date }}</td>
+                                                <td>{{ $rateLimit->end_date }}</td>
+                                                <td>{{ $rateLimit->status }}</td>
+                                                <!-- <td><button class="btn status-button" type="button">Active</button></td> -->
+                                            </tr>
+                                            @endforeach
+                                            
+                                           
+                                            </tbody>
+                                        </table>
+
+                                 <!-- ========================YEAR END PROCESSING============================================= -->
+                            
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    <div id="divleavepolicy mt-3">
+                                    <h4>Policy Enforcement</h4>
+
+                                    <div class="form-group">
+                                    </label><input type="checkbox" id="selectAllCheckbox" >Prevent report submission</label>
+                                    </div>
+                                    <div class="form-group">
+                                    </label> <input type="checkbox" id="selectAllCheckbox" > Display warning to user</label>
+                                    </div>
+                                    </div>
+
+                                    <form method="post" action="{{ route('policy.details.saveOrCancel', ['policy' => $policy->id]) }}">
+                                        @csrf
+                                    <div class="modal-footer justify-content-middle mt-3">
+                                    <button type="submit" class="btn btn-primary">Previous</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    </div>
+                                    </div>
+                                    </form>
+                                     <!-- =================================END TABLE====================================== -->
+                                   
+                                 </div>
+                                 <!-- ========================================END LEAVE PLAN================================================= -->
+                            </div>
+                        </div>
+                   
+            <!-- =====================================================END COMPLETE======================================================= -->
+           
+
+
+                           
+    
+                        </div>
+                        </div>
+
+
                     </div>
                 </div>
-            </div>
+            </div>       
         </div>
-    </div>
-</x-app-layout>
+     <!-- /row -->
+    
+</div>
+<!-- Page Content -->
+</div>
+<!-- /Page Wrapper -->
+
+                
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script>
+    function redirectToYearEndProcessing(url) {
+        window.location.href = url;
+    }
+</script>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
+<script>
+    $(document).ready(function() {
+    // Initialize datetimepicker
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Set the desired date format
+        // Add any other options you need
+    });
+});
+</script>
+@endsection
+
+
+

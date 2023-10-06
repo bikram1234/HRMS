@@ -45,7 +45,7 @@ background-color:#f5a524;
                     <div class="col-md-12">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Edit Leave Policy</h5>
+                                <h5 class="modal-title">Add Rate Definition</h5>
                             </div>
                 <div class="modal-body">
                     <div class="card tab-box">
@@ -64,7 +64,7 @@ background-color:#f5a524;
                 <form method="POST" action="{{ route('store-rate-definition') }}">
                         @csrf
                         <div class="form-group">
-                            <input type="hidden" id="policy_id" name="policy_id" value="{{ $policy->id }}">
+                            <input type="hidden" id="policy_id" name="policy_id" value="{{ $policy->id  }}">
                                 @error('policy_id')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -124,129 +124,14 @@ background-color:#f5a524;
                                 </div>
                             </div>
                             <div class="col-auto p-4">
-                            <a href="#"  class="btn add-btn" data-toggle="modal" data-target="#myModal{{ $policy_id }}"><i class="fa fa-plus"></i>Create Limit</a>
-                                    &nbsp;  &nbsp;   &nbsp;
-                                    <a href="{{ route('policy-enforcement.index', ['policy' => $policy]) }}" style="text-decoration: none;">
-                                        <button type="button" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
-                                            {{ __('Save And Submit') }}
-                                        </button>
-                                    </a>
+                            <button  class="btn add-btn" type="submit"><i class="fa fa-plus"></i>Create Limit</button>
+                            &nbsp;  &nbsp;   &nbsp;
                             </div>
                         </div>
                     </form>
-
-
-                     <!-- Add Leave Rule -->
-                     <div id="myModal{{ $policy_id }}" class="modal custom-modal fade" role="dialog"> 
-                                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title">Add Limit </h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                </div>
-                                            <div class="container">
-                                                <form method="POST" action="{{ route('rate-limits.store', ['rateDefinition' => $rateDefinition->id]) }}">
-                                                    @csrf
-
-                                                    <div class="form-group">
-                                                            <input type="hidden" id="policy_id" name="policy_id" value="{{ $leave_id }}">
-                                                            @error('policy_id')
-                                                        <small class="text-danger">{{ $message }}</small>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="grade_id">Grade:</label>
-                                                        <select id="grade_id" name="grade_id" class="form-control" required>
-                                                            <!-- Populate options dynamically from your database or use a loop -->
-                                                            <option disabled selected>Select</option>
-                                                            @foreach ($grades as $grade)
-                                                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                                            @endforeach
-                                                            <!-- Add more options as needed -->
-                                                        </select>
-                                                        @error('grade_id')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
-                                                    </div>
-
-                                                   
-
-                                                    <div class="form-group">
-                                                        <label for="uom">Region:</label>
-                                                        <select class="form-control" id="region" name="region">
-                                                        <option value="Bumthang">Bumthang</option>
-                                                        <option value="Gelephu">Gelephu</option>
-                                                        <option value="Mongar">Mongar</option>
-                                                        <option value="Paro">Paro</option>
-                                                        <option value="Phuntsholing">Phuntsholing</option>
-                                                        <option value="Punakha">Punakha</option>
-                                                        <option value="Sumdrup Jongkhar">Sumdrup Jongkhar</option>
-                                                        <option value="Samtse">Samtse</option>
-                                                        <option value="Thimphu">Thimphu</option>
-                                                        <option value="Trashigang">Trashigang</option>
-                                                        <option value="Tsirang">Tsirang</option>
-                                                        </select>
-                                                        @error('region')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="limit_amount">Limit Amount:</label>
-                                                        <input type="number" id="limit_amount" name="limit_amount" class="form-control" required>
-                                                        @error('limit_amount')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="start_date">Start Date:</label>
-                                                        <input type="date" id="start_date" name="start_date" class="form-control" required>
-                                                        @error('start_date')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="end_date">End Date:</label>
-                                                        <input type="date" id="end_date" name="end_date" class="form-control" required>
-                                                        @error('end_date')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
-                                                    </div>
-                                                    <div class="form-group md-3">
-                                                        <label for="status">Status:</label>
-                                                        <select class="form-control" id="status" name="status">
-                                                            <option disabled selected>Choose status:</option>
-                                                            <option value="active">Active</option>
-                                                            <option value="inactive">Inactive</option>
-                                                        </select>
-                                                        @error('status')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror   
-                                                    </div>
-                                                        <!-- Modal footer -->
-                                                        <div class="modal-footer justify-content-end mt-3">
-                                                        <button type="submit" class="btn btn-primary">Create Limit</button>
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        </div>
-                                                </form>
-                                            </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                <!-- /End  Leave Rule -->
-
-                   
-                    
-        
-                              
-
-                                <h2>Limit</h2>
-                                <!-- Table -->
-                                <div class="row">
+                    <h2>Limit</h2>
+                        <!-- Table -->
+                        <div class="row">
                                     <div class="col-md-12 stretch-card">
                                         <div class="card">
                                             <div class="card-body">
@@ -300,8 +185,19 @@ background-color:#f5a524;
                                     <button type="submit" class="btn btn-primary">Previous</button>
                                     &nbsp;  &nbsp;   &nbsp;
                                     
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                  
+
+
+                                    <a href="{{ route('policy-enforcement.index', ['policy' => $policy]) }}" style="text-decoration: none;">
+                                        <button type="button" class="btn btn-primary">
+                                            {{ __('Save And Submit') }}
+                                        </button>
+                                    </a>
                                     &nbsp;  &nbsp;   &nbsp;
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                                            
+                                
                                 </div> 
                                 <!--/End Button -->
                             </div>
@@ -311,12 +207,7 @@ background-color:#f5a524;
             </div>       
         </div>
      <!-- /row -->
-
-
-     <!-- Year End Processing -->
-
-
-     <!--/ End Year End Processing -->
+    >
 </div>
 <!-- Page Content -->
 </div>

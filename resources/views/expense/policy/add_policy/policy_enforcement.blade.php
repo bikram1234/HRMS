@@ -1,46 +1,135 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Policy Enforcement') }}
-        </h2>
-    </x-slot>
 
-    <div class="container mx-auto">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-            <div class="container">
-                <h2 class="text-2xl font-bold mb-4">Policy Enforcement for {{ $policy->name }}</h2>
 
-                @if(session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                    {{ session('success') }}
-                </div>
-                @endif
+@extends('layouts.index')
+@section('content')
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
 
-                <form method="POST" action="{{ route('policy-enforcement.store', ['policy' => $policy->id]) }}">
-                    @csrf
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="enforcement_options">Enforcement Options</label>
-                        <div class="flex">
-                            <div class="mr-4">
-                                <input class="form-checkbox" type="checkbox" id="prevent_submission" name="enforcement_options[]" value="prevent_submission">
-                                <label class="ml-2" for="prevent_submission">Prevent report submission</label>
+.inactive-button:hover{
+    background-color:#f5a524;
+}
+
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
+
+
+.word {
+ margin-left: 10px; 
+ }
+                            
+
+</style>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+<!-- Page Content -->
+<div class="content container-fluid">
+<!-- row -->
+    <div class="row">
+        <div class="col-md-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Policy Enforcement</h5>
                             </div>
-                            <div class="mr-4">
+                        <div class="modal-body">
+                            <div class="card tab-box">
+                                <div class="row user-tabs">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+                                        <ul class="nav nav-tabs nav-tabs-bottom">
+                                            <li class="nav-item"><a href="#emp_profile" data-toggle="tab" class="nav-link">Expense Policy</a></li>
+                                            <li class="nav-item"><a href="#leave_plan" data-toggle="tab" class="nav-link">Rate Definition</a></li>
+                                            <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link active">Policy Enforcement</a></li>
+                                            <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link">Complete</a></li>
+                                        </ul>
+                                    </div>
+                                </div> 
+                            </div>
+                                <form method="POST" action="{{ route('policy-enforcement.store', ['policy' => $policy->id])}}">
+                                @csrf
+                                <div class="row">
+                                <label class="mt-3">
+                                <input class="form-checkbox" type="checkbox" id="prevent_submission" name="enforcement_options[]" value="prevent_submission">
+                                    <span>Prevent Report Submission</span>
+                                </label>
+                                    
+                                <label class="mt-3">
                                 <input class="form-checkbox" type="checkbox" id="display_warning" name="enforcement_options[]" value="display_warning">
-                                <label class="ml-2" for="display_warning">Display warning to user</label>
+                                    <span>Display warning to User</span>
+                                </label>
+
+                                 <!-- Modal footer -->
+                                 <div class="modal-footer justify-content-middle mt-3">
+                                    <button type="submit" class="btn btn-primary">Previous</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    <button type="submit" class="btn btn-primary">Save and Continue</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    &nbsp;  &nbsp;   &nbsp;
+                                    </div>
+                            
+                                </form>
+    
                             </div>
                         </div>
-                    </div>
 
-                    <div class="flex items-center mt-4">
-                        <button type="submit" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
-                            {{ __('submit') }}
-                        </button>
+
                     </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </div>       
         </div>
-    </div>
-</x-app-layout>
+     <!-- /row -->
+    
+</div>
+<!-- Page Content -->
+</div>
+<!-- /Page Wrapper -->
+
+                
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script>
+    function redirectToYearEndProcessing(url) {
+        window.location.href = url;
+    }
+</script>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
+<script>
+    $(document).ready(function() {
+    // Initialize datetimepicker
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Set the desired date format
+        // Add any other options you need
+    });
+});
+</script>
+@endsection
+
+
+

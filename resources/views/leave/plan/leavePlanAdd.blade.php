@@ -199,7 +199,7 @@ background-color:#f5a524;
                                     <button type="submit" class="btn btn-primary">Add Leave Plan</button>
                                     &nbsp;  &nbsp;   &nbsp;
                                 </div>
-                    </form>
+                             </form>
         
                                 <!-- Add Leave Rule -->
                                         <div id="myModal{{ $leave_id }}" class="modal custom-modal fade" role="dialog"> 
