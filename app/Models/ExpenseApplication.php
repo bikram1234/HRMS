@@ -26,6 +26,6 @@ class ExpenseApplication extends Model
 
     public function expenseType()
     {
-        return $this->belongsTo(ExpenseType::class);
+        return $this->belongsTo(ExpenseType::class,'expense_type_id');
     }
 }

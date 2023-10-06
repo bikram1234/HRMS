@@ -23,6 +23,8 @@ return new class extends Migration
             $table->text('purpose')->nullable();
             $table->string('upload_file')->nullable();
             $table->text('remarks')->nullable(); 
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
+
 
             $table->timestamps();
     

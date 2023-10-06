@@ -84,6 +84,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Expense Type</th>
                                 <th>Description</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
@@ -95,6 +96,7 @@
                             @foreach ($policies as $policy)
                                 <tr>
                                     <td>{{ $policy->name }}</td>
+                                    <td>{{ $policy->expenseType->name }}</td>
                                     <td>{{ $policy->description }}</td>
                                     <td>{{ $policy->start_date }}</td>
                                     <td>{{ $policy->end_date }}</td>

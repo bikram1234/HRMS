@@ -76,6 +76,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Start Date') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('End Date') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Status') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -87,6 +88,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap" style="color: {{ $expenseType->status === 'enforce' ? 'green' : 'gray' }}">
                                         {{ $expenseType->status }}
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <!-- "Edit" button with a link to the edit page -->
+                                        <a href="{{ route('expense-types.edit', $expenseType->id) }}" class="btn btn-primary">Edit</a>
+                                    </td>
+
                                                                     </tr>
                             @endforeach
                         </tbody>

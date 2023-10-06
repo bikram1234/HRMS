@@ -76,4 +76,29 @@ class expense_type  extends Controller
             
         }
 
+        public function edit($id)
+        {
+            $expenseType = ExpenseType::findOrFail($id);
+            return view('Expense.expense_type.edit', compact('expenseType'));
+        }
+
+        public function update(Request $request, $id)
+        {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                // Add validation rules for start_date, end_date, and status here
+            ]);
+
+            $expenseType = ExpenseType::findOrFail($id);
+            $expenseType->update($validatedData);
+
+            return redirect()->route('expense-types')
+                ->with('success', 'Expense type updated successfully');
+        }
+
+
+
+
+
+
  }

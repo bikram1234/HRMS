@@ -55,7 +55,6 @@ class edit_policy  extends Controller
         // Define your validation rules here
         $validatedData = $request->validate([
             'description' => 'nullable|string',
-            'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
             // Add more fields as needed
         ]);
@@ -389,8 +388,8 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
 
         // Validate the submitted data
         $validatedData = $request->validate([
-            'limit_amount' => 'required|numeric',
-            'start_date' => 'required|date',
+            //'limit_amount' => 'required|numeric',
+            //'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
         ]);
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('expense_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained(); // Add foreign key relationship to users table
+            $table->unsignedBigInteger('user_id');
             $table->foreignId('expense_type_id')->constrained();
             $table->date('application_date');
             $table->decimal('total_amount', 10, 2)->default(0);
@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('attachment')->nullable();
             $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
