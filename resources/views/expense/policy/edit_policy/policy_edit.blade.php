@@ -34,7 +34,7 @@
         </div>
         <div class="form-group">
             <label for="start_date">Start Date:</label>
-            <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $policy->start_date) }}" >
+            <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $policy->start_date) }}" readonly>
         </div>
         <div class="form-group">
             <label for="end_date">End Date:</label>

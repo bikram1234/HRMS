@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('upload_file')->nullable();
             $table->text('remarks')->nullable(); 
             $table->timestamps();
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
+
     
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('advance_type_id')->references('id')->on('advances');

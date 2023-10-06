@@ -38,7 +38,18 @@ class dsa_settlement  extends Controller
 public function dsaSettlementForm() {
     
     $user = Auth::user();
-    $userAdvances = $user->dsaAdvances->pluck('advance_no', 'id');
+   // Retrieve all advances from the user's dsaAdvances relationship with status "approved"
+   $userAdvances = $user->dsaAdvances->where('status', 'approved')->pluck('advance_no', 'id');
+
+   // Get the IDs of advances that exist in the dsa_settlements table
+   $existingAdvanceIds = DB::table('dsa_settlements')->pluck('dsa_advance_id');
+
+  // Filter the user's advances to include only those that do not exist in the dsa_settlements table
+  $userAdvances = $userAdvances->filter(function ($advanceNo, $id) use ($existingAdvanceIds) {
+    return !$existingAdvanceIds->contains($id);
+});
+
+    
     $advanceAmounts = $user->dsaAdvances->pluck('amount', 'id');
     //dd($advanceAmounts);
     

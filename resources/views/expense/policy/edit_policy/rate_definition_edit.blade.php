@@ -23,14 +23,14 @@
         <!-- For example, you can display the existing options here -->
         <div class="form-group">
             <label for="attachment_required">Attachment Required:</label>
-            <input type="checkbox" id="attachment_required" name="attachment_required" value="1" {{ $rateDefinition->attachment_required ? 'checked' : '' }} disabled>
+            <input type="checkbox" id="attachment_required" name="attachment_required" value="1" {{ $rateDefinition->attachment_required ? 'checked' : '' }} readonly>
         </div>
 
         <!-- Display the fields that can be edited -->
         <div class="form-group">
             <label for="travel_type">Travel Type:</label>
             <select id="travel_type" name="travel_type" @if($rateDefinition->travel_type) disabled @endif>
-                <option value="domestic" {{ $rateDefinition->travel_type == 'domestic' ? 'selected' : '' }}>Domestic</option>
+                <option value="domestic" {{ $rateDefinition->travel_type == 'domestic' ? 'selected' : '' }} readonly>Domestic</option>
                 <!-- Add other options as needed -->
             </select>
         </div>
@@ -38,7 +38,7 @@
        <div class="mt-4">
         <label for="type" class="block font-medium text-sm text-gray-700">{{ __(' Type') }}</label>
         <select id="type" name="type" class="form-select rounded-md shadow-sm mt-1 block w-full">
-            <option value="Single Currency"{{ $rateDefinition->type == 'Single Currency' ? 'selected' : '' }}>Single Currency</option>
+            <option value="Single Currency"{{ $rateDefinition->type == 'Single Currency' ? 'selected' : '' }} readonly>Single Currency</option>
         </select>
     </div>
 
@@ -46,7 +46,7 @@
      <div class="mt-4">
         <label for="name" class="block font-medium text-sm text-gray-700">{{ __('Name') }}</label>
         <select id="name" name="name" class="form-select rounded-md shadow-sm mt-1 block w-full">
-            <option value="Nu"{{ $rateDefinition->name == 'Nu' ? 'selected' : '' }}>Nu</option>
+            <option value="Nu"{{ $rateDefinition->name == 'Nu' ? 'selected' : '' }} readonly>Nu</option>
         </select>
     </div>
         

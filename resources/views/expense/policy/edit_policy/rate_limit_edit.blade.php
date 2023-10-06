@@ -35,7 +35,7 @@
         </div>
         <div class="form-group">
             <label for="end_date">End Date:</label>
-            <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $rateLimit->end_date) }}" @if($rateLimit->end_date) readonly @endif>
+            <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $rateLimit->end_date) }}" @if($rateLimit->end_date) @endif>
             @error('end_date')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror

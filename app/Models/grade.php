@@ -13,4 +13,12 @@ class grade extends Model
         'name',
         'status'
     ];
+
+    // app/Models/Grade.php
+
+    public function basicPay()
+    {
+        return $this->hasOne(BasicPay::class);
+    }
+
 }

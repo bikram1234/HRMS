@@ -28,6 +28,14 @@ use App\Http\Controllers\Expense\expense_apply\apply;
 use App\Http\Controllers\Advance\advance_type\advance_type;
 use App\Http\Controllers\Advance\apply\advance_apply;
 use App\Http\Controllers\Expense\dsa_claim\dsa_settlement;
+use App\Http\Controllers\Expense\expense_fuel\fuel_claim;
+use App\Http\Controllers\Expense\transfer_claim\transfer_claim;
+use App\Http\Controllers\Expense\requisition\requisitionController;
+use App\Http\Controllers\WorkStructure\basic_pay\basic_payController;
+
+
+
+
 
 
 /*
@@ -173,6 +181,11 @@ Route::namespace('Leave')->group(function () {
 // Expense_Type_Route
 Route::get('/expense-types', [expense_type::class, 'showAddForm'])->name('expense-types');
 Route::post('/expense-types', [expense_type::class, 'addExpenseType'])->name('expense-types');
+//Edit Expense Type
+Route::get('/expense-types/{id}/edit', [expense_type::class,'edit'])->name('expense-types.edit');
+Route::put('/expense-types/{id}', [expense_type::class,'update'])->name('expense-types.update');
+
+
 
 //Policy Route
 Route::get('/add-policy', [add_policy::class, 'AddForm'])->name('add-policy');
@@ -228,6 +241,7 @@ Route::get('/admin/advance/add', [advance_type::class, 'showAdvanceForm'])->name
 Route::post('/admin/advance/add', [advance_type::class, 'addAdvance'])->name('add-advance');
 
 // Route to show the advance form
+Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
 Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-advance-loan');
 // Route to handle the advance submission
 Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
@@ -242,6 +256,90 @@ Route::post('calculate-dsa-settlement', [dsa_settlement::class, 'calculateDsaSet
 // Route to retrive allthe dsa settlement 
 Route::get('/retrieve-dsa-data', [dsa_settlement::class,'DSAretrieveData'])->name('retrieve-dsa-data');
 
+
+// Show all fuels
+Route::get('fuels', [fuel_claim::class, 'index'])->name('fuels.index');
+
+// Display the form to create a new fuel
+Route::get('fuels/create', [fuel_claim::class, 'create'])->name('fuels.create');
+
+// Store a newly created fuel
+Route::post('fuels', [fuel_claim::class, 'store'])->name('fuels.store');
+
+// Display the form to edit a fuel
+Route::get('fuels/{fuel}/edit', [fuel_claim::class, 'edit'])->name('fuels.edit');
+
+// Update a fuel
+Route::put('fuels/{fuel}', [fuel_claim::class, 'update'])->name('fuels.update');
+
+//show a fuel
+// Show a single fuel claim
+Route::get('fuels/{fuel}', [fuel_claim::class, 'show'])->name('fuels.show');
+
+// Delete a fuel
+Route::delete('fuels/{fuel}', [fuel_claim::class, 'destroy'])->name('fuels.destroy');
+
+
+
+// Show all products
+Route::get('products', [transfer_claim::class, 'index'])->name('products.index');
+
+// Display the form to create a new product
+Route::get('products/create', [transfer_claim::class, 'create'])->name('products.create');
+
+// Store a newly created product
+Route::post('products', [transfer_claim::class, 'store'])->name('products.store');
+
+// Display the form to edit a product
+Route::get('products/{product}/edit', [transfer_claim::class, 'edit'])->name('products.edit');
+
+// Update a product
+Route::put('products/{product}', [transfer_claim::class, 'update'])->name('products.update');
+
+// Delete a product
+Route::delete('products/{product}', [transfer_claim::class, 'destroy'])->name('products.destroy');
+
+// Show a single fuel claim
+Route::get('products/{product}', [transfer_claim::class, 'show'])->name('products.show');
+
+
+
+// Show all requisitions
+Route::get('requisitions', [RequisitionController::class, 'index'])->name('requisitions.index');
+
+// Display the form to create a new requisition
+Route::get('requisitions/create', [RequisitionController::class, 'create'])->name('requisitions.create');
+
+// Store a newly created requisition
+Route::post('requisitions', [RequisitionController::class, 'store'])->name('requisitions.store');
+
+// Display the form to edit a requisition
+Route::get('requisitions/{requisition}/edit', [RequisitionController::class, 'edit'])->name('requisitions.edit');
+
+// Update a requisition
+Route::put('requisitions/{requisition}', [RequisitionController::class, 'update'])->name('requisitions.update');
+
+// Show a single requisition
+Route::get('requisitions/{requisition}', [RequisitionController::class, 'show'])->name('requisitions.show');
+
+// Delete a requisition
+Route::delete('requisitions/{requisition}', [RequisitionController::class, 'destroy'])->name('requisitions.destroy');
+// Download a requisition
+Route::get ('requisitions/download/{file}', [RequisitionController::class,'download'])->name('requisitions.download');
+
+
+//Add Basic
+Route::get('/basic_pay', [basic_payController::class, 'index'])->name('basic_pay.index');
+Route::get('/basic_pay/create', [basic_payController::class, 'create'])->name('basic_pay.create');
+Route::post('/basic_pay', [basic_payController::class, 'store'])->name('basic_pay.store');
+
+// Edit and Update
+Route::get('/basic_pay/{basicPay}/edit', [basic_payController::class, 'edit'])->name('basic_pay.edit');
+Route::put('/basic_pay/{basicPay}', [basic_payController::class, 'update'])->name('basic_pay.update');
+
+// Delete
+Route::get('/basic_pay/{basicPay}/confirm-delete', [basic_payController::class, 'confirmDelete'])->name('basic_pay.confirm_delete');
+Route::delete('/basic_pay/{basicPay}', [basic_payController::class, 'destroy'])->name('basic_pay.destroy');
 
 
 

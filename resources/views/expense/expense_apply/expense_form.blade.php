@@ -49,7 +49,7 @@
                                 {{ __('Total Amount') }}
                             </label>
                             <input type="number" name="total_amount" id="total_amount"
-                                class="form-input rounded-md shadow-sm mt-1 block w-full" min="0" value="{{ old('total_amount', 0) }}" required>
+                                class="form-input rounded-md shadow-sm mt-1 block w-full" min="0" value="{{ old('total_amount') }}" required>
                         </div>
 
                         <!-- Description -->
@@ -84,6 +84,7 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('Application Date') }}</th>
+                                    <th>{{ __('Expense Type') }}</th>
                                     <th>{{ __('Total Amount') }}</th>
                                     <th>{{ __('Description') }}</th>
                                     <th>{{ __('Attachment') }}</th>
@@ -95,7 +96,8 @@
                                 @foreach ($userApplications as $userApplication)
                                     <tr>
                                         <td>{{ $userApplication->application_date }}</td>
-                                        <td>${{ number_format($userApplication->total_amount, 2) }}</td>
+                                        <td>{{ $userApplication->expenseType->name}}</td>
+                                        <td>{{ number_format($userApplication->total_amount, 2) }}</td>
                                         <td>{{ $userApplication->description }}</td>
                                         <td>
                                             @if ($userApplication->attachment)

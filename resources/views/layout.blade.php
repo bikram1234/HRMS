@@ -90,6 +90,10 @@
                                         <a class="dropdown-item" href="{{ url('/apply-expense') }}">{{ __('Apply') }}</a>
                                         <a class="dropdown-item" href="{{ url('dsa-settlement') }}">{{ __('DSA Claim') }}</a>
                                         <a class="dropdown-item" href="{{ url('/retrieve-dsa-data') }}">{{ __('Retrive DSA') }}</a>
+                                        <a class="dropdown-item" href="{{ route('fuels.index') }}">{{ __('Fuel') }}</a>
+                                        <a class="dropdown-item" href="{{ route('products.index') }}">{{ __('Transfer Claim') }}</a>
+                                        <a class="dropdown-item" href="{{ route('requisitions.index') }}">{{ __('Requisition') }}</a>
+                                        <a class="dropdown-item" href="{{ route('basic_pay.index') }}">{{ __('Basic Pay') }}</a>
                                     </div>
                             </div>
                              <div class="dropdown show">
@@ -98,7 +102,7 @@
                                 </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a class="dropdown-item" href="{{ url('/admin/advance/add') }}">{{ __('Type') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/advance-form') }}">{{ __('Apply Advance') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/advance-details') }}">{{ __('Apply Advance') }}</a>
                                        </div>
                             </div>
                                 <!-- Add this code to your HTML template where you want the dropdown to appear -->

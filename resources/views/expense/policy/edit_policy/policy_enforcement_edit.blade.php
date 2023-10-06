@@ -14,12 +14,16 @@
 
             <!-- Display the fields that can be edited -->
             <div class="form-group">
-                <label for="enforcement_options">Enforcement Options:</label>
-                <input type="checkbox" id="prevent_submission" name="enforcement_options[]" value="prevent_submission" {{ optional($enforcementOptions)->prevent_submission == 1 ? 'checked' : '' }}>               
-                
+                <!-- Checkbox for "Prevent Submission" -->
+                <input type="checkbox" id="prevent_submission" name="enforcement_options[]" value="prevent_submission" {{ optional($enforcementOptions)->prevent_submission == 1 ? 'checked' : '' }} readonly>
+
                 <label for="prevent_submission">Prevent Submission</label>
-                <input type="checkbox" id="display_warning" name="enforcement_options[]" value="display_warning" {{ optional($enforcementOptions)->display_warning == 1 ? 'checked' : '' }}>
+
+                <!-- Checkbox for "Display Warning" -->
+                <input type="checkbox" id="display_warning" name="enforcement_options[]" value="display_warning" {{ optional($enforcementOptions)->display_warning == 1 ? 'checked' : '' }} readonly>
+
                 <label for="display_warning">Display Warning</label>
+
             </div>
             <br><br>
 
