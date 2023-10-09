@@ -37,7 +37,7 @@ class edit_policy  extends Controller
 //Edit policy
     public function editPolicy(Policy $policy)
     {
-    return view('Expense.policy.edit_policy.policy_edit', compact('policy'));
+    return view('Expense.policy.policy_add', compact('policy'));
     }
     public function updatePolicy(Request $request, Policy $policy)
     {
@@ -55,7 +55,6 @@ class edit_policy  extends Controller
         // Define your validation rules here
         $validatedData = $request->validate([
             'description' => 'nullable|string',
-            'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
             // Add more fields as needed
         ]);
@@ -77,8 +76,13 @@ class edit_policy  extends Controller
             // If the user saves, apply the changes to the main policy
             $currentPolicy->update($draftPolicy->toArray());
             $request->session()->forget('draft_policy');
+
+            $notification = array(
+                'message' => 'Policy updated successfully',
+                'alert-type' =>'success'
+            );
             return redirect()->route('edit-rate-definition', ['policy' => $policy->id])
-                ->with('success', 'Policy updated successfully');
+                ->with($notification);
         }
 
         // In the update step, continue as usual without affecting the main database
@@ -90,8 +94,6 @@ class edit_policy  extends Controller
             ->with('success', 'An error occurred while handling changes: ' . $e->getMessage());
     }
     }
-
-
 
 
     //Edit Rate definition
@@ -261,8 +263,13 @@ class edit_policy  extends Controller
                     ->exists();
     
                 if ($existingRateLimit) {
+
+                    $notification = array(
+                        'message' => 'Rate limit for this grade and region already exists.',
+                        'alert-type' =>'success'
+                    );
                     return redirect()->route('edit-rate-limits.create', ['rateDefinition' => $rateDefinition->id])
-                        ->with('success', 'Rate limit for this grade and region already exists.');
+                        ->with($notification);
                 }
             }
     
@@ -377,6 +384,7 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
             $request->session()->forget('update_rate_limit'); // Remove draft rate limit
 
             // Redirect to the appropriate page or route after cancellation
+            
             return redirect()->route('edit-rate-limit', ['rateLimit' => $rateLimit->id])
                 ->with('success', 'Changes canceled');
         }
@@ -389,8 +397,8 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
 
         // Validate the submitted data
         $validatedData = $request->validate([
-            'limit_amount' => 'required|numeric',
-            'start_date' => 'required|date',
+            //'limit_amount' => 'required|numeric',
+            //'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
         ]);
 
@@ -447,8 +455,12 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
             $request->session()->put('update_policy_enforcement', $enforcementOptions);
 
             // Redirect to the next page
+            $notification = array(
+                'message' => 'Policy enforcement draft updated successfully',
+                'alert-type' =>'success'
+            );
             return redirect()->route('policy.summary', ['policy' => $policy->id])
-                ->with('success', 'Policy enforcement draft updated successfully');
+                ->with($notification);
         } catch (\Exception $e) {
             \Log::error('Error:', ['message' => $e->getMessage()]);
             return back()->withInput()
@@ -467,6 +479,7 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
             ->with('gradeName')
             ->get();
         $policyEnforcements = EnforcementOption::where('policy_id', $policy->id)->first();
+       // dd($policyEnforcements);
         $policyDetails = $policy; // Fetch policy details
 
         // Fetch the current rate definition and the draft rate definition
@@ -486,6 +499,7 @@ $request->session()->put('update_rate_limit', $rateLimitsData);
        // dd($draftRateLimit);
    
         $draftPolicyEnforcement = session('update_policy_enforcement');
+        //dd($draftPolicyEnforcement);
     
 
         return view('Expense.policy.edit_policy.policy_summary_update', compact('policy', 'currentPolicy', 'draftPolicy', 'rateDefinitions', 'rateLimits', 'policyEnforcements','draftRateLimit','draftRateLimits','draftPolicyEnforcement'));
@@ -590,8 +604,13 @@ if (!empty($draftRateLimits)) {
                 $request->session()->forget('update_policy_enforcement');
 
                 // Redirect to the appropriate page or route after saving
-                return redirect()->route('edit-policy', ['policy' => $policy->id])
-                    ->with('success', 'Policy and Rate definition updated successfully');
+                $notification = array(
+                    'message' => 'Policy Updated Successfully',
+                    'alert-type' =>'success'
+                );
+                return redirect()->route('add-policy')
+                ->with($notification);
+    
         }
     } catch (\Exception $e) {
         // Handle errors
@@ -600,10 +619,4 @@ if (!empty($draftRateLimits)) {
             ->with('error', 'An error occurred while handling changes: ' . $e->getMessage());
     }
 }
-
-
-
-
-
-
 }

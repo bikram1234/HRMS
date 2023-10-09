@@ -1,5 +1,4 @@
 
-
 @extends('layouts.index')
 @section('content')
 <style>
@@ -200,34 +199,23 @@ background-color:#f5a524;
                                         </div>
                                         </div>
                                         </div>
+
+                                    
                                     <div id="divleavepolicy mt-3">
                                     <h4>Policy Enforcement</h4>
-                                    @if  ($policyEnforcements)
+                                    @if ($policyEnforcements)
                                     <div class="form-group">
-                                    </label><input type="checkbox" {{  ($policyEnforcements)->prevent_submission ? 'checked' : '' }} disabled>Prevent report submission</label>
+                                    </label><input type="checkbox" {{ $policyEnforcements->prevent_submission ? 'checked' : '' }} disabled>Prevent report submission</label>
                                     </div>
                                     <div class="form-group">
-                                    </label> <input type="checkbox"  {{ ($policyEnforcements)->display_warning ? 'checked' : '' }} disabled> Display warning to user</label>
+                                    </label> <input type="checkbox"  {{ $policyEnforcements->display_warning ? 'checked' : '' }} disabled> Display warning to user</label>
                                     </div>
                                     </div>
                                         <!-- Add more draft policy enforcement fields as needed -->
                                     @else
                                         <p>No draft data for policy enforcement.</p>
                                     @endif
-                                    </div>
-
-                                    <form method="post" action="{{ route('policy.details.saveOrCancel', ['policy' => $policy->id]) }}">
-                                        @csrf
-                                    <div class="modal-footer justify-content-middle mt-3">
-                                    <button type="submit" class="btn btn-primary">Previous</button>
-                                    &nbsp;  &nbsp;   &nbsp;
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                    &nbsp;  &nbsp;   &nbsp;
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    &nbsp;  &nbsp;   &nbsp;
-                                    </div>
-                                    </div>
-                                    </form>
+                                    </div>                                  
                                      <!-- =================================END TABLE====================================== -->
                                    
                                  </div>

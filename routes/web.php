@@ -23,6 +23,7 @@ use App\Http\Controllers\Leave\YearEnd\LeaveYearendProcessingController;
 use App\Http\Controllers\Leave\Apply\AppliedLeaveController;
 use App\Http\Controllers\Expense\expense_type\expense_type;
 use App\Http\Controllers\Expense\policy\add_policy;
+use App\Http\Controllers\Expense\policy\view_policy;
 use App\Http\Controllers\Expense\policy\edit_policy;
 use App\Http\Controllers\Expense\expense_apply\apply;
 use App\Http\Controllers\Advance\advance_type\advance_type;
@@ -204,13 +205,18 @@ Route::post('/policy-enforcement/{policy}', [add_policy::class, 'storepolicyEnfo
 Route::get('/policy/{policy}/create', [add_policy::class, 'createpolicy'])->name('policy.details.create');
 Route::post('/policy/{policy}/save-or-cancel', [add_policy::class, 'saveorcanclepolicy'])->name('policy.details.saveOrCancel');
 
+
+//View Policy details
+Route::get('/view-policy/{policy}', [view_policy::class, 'viewpolicy'])
+    ->name('view-policy');
+
 //Edit Policy
 Route::get('/edit-policy/{policy}', [edit_policy::class, 'editPolicy'])->name('edit-policy');
 Route::put('/update-policy/{policy}', [edit_policy::class,'updatePolicy'])->name('update-policy');
 
 //Edit Rate definition
 Route::get('/edit-rate-definition/{policy}', [edit_policy:: class, 'editRateDefinition'])->name('edit-rate-definition');
-Route::put('/update-rate-definition/{policy}', [edit_policy:: class, 'updateRateDefinition'])->name('update-rate-definition');
+//Route::put('/update-rate-definition/{policy}', [edit_policy:: class, 'updateRateDefinition'])->name('update-rate-definition');
 // Rate Limit after update of rate defintion
 Route::get('rate-limit/{rateDefinition}/rate-limits/create', [edit_policy::class, 'createLimits'])->name('edit-rate-limits.create');
 Route::post('rate-limit/{rateDefinition}/rate-limits', [edit_policy::class, 'storeLimits'])->name('new-rate-limits.store');

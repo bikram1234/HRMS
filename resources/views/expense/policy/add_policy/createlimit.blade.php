@@ -61,9 +61,8 @@ background-color:#f5a524;
 							</div>
 						</div> 
                     </div>
-                            <form method="POST" action="{{ route('rate-limits.store', ['rateDefinition' => $rateDefinition->id]) }}">
-                                @csrf
-<!--                                
+                    <form method="POST" action="{{ route('rate-limits.store', ['rateDefinition' => $rateDefinition->id]) }}">
+                                @csrf                              
                                 <!-- Grade -->
                                 <div class="mt-4">
                                     <label for="grade" class="block font-medium text-sm text-gray-700">{{ __('Grade') }}</label>
@@ -87,7 +86,7 @@ background-color:#f5a524;
                                         });
                                     });
                                 </script>
-                            <!-- <div class="col-sm-6">
+    <!-- <div class="col-sm-6">
     <div class="form-group">
         <label for="grade">Grade:</label>
         <select class="form-control" id="grade" name="grade">

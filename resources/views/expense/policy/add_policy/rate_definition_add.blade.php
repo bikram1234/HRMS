@@ -128,7 +128,7 @@ background-color:#f5a524;
                             &nbsp;  &nbsp;   &nbsp;
                             </div>
                         </div>
-                    </form>
+                   
                     <h2>Limit</h2>
                         <!-- Table -->
                         <div class="row">
@@ -184,10 +184,6 @@ background-color:#f5a524;
                                 <div class="modal-footer justify-content-end mt-3">
                                     <button type="submit" class="btn btn-primary">Previous</button>
                                     &nbsp;  &nbsp;   &nbsp;
-                                    
-                                  
-
-
                                     <a href="{{ route('policy-enforcement.index', ['policy' => $policy]) }}" style="text-decoration: none;">
                                         <button type="button" class="btn btn-primary">
                                             {{ __('Save And Submit') }}
@@ -196,10 +192,9 @@ background-color:#f5a524;
                                     &nbsp;  &nbsp;   &nbsp;
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                 </div>
-                                            
-                                
                                 </div> 
                                 <!--/End Button -->
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -207,7 +202,6 @@ background-color:#f5a524;
             </div>       
         </div>
      <!-- /row -->
-    >
 </div>
 <!-- Page Content -->
 </div>
@@ -242,13 +236,6 @@ $(document).ready(function () {
     });
 });
 </script>
-
-
-
-
-
-
-
 @endsection
 
 

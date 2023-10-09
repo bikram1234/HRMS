@@ -34,13 +34,21 @@ use Illuminate\Support\Facades\Redirect;
 
 class add_policy  extends Controller
 {
-     // Get Policy
-     public function AddForm()
-     {
-         $expenseTypes = ExpenseType::all();
-         $policies = Policy::all(); // Fetch policies from the database
-         return view('Expense.policy.add_policy.policy_add', compact('expenseTypes', 'policies'));
-     }   
+       // Get Policy
+       public function AddForm()
+       {
+           $expenseTypes = ExpenseType::all();
+           // Get the expense_type_ids that exist in the policies table
+  $existingExpenseTypeIds = DB::table('policies')->pluck('expense_type_id');
+  
+  // Filter the $expenseTypes collection to exclude those that exist in the policies table
+  $expenseTypes = $expenseTypes->reject(function ($expenseType) use ($existingExpenseTypeIds) {
+      return $existingExpenseTypeIds->contains($expenseType->id);
+  });
+  
+           $policies = Policy::with('expenseType')->get(); // Fetch policies from the database
+           return view('Expense.policy.add_policy.policy_add', compact('expenseTypes', 'policies'));
+       } 
      // Add Policy Based on Expense_Type
      public function addPolicy(Request $request)
      {
@@ -55,10 +63,15 @@ class add_policy  extends Controller
  
          //Policy::create($validatedData);
          $policy = Policy::create($validatedData);
- 
+
+
+         $notification = array(
+            'message' => 'Policy Added successfully',
+            'alert-type' =>'success'
+        );
          // return redirect()->route('add-policy')
          return redirect()->route('add-rate-definition', ['policy' => $policy->id])
-             ->with('success', 'Policy added successfully');
+             ->with($notification);
      }
  
  
@@ -96,10 +109,13 @@ class add_policy  extends Controller
   
      // Create a new RateDefinition
      $rateDefinition = RateDefinition::create($validatedData);
- 
+     $notification = array(
+        'message' => 'Rate Definition Added successfully',
+        'alert-type' =>'success'
+    );
      // Redirect to the createLimit view with rate_definition_id as a parameter
      return redirect()->route('rate-limits.create', ['rateDefinition' => $rateDefinition->id])
-         ->with('success', 'Rate definition added successfully');
+         ->with($notification);
  }
  
  
@@ -136,8 +152,12 @@ class add_policy  extends Controller
              ->exists();
  
          if ($existingRateLimit) {
+            $notification = array(
+                'message' => 'Rate limit for this grade and region already exists.',
+                'alert-type' =>'success'
+            );
              return redirect()->route('rate-limits.create', ['rateDefinition' => $rateDefinition->id])
-                 ->with('success', 'Rate limit for this grade and region already exists.');
+                 ->with($notification);
          }
  
          // Create a new rate limit associated with the rate definition for each grade
@@ -153,10 +173,14 @@ class add_policy  extends Controller
  
          // Create a new rate limit associated with the rate definition for each grade
          $rateDefinition->rateLimits()->create($rateLimitData);
+
      }
- 
+     $notification = array(
+        'message' => 'Rate limits added successfully',
+        'alert-type' =>'success'
+    );
      return redirect()->route('add-rate-definition', ['policy' => $rateDefinition->policy->id])
-         ->with('success', 'Rate limits added successfully');
+         ->with($notification);
  
      } catch (\Exception $e) {
          $errorMessage = 'An error occurred while saving the manual settlement';
@@ -175,11 +199,14 @@ class add_policy  extends Controller
      $rateLimitExists = RateLimit::where('policy_id', $policy->id)->exists();
  
      if (!$rateLimitExists) {
+        $notification = array(
+            'message' => 'Rate limit for this policy does not exist. Please create a rate limit first.',
+            'alert-type' =>'success'
+        );
          return redirect()->route('add-rate-definition', ['policy' => $policy->id])
-             ->with('success', 'Rate limit for this policy does not exist. Please create a rate limit first.');
+             ->with($notification);
      }
      
- 
      return view('Expense.policy.add_policy.policy_enforcement', compact('policy'));
  }
  public function storepolicyEnforement(Request $request, Policy $policy)
@@ -213,8 +240,12 @@ class add_policy  extends Controller
  
          // return redirect()->route('policy-enforcement.index', ['policy' => $policy->id])
          //     ->with('success', 'Enforcement options updated successfully');
+         $notification = array(
+            'message' => 'Enforcement options updated successfully',
+            'alert-type' =>'success'
+        );
          return redirect()->route('policy.details.create', ['policy' => $policy->id])
-         ->with('success', 'Enforcement options updated successfully');    
+         ->with($notification);    
      
      } catch (\Exception $e) {
          \Log::error('Error:', ['message' => $e->getMessage()]);
