@@ -21,6 +21,10 @@ class Requisition extends Model
         'uom',
         'required_qty',
         'file_path',
+        'level1',
+        'level2',
+        'level3',
+        'status',
     ];
 
     protected static function boot()

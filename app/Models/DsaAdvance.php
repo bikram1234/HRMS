@@ -14,7 +14,7 @@ class DsaAdvance extends Model
     // Define the fillable fields
     protected $fillable = [
         'user_id','advance_type_id', 'advance_no', 'date', 'mode_of_travel', 'from_location', 'to_location',
-        'from_date', 'to_date', 'amount', 'purpose', 'upload_file','remark','status'
+        'from_date', 'to_date', 'amount', 'purpose', 'upload_file','remark','level1','level2','level3','status','remark'
     ];
 
     // Define the relationship with the User model

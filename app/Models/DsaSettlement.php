@@ -14,6 +14,9 @@ class DsaSettlement extends Model
         'net_payable_amount',
         'balance_amount',
         'upload_file',
+        'level1',
+        'level2',
+        'level3',
         'status',
         'remark'
 

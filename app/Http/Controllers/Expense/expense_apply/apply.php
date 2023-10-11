@@ -84,11 +84,20 @@ class apply  extends Controller
 
     public function submitApplication(Request $request)
     {
+        try{
         $validatedData = $request->validate([
             'expense_type_id' => 'required|exists:expense_types,id',
             'total_amount' => 'required|numeric|min:0',
             'description' => 'required|string',
             'attachment' => 'nullable|mimes:pdf|max:2048', // Max 2 MB PDF file
+            'travel_type'=> 'nullable|string',
+            'travel_mode'=> 'nullable|string',
+            'travel_from_date'=>'nullable|date',
+            'travel_to_date'=>'nullable|date|after:travel_from_date',
+            'travel_from'=> 'nullable|string',
+            'travel_to'=> 'nullable|string',
+
+
         ], [
             'attachment.max' => 'The attachment file size must not exceed 2MB.',
         ]);
@@ -146,6 +155,14 @@ class apply  extends Controller
     
         return redirect()->route('show-application-form')
             ->with('success', 'Expense application submitted successfully.');
+
+        } catch (\Exception $e) {
+            $errorMessage = 'An error occurred while saving the settlement';
+            \Log::error($errorMessage . ': ' . $e->getMessage());
+            \Log::error('Stack Trace: ' . $e->getTraceAsString());
+    
+            return response()->json(['error' => $errorMessage], 500);
+        }
     }
 
 

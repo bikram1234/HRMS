@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('upload_file')->nullable();
             $table->text('remarks')->nullable(); 
             $table->timestamps();
+            $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level3', ['pending', 'approved','rejected'])->default('pending');
             $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
 
     

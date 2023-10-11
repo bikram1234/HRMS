@@ -21,6 +21,9 @@ return new class extends Migration
             $table->decimal('net_payable_amount', 10, 2)->nullable(); // Make it nullable
             $table->decimal('balance_amount', 10, 2)->nullable(); // Make it nullable
             $table->string('upload_file')->nullable();
+            $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level3', ['pending', 'approved','rejected'])->default('pending');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('remark')->nullable();
             $table->timestamps();

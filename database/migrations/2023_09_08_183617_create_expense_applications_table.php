@@ -19,7 +19,17 @@ return new class extends Migration
             $table->decimal('total_amount', 10, 2)->default(0);
             $table->text('description');
             $table->string('attachment')->nullable();
-            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
+            $table->string('travel_type')->nullable();
+            $table->string('travel_mode')->nullable();
+            $table->date('travel_from_date')->nullable();
+            $table->date('travel_to_date')->nullable();
+            $table->string('travel_from')->nullable();
+            $table->string('travel_to')->nullable();
+            $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level3', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->text('remark')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

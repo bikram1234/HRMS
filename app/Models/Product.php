@@ -25,7 +25,11 @@ class Product extends Model
         'new_location',
         'claim_amount',
         'distance_km',
+        'level1',
+        'level2',
+        'level3',
         'status',
+        ''
     ];
     public function username()
     {

@@ -27,8 +27,13 @@ class CreateFuelEntriesTable extends Migration
             $table->string('mileage');
             $table->string('rate');
             $table->string('amount');
+            $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level3', ['pending', 'approved','rejected'])->default('pending');
             $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->text('remark')->nullable();
+
 
             $table->timestamps();
         });

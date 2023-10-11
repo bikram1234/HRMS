@@ -25,8 +25,13 @@ class CreateProductsTable extends Migration
             $table->string('new_location');
             $table->string('claim_amount');
             $table->string('distance_km')->nullable();
+            $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+            $table->enum('level3', ['pending', 'approved','rejected'])->default('pending');
             $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->text('remark')->nullable();
+
 
             $table->timestamps();
         });

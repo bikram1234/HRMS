@@ -26,6 +26,11 @@ class CreateRequisitionsTable extends Migration
         $table->string('uom');
         $table->string('required_qty');
         $table->string('file_path')->nullable(); //file_path column
+        $table->enum('level1', ['pending', 'approved','rejected'])->default('pending'); 
+        $table->enum('level2', ['pending', 'approved','rejected'])->default('pending'); 
+        $table->enum('level3', ['pending', 'approved','rejected'])->default('pending'); 
+        $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); 
+        $table->text('remark')->nullable();
         $table->timestamps();
     });
     

@@ -27,5 +27,10 @@ class Fuel extends Model
         'mileage',
         'rate',
         'amount',
+        'level1',
+        'level2',
+        'level3',
+        'status',
+        'remark',
     ];
 }

@@ -12,7 +12,8 @@ class SalaryAdvance extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'advance_type_id', 'advance_no', 'date', 'amount', 'emi_count', 'deduction_period', 'purpose', 'upload_file', 'remark','status'
+        'user_id', 'advance_type_id', 'advance_no', 'date', 'amount', 'emi_count', 'deduction_period', 'purpose', 'upload_file', 'remark','level1','level2',
+        'level3','status'
     ];
 
     public function user()
