@@ -84,6 +84,9 @@ public function store(Request $request): RedirectResponse
     // Set the 'basic_pay' field with the fetched basic pay amount
     $request->merge(['basic_pay' => $basicPayAmount]);
 
+    $validated['user_id'] = Auth::id(); // Assign the current user's ID
+
+
     // Create the product record with the updated request data
     Product::create($request->all());
 

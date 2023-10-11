@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Settings\Approval;
 use App\Http\Controllers\Controller;
 use App\Models\ApprovalRule;
 use App\Models\Formula;
+use Illuminate\Http\Request;
+use App\Models\ExpenseType;
 use App\Models\leavetype;
 use App\Models\approval_condition;
 use App\Http\Requests\StoreApprovalRuleRequest;
@@ -27,7 +29,7 @@ class ApprovalRuleController extends Controller
     public function create()
     {
         $leavetypes = leavetype::all();
-        $expenses = [];
+        $expenses = ExpenseType::all();
         $loans = [ ];
         return view('settings.approval.ApprovalAdd', compact('leavetypes', 'expenses', 'loans'));
     }

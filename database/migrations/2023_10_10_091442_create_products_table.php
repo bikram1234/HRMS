@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('employee_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('designation');
             $table->string('department');
             $table->string('basic_pay');
@@ -24,6 +25,9 @@ class CreateProductsTable extends Migration
             $table->string('new_location');
             $table->string('claim_amount');
             $table->string('distance_km')->nullable();
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

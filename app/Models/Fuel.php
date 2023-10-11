@@ -16,6 +16,7 @@ class Fuel extends Model
      */
     protected $fillable = [
         'employee_name', // Update the validation rules
+        'user_id',
         'location',
         'date',
         'vehicle_no',

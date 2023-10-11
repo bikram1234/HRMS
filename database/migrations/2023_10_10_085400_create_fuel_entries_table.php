@@ -16,6 +16,7 @@ class CreateFuelEntriesTable extends Migration
         Schema::create('fuels', function (Blueprint $table) {
             $table->id();
             $table->string('employee_name');
+            $table->unsignedBigInteger('user_id');
             $table->string('location');
             $table->string('date');
             $table->string('vehicle_no');
@@ -26,6 +27,9 @@ class CreateFuelEntriesTable extends Migration
             $table->string('mileage');
             $table->string('rate');
             $table->string('amount');
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

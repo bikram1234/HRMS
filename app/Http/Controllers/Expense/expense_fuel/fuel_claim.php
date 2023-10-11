@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+
 
 class fuel_claim extends Controller
 {
@@ -49,8 +51,11 @@ class fuel_claim extends Controller
             'rate' => 'required',
             'amount' => 'required',
         ]);
-        
+
+        $validated['user_id'] = Auth::id(); // Assign the current user's ID
+
         Fuel::create($request->all()); // Change from 'Product' to 'Fuel'
+
          
         return redirect()->route('fuels.index')
                         ->with('success', 'Fuel entry created successfully.');

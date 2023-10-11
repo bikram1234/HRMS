@@ -25,13 +25,19 @@ use App\Http\Controllers\Expense\expense_type\expense_type;
 use App\Http\Controllers\Expense\policy\add_policy;
 use App\Http\Controllers\Expense\policy\edit_policy;
 use App\Http\Controllers\Expense\expense_apply\apply;
+use App\Http\Controllers\Expense\expense_approval\expense_approval_Controller;
 use App\Http\Controllers\Advance\advance_type\advance_type;
 use App\Http\Controllers\Advance\apply\advance_apply;
+use App\Http\Controllers\Advance\advance_approval\advance_approval_Controller;
 use App\Http\Controllers\Expense\dsa_claim\dsa_settlement;
+use App\Http\Controllers\Expense\dsa_approval\dsa_approval_Controller;
 use App\Http\Controllers\Expense\expense_fuel\fuel_claim;
+use App\Http\Controllers\Expense\Fuel_approval\fuel_approval_Controller;
 use App\Http\Controllers\Expense\transfer_claim\transfer_claim;
+use App\Http\Controllers\Expense\transfer_claim_approval\transfer_claim_approval_Controller;
 use App\Http\Controllers\Expense\requisition\requisitionController;
 use App\Http\Controllers\WorkStructure\basic_pay\basic_payController;
+
 
 
 
@@ -236,6 +242,10 @@ Route::get('/apply-expense', [apply::class, 'showApplicationForm'])
 Route::post('/apply-expense', [apply::class, 'submitApplication'])
     ->name('submit-application');
 
+//Expense_Approval Route
+Route::get('/expense-approval', [expense_approval_Controller::class,'show_pending_expense_application'])->name('expense.approval.index');
+
+
 // Add_Advance_Type
 Route::get('/admin/advance/add', [advance_type::class, 'showAdvanceForm'])->name('show-advance-form');
 Route::post('/admin/advance/add', [advance_type::class, 'addAdvance'])->name('add-advance');
@@ -246,6 +256,12 @@ Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-a
 // Route to handle the advance submission
 Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
 
+
+//Advance Approval Route
+Route::get('/advance-approval', [advance_approval_Controller::class, 'advance_approval_show'])
+    ->name('advance.approval.index');
+
+
 // Route to display the DSA settlement form
 Route::get('dsa-settlement', [dsa_settlement::class, 'dsaSettlementForm'])
     ->name('dsa-settlement-form');
@@ -255,6 +271,13 @@ Route::post('calculate-dsa-settlement', [dsa_settlement::class, 'calculateDsaSet
     ->name('calculate-dsa-settlement');
 // Route to retrive allthe dsa settlement 
 Route::get('/retrieve-dsa-data', [dsa_settlement::class,'DSAretrieveData'])->name('retrieve-dsa-data');
+
+
+//Dsa Approval Route
+Route::get('/dsa-approval', [dsa_approval_Controller::class,'show_dsa_approval_application'])->name('dsa.approval.index');
+Route::get('/dsa-settlement/{id}', [dsa_approval_Controller::class, 'view_DsaSettlement_detail'])
+    ->name('dsa-settlement.view'); 
+
 
 
 // Show all fuels
@@ -279,6 +302,10 @@ Route::get('fuels/{fuel}', [fuel_claim::class, 'show'])->name('fuels.show');
 // Delete a fuel
 Route::delete('fuels/{fuel}', [fuel_claim::class, 'destroy'])->name('fuels.destroy');
 
+//Fuel Approval Route
+Route::get('/fuel-approval', [fuel_approval_Controller::class, 'fuel_approval'])
+    ->name('fuel.approval.index');
+
 
 
 // Show all products
@@ -301,6 +328,10 @@ Route::delete('products/{product}', [transfer_claim::class, 'destroy'])->name('p
 
 // Show a single fuel claim
 Route::get('products/{product}', [transfer_claim::class, 'show'])->name('products.show');
+
+//transfer Approval Route
+Route::get('/transfer-approval', [transfer_claim_approval_Controller::class, 'transfer_claim_approval_show'])
+    ->name('transfer.approval.index');
 
 
 

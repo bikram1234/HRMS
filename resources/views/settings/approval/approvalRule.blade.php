@@ -24,7 +24,11 @@
                 @if($approvals->count() > 0)
                 @foreach($approvals as $approval)
                     <tr>
-                        <td>{{ $approval->type->name }}</td>
+                        @if ($approval->For === 'Expense')
+                            <td>{{ $approval->types->name }}</td>
+                        @else
+                            <td>{{ $approval->type->name }}</td>
+                        @endif                        
                         <td>{{ $approval->RuleName }}</td>
                         <td>{{ $approval->start_date }}</td>
                         <td>{{ $approval->end_date }}</td>

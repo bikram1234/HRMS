@@ -39,6 +39,9 @@
         <div class="form-group">
             <label for="end_date">End Date:</label>
             <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $policy->end_date) }}">
+            @error('end_date')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         </div>
 
         <button type="submit" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.1rem 1rem; border-radius: 0.25rem; cursor: pointer;">

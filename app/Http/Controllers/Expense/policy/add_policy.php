@@ -35,20 +35,20 @@ use Illuminate\Support\Facades\Redirect;
 class add_policy  extends Controller
 {
      // Get Policy
-     public function AddForm()
-     {
+    public function AddForm()
+    {
          $expenseTypes = ExpenseType::all();
          // Get the expense_type_ids that exist in the policies table
-$existingExpenseTypeIds = DB::table('policies')->pluck('expense_type_id');
+            $existingExpenseTypeIds = DB::table('policies')->pluck('expense_type_id');
 
-// Filter the $expenseTypes collection to exclude those that exist in the policies table
-$expenseTypes = $expenseTypes->reject(function ($expenseType) use ($existingExpenseTypeIds) {
-    return $existingExpenseTypeIds->contains($expenseType->id);
-});
+        // Filter the $expenseTypes collection to exclude those that exist in the policies table
+        $expenseTypes = $expenseTypes->reject(function ($expenseType) use ($existingExpenseTypeIds) {
+        return $existingExpenseTypeIds->contains($expenseType->id);
+        });
 
          $policies = Policy::with('expenseType')->get(); // Fetch policies from the database
          return view('Expense.policy.add_policy.policy_add', compact('expenseTypes', 'policies'));
-     }   
+    }   
      // Add Policy Based on Expense_Type
      public function addPolicy(Request $request)
      {

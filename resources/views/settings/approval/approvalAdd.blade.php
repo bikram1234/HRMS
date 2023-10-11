@@ -94,11 +94,15 @@
             } else {
                 // Define and populate options based on the selected "For" value
                 var options;
-                if (selectedFor === 'Leave') {
-                    options = {!! json_encode($leavetypes->pluck('name', 'id')) !!};
-                } else {
-                    options = []; // Default empty options
-                }
+            if (selectedFor === 'Expense') {
+                options = {!! json_encode($expenses->pluck('name', 'id')) !!};
+            } else if (selectedFor === 'Leave') {
+                // Populate options based on 'AnotherOption'
+                options = {!! json_encode($leavetypes->pluck('name', 'id')) !!};
+            } else {
+                // Default empty options
+                options = [];
+            }
                 
                 // Populate the "Type" dropdown with options
                 for (var id in options) {

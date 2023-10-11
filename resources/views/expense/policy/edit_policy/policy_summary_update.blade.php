@@ -89,9 +89,16 @@
                          <h3>Policy Enforcement Draft</h3>
                          @if ($draftPolicyEnforcement)
                          <ul>
-                             <li>Prevent Submission: {{ $draftPolicyEnforcement->prevent_submission ? 'Yes' : 'No' }}</li>
-                             <li>Display Warning: {{ $draftPolicyEnforcement->display_warning ? 'Yes' : 'No' }}</li>
-                         </ul>
+                            <li>
+                                Prevent Submission:
+                                <input type="checkbox" {{ $draftPolicyEnforcement->prevent_submission ? 'checked' : '' }} disabled>
+                            </li>
+                            <li>
+                                Display Warning:
+                                <input type="checkbox" {{ $draftPolicyEnforcement->display_warning ? 'checked' : '' }} disabled>
+                            </li>
+                        </ul>
+                        
                              <!-- Add more draft policy enforcement fields as needed -->
                          @else
                              <p>No draft data for policy enforcement.</p>

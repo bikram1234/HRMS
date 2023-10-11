@@ -78,8 +78,14 @@
                         <h3 class="text-xl font-semibold mb-2">Policy Enforcement</h3>
                         @if ($policyEnforcements)
                         <ul>
-                            <li>Prevent Submission: {{ $policyEnforcements->prevent_submission ? 'Yes' : 'No' }}</li>
-                            <li>Display Warning: {{ $policyEnforcements->display_warning ? 'Yes' : 'No' }}</li>
+                            <li>
+                                Prevent Submission:
+                                <input type="checkbox" {{ $policyEnforcements->prevent_submission ? 'checked' : '' }} disabled>
+                            </li>
+                            <li>
+                                Display Warning:
+                                <input type="checkbox" {{ $policyEnforcements->display_warning ? 'checked' : '' }} disabled>
+                            </li>
                         </ul>
                         @else
                         <p>No Policy Enforcement details found.</p>

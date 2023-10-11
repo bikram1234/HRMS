@@ -33,13 +33,20 @@ class ApprovalConditionController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
-    public function store(Storeapproval_conditionRequest $request)
-    {
+    //  */
+    // public function store(Storeapproval_conditionRequest $request)
+    // {
 
-        approval_condition::create($request->validated());
-        return redirect()->route('approval_condition.edit')->with('success', 'Approval added successfully.');
-    }
+    //     approval_condition::create($request->validated());
+    //     return redirect()->route('approval_condition.edit')->with('success', 'Approval added successfully.');
+    // }
+    public function store(Storeapproval_conditionRequest $request)
+{
+    $newApprovalCondition = approval_condition::create($request->validated());
+
+    return redirect()->route('approval_condition.edit', ['approval_condition' => $newApprovalCondition])->with('success', 'Approval added successfully.');
+}
+
     
 
     /**

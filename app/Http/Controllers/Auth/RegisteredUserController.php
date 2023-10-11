@@ -66,6 +66,7 @@ class RegisteredUserController extends Controller
     // }
     public function store(Request $request): RedirectResponse
     {
+        try{
         // Validate the request data
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -97,6 +98,12 @@ class RegisteredUserController extends Controller
         }
 
         return redirect()->route('login')->with('success', "Successfully Registered. Login Now!!");
+        
+    } catch (\Exception $e) {
+        \Log::error('Error:', ['message' => $e->getMessage()]);
+        return back()->withInput()
+            ->with('success', 'An error occurred while adding policy Enforcement: ' . $e->getMessage());
+    }
     }
 
     function logout() {

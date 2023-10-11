@@ -16,6 +16,7 @@ class Product extends Model
      */
     protected $fillable = [
         'employee_id',
+        'user_id',
         'designation',
         'department',
         'basic_pay',
@@ -24,5 +25,10 @@ class Product extends Model
         'new_location',
         'claim_amount',
         'distance_km',
+        'status',
     ];
+    public function username()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

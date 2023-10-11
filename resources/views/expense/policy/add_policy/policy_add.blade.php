@@ -59,6 +59,9 @@
                                 {{ __('End Date') }}
                             </label>
                             <input type="date" name="end_date" id="end_date" class="form-input rounded-md shadow-sm mt-1 block w-full" >
+                            @error('end_date')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                         </div>
 
                         <div class="mb-4">

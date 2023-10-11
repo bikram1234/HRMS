@@ -34,6 +34,7 @@
                     <div class="form-group">
                         <strong>Employee ID</strong>
                         <input type="text" name="employee_id" class="form-control" placeholder="Employee ID" value="{{ Auth::user()->employee_id }}" readonly>
+                        <input type="hidden" name="user_id" class="form-control" placeholder="User ID" value="{{ Auth::user()->id }}" readonly>
                     </div>
                 </div>
 
@@ -47,7 +48,7 @@
                 <div class="col-md-6 mt-3">
                     <div class="form-group">
                         <strong>Department</strong>
-                        <input type="text" name="department" class="form-control" placeholder="Department" value="{{ Auth::user()->department->na }}" readonly>
+                        <input type="text" name="department" class="form-control" placeholder="Department" value="{{ Auth::user()->department->name }}" readonly>
                     </div>
                 </div>
 

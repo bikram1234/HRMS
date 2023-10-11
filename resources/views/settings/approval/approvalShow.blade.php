@@ -27,12 +27,10 @@
         <div class="form-group">
             <label for="type">Type</label>
             <select name="Type" id="type" class="form-control">
-                <option disabled selected>{{ $approvalRule->type->name}}</option>
-                <option value="Casual Leave">Casual Leave</option>
-                <option value="Medical Leave">Medical Leave</option>
-                <option value="Study Leave">Study Leave</option>
-                <option value="Bereavement Leave">Bereavement Leave</option>
-            </select>
+                <option {{ $approvalRule->For === 'Expense' ? 'readonly' : '' }}>
+                    {{ $approvalRule->For === 'Expense' ? $approvalRule->types->name : $approvalRule->type->name }}
+                </option>
+                            </select>
             @error('Type')
                     <small class="text-danger">{{ $message }}</small>
             @enderror
