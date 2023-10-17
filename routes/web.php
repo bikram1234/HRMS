@@ -9,6 +9,13 @@ use App\Http\Controllers\WorkStructure\Section\SectionController;
 use App\Http\Controllers\WorkStructure\Role\RoleController;
 use App\Http\Controllers\WorkStructure\Designation\DesignationController;
 use App\Http\Controllers\WorkStructure\Grade\GradeController;
+use App\Http\Controllers\WorkStructure\Geography\Country\CountryController;
+use App\Http\Controllers\WorkStructure\Geography\TimeZone\TimezoneController;
+use App\Http\Controllers\WorkStructure\Geography\Region\RegionController;
+use App\Http\Controllers\WorkStructure\Geography\Dzongkhag\DzongkhagController;
+use App\Http\Controllers\WorkStructure\Geography\StoreLocation\StorelocationController;
+use App\Http\Controllers\WorkStructure\Holiday\HolidayController;
+use App\Http\Controllers\WorkStructure\Holiday\HolidaytypeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Settings\RolesAndPermission\PermissionController;
 use App\Http\Controllers\Settings\Hierarchy\HierarchyController;
@@ -109,6 +116,39 @@ Route::namespace('WorkStructure')->group(function () {
     Route::get('/grade/{grade}/edit', [GradeController::class, 'edit'])->name('grade.edit');
     Route::patch('/grade/{grade}', [GradeController::class, 'update'])->name('grade.update');
     Route::delete('/grade/{grade}', [GradeController::class, 'destroy'])->name('grade.delete');
+
+    // Geograpgy route
+    Route::get('/country', [CountryController::class, 'index'])->name('country.index');
+    Route::post('/addCountry', [CountryController::class, 'store'])->name('country.store');
+    Route::patch('/updateCountry/{country}', [CountryController::class, 'update'])->name('country.update');
+    Route::delete('/delete/{country}', [CountryController::class, 'destroy'])->name('country.delete');
+
+    Route::get('/timezone', [TimezoneController::class, 'index'])->name('timezone.index');
+    Route::post('/timezoneAdd', [TimezoneController::class, 'store'])->name('timezone.store');
+    Route::patch('/updateTimezone/{timezone}', [TimezoneController::class, 'update'])->name('timezone.update');
+    Route::delete('/deleteTimezone/{timezone}', [TimezoneController::class, 'destroy'])->name('timezone.delete');
+
+    Route::get('/region', [RegionController::class, 'index'])->name('region.index');
+    Route::post('/addRegion', [RegionController::class, 'store'])->name('region.store');
+    Route::patch('/updateRegion/{region}', [RegionController::class, 'update'])->name('region.update');
+    Route::delete('/deleteRegion/{region}', [RegionController::class, 'destroy'])->name('region.delete');
+
+    Route::get('/dzongkhag', [DzongkhagController::class, 'index'])->name('dzongkhag.index');
+    Route::get('/get-regions/{countryId}', [DzongkhagController::class, 'getRegions'])->name('getRegions');
+    Route::post('/addDzongkhag', [DzongkhagController::class, 'store'])->name('dzongkhag.store');
+    Route::patch('/updateDzongkhag/{dzongkhag}', [DzongkhagController::class, 'update'])->name('dzongkhag.update');
+    Route::delete('/deleteDzongkhag/{dzongkhag}', [DzongkhagController::class, 'destroy'])->name('dzongkhag.delete');
+
+    Route::get('/storelocation', [StorelocationController::class, 'index'])->name('storelocation.index');
+    Route::post('/addStorelocation', [StorelocationController::class, 'store'])->name('storelocation.store');
+    Route::delete('/delete/{storelocation}', [StorelocationController::class, 'destroy'])->name('storelocation.delete');
+    Route::patch('/update/{storelocation}', [StorelocationController::class, 'update'])->name('storelocation.update');
+
+    Route::get('/holiday', [HolidayController::class, 'index'])->name('holiday.index');
+    Route::post('/Addholiday', [HolidayController::class, 'store'])->name('holiday.store');
+    Route::get('/fetch-holiday-dates', [HolidayController::class, 'fetchHolidayDates'])->name('fetch-holiday-dates');
+
+    Route::post('/holidaytype', [HolidaytypeController::class, 'store'])->name('holidaytype.store');
 
 });
 
@@ -234,21 +274,21 @@ Route::get('/policy/{policy}/summary', [edit_policy::class, 'getPolicySummary'])
 Route::post('/policy/{policy}/summary', [edit_policy::class, 'postPolicySummary'])->name('policy.summary.saveOrCancel');
 
 //Apply_Expense_Route
-Route::get('/apply-expense', [apply::class, 'showApplicationForm'])
-    ->name('show-application-form');
-Route::post('/apply-expense', [apply::class, 'submitApplication'])
-    ->name('submit-application');
+Route::get('/apply-expense', [apply::class, 'showApplicationForm'])->name('show-application-form');
+Route::post('/submit-application', [apply::class, 'submitApplication']) ->name('submit-application');
 
 // Add_Advance_Type
 Route::get('/admin/advance/add', [advance_type::class, 'showAdvanceForm'])->name('show-advance-form');
 Route::post('/admin/advance/add', [advance_type::class, 'addAdvance'])->name('add-advance');
 
 // Route to show the advance form
+Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
 Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-advance-loan');
 // Route to handle the advance submission
 Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
 
 // Route to display the DSA settlement form
+Route::get('/dsa-data', [dsa_settlement::class,'getdsa'])->name('dsa-data');
 Route::get('dsa-settlement', [dsa_settlement::class, 'dsaSettlementForm'])
     ->name('dsa-settlement-form');
 

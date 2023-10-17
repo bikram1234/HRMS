@@ -1,8 +1,54 @@
-@extends('layout')
+
+@extends('layouts.index')
 
 @section('content')
-<div class="container mt-5">
-<h1>This is role edit page</h1>
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
+
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
+
+.inactive-button:hover{
+    background-color:#f5a524;
+}
+
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
+
+</style>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+            
+            <!-- Page Content -->
+            <div class="content container-fluid">
+            @if(session('success'))
+            <div id="success-message" class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h3 class="page-title">Roles</h3>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active">Dashboard/Setting Management/Role</li>
+                            </ul>
+                        </div>                     
+                    </div>
+                </div>
+                <!-- /Page Header -->         
 @can('create: role')
 <form method="POST" action="{{ route('role.update', $role->id) }}">
         @csrf
@@ -15,7 +61,7 @@
                 @enderror
         </div>
 
-        @foreach ($permissions as $permission)
+         @foreach ($permissions as $permission)
                 <div>
                     <input type="checkbox"
                            name="permissions[]"
@@ -23,7 +69,7 @@
                            {{ $role->permissions->contains($permission->id) ? 'checked' : '' }}>
                     {{ $permission->name }}
                 </div>
-            @endforeach
+            @endforeach 
 
 
         <div class="form-group">
@@ -41,5 +87,27 @@
         <button type="submit" class="btn btn-primary mt-4">Update role</button>
     </form>
     @endcan
+
 </div>
+<!-- /Page Content -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
+
+
 @endsection
+
+
+

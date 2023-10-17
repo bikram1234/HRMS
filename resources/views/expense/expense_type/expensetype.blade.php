@@ -123,9 +123,9 @@ background-color:#f5a524;
                 <label for="start_date">Start Date <span class="text-danger">*</span></label>
                 <div class="cal-icon">
                     <input  name="start_date" id="start_date" class="form-control datetimepicker" type="date"  required>
-                                    @error('start_date')
-                                        <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                    @error('start_date')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
             </div>
                 </div>

@@ -57,8 +57,12 @@ class advance_type  extends Controller
            $validatedData['end_date'] = $validatedData['end_date'] ?? null;
    
            Advance::create($validatedData);
+            //display the message 
+            $notification = array(
+                'message' => 'Advance added successfully',
+                'alert-type' =>'success'
+            );
    
-           return redirect()->route('show-advance-form')
-               ->with('success', 'Advance added successfully');
+           return redirect()->route('show-advance-form')->with($notification);
        }
 }

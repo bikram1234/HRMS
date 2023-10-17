@@ -195,13 +195,6 @@ background-color:#f5a524;
                                             </form>
                                         </div>
                                     <!-- /Edit expensepolicy-->
-
-
-                                    <!-- View Expensepolicy -->
-
-
-                                    
-                                    <!-- View Expensepolicy -->
                                     </tr>
                             @endforeach 
 
@@ -284,8 +277,8 @@ background-color:#f5a524;
                     </div>
                 </div>
                 </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="form-group">
                         <label>End Date <span class="text-danger">*</span></label>
                         <div class="cal-icon">
                             <input class="form-control datetimepicker" id="end_date" name="end_date"  type="date">
@@ -294,20 +287,22 @@ background-color:#f5a524;
                             @enderror
                         </div>
                     </div>
-                    </div>
-                    <div class="col-sm-12">
-                            <div class="form-group">
+                </div>
+            
+                <div class="col-sm-12">
+                        <div class="form-group">
                             <label class="col-form-label form-select-md">Status</label>
                             <select class="form-select" aria-label="Default select example" style="height:45px" id="status" name="status">
                             <option value="enforce" {{ old('status') === 'enforce' ? 'selected' : '' }}>Enforce</option>
                             <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                             </select>
                             @error('status')
-                                        <small class="text-danger">{{ $message }}</small>
+                                <small class="text-danger">{{ $message }}</small>
                             @enderror
 
-                            </div>
                         </div>
+                </div>
+
                     </div>
                     <div class="modal-footer justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary">Add Expense Policy</button>

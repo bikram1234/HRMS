@@ -117,7 +117,7 @@
 						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 							<span class="user-img"><img src="{{asset('assets/img/profiles/profile.jpg')}}" alt="">
 							<span class="status online"></span></span>
-							<span>SuperAdmin</span>
+							<span>{{auth()->user()->roles->pluck('name')->implode(', ')}}</span>
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="">My Profile</a>

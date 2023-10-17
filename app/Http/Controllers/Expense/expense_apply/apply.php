@@ -48,6 +48,8 @@ class apply  extends Controller
     // Add expense Application Request
     public function submitApplication(Request $request)
     {
+        try {
+        
         $validatedData = $request->validate([
             'expense_type_id' => 'required|exists:expense_types,id',
             'total_amount' => 'required|numeric|min:0',
@@ -74,8 +76,21 @@ class apply  extends Controller
         $validatedData['status'] = 'pending'; // Set status to pending
     
         ExpenseApplication::create($validatedData);
+            //display the message 
+            $notification = array(
+                'message' => 'Expense application submitted successfully.',
+                'alert-type' =>'success'
+            );
     
-        return redirect()->route('show-application-form')
-            ->with('success', 'Expense application submitted successfully.');
+        return redirect()->route('show-application-form')->with($notification);
+
+        } catch (\Exception $e) {
+            $errorMessage = 'An error occurred while saving the settlement';
+            \Log::error($errorMessage . ': ' . $e->getMessage());
+            \Log::error('Stack Trace: ' . $e->getTraceAsString());
+    
+            return response()->json(['error' => $errorMessage], 500);
+        }
     } 
+    
 }

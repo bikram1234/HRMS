@@ -1,122 +1,236 @@
 
+@extends('layouts.index')
+@section('content')
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
 
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('DSA Settlement Form') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-    <form method="POST" action="{{ route('calculate-dsa-settlement') }}" enctype="multipart/form-data">
-        @csrf
-        @if(session('success'))
-        <div class="bg-gray-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-            {{ session('success') }}
-        </div>
-        @endif
-        <div class="mb-4">
-            <label for="advance_number" class="block text-sm font-medium text-gray-700">Select Advance Number:</label>
-            <select name="advance_number" id="advance_number" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                @foreach($userAdvances as $advanceId => $advanceNo)
-                <option value="{{ $advanceNo }}" data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo }}</option>
-                @endforeach
-            </select>
-        </div>
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
 
-        <div id="dsa_settlement_fields_with_advance">
-            <div class="mb-4">
-                <label for="advance_amount_with_advance" class="block text-sm font-medium text-gray-700">Advance Amount:</label>
-                <input type="text" name="advance_amount_with_advance" id="advance_amount_with_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="total_amount_adjusted_with_advance" class="block text-sm font-medium text-gray-700">Total Amount Adjusted:</label>
-                <input type="text" name="total_amount_adjusted_with_advance" id="total_amount_adjusted_with_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="net_payable_amount_with_advance" class="block text-sm font-medium text-gray-700">Net Payable Amount:</label>
-                <input type="text" name="net_payable_amount_with_advance" id="net_payable_amount_with_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="balance_amount_with_advance" class="block text-sm font-medium text-gray-700">Balance Amount:</label>
-                <input type="text" name="balance_amount_with_advance" id="balance_amount_with_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="upload_file_with_advance" class="block text-sm font-medium text-gray-700">Upload PDF:</label>
-                <input type="file" name="upload_file_with_advance" id="upload_file_with_advance" accept=".pdf" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-        </div>
+.inactive-button:hover{
+    background-color:#f5a524;
+}
 
-        <div id="dsa_settlement_fields_without_advance" style="display: none;">
-            <div class="mb-4">
-                <label for="advance_amount_without_advance" class="block text-sm font-medium text-gray-700">Advance Amount:</label>
-                <input type="text" name="advance_amount_without_advance" id="advance_amount_without_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="total_amount_adjusted_without_advance" class="block text-sm font-medium text-gray-700">Total Amount Adjusted:</label>
-                <input type="text" name="total_amount_adjusted_without_advance" id="total_amount_adjusted_without_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="net_payable_amount_without_advance" class="block text-sm font-medium text-gray-700">Net Payable Amount:</label>
-                <input type="text" name="net_payable_amount_without_advance" id="net_payable_amount_without_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="balance_amount_without_advance" class="block text-sm font-medium text-gray-700">Balance Amount:</label>
-                <input type="text" name="balance_amount_without_advance" id="balance_amount_without_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-            <div class="mb-4">
-                <label for="upload_file_without_advance" class="block text-sm font-medium text-gray-700">Upload PDF:</label>
-                <input type="file" name="upload_file_without_advance" id="upload_file_without_advance" accept=".pdf" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
-        </div>
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
 
-        <table id="manual_settlement_container" class="manual-settlement">
-            <tr>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="manual_from_date[]" class="block text-sm font-medium text-gray-700">From Date:</label>
-                    <input type="date" name="manual_from_date[]" id="manual_from_date[]" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="manual_from_location[]" class="block text-sm font-medium text-gray-700">From Location:</label>
-                    <input type="text" name="manual_from_location[]" id="manual_from_location[]" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="manual_to_date[]" class="block text-sm font-medium text-gray-700">To Date:</label>
-                    <input type="date" name="manual_to_date[]" id="manual_to_date[]" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="manual_to_location[]" class="block text-sm font-medium text-gray-700">To Location:</label>
-                    <input type="text" name="manual_to_location[]" id="manual_to_location[]" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-          
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="ta" class="block text-sm font-medium text-gray-700">TA (Travel Allowance):</label>
-                    <input type="text" name="manual_ta[]" id="manual_ta" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="da" class="block text-sm font-medium text-gray-700">DA (Daily Allowance):</label>
-                    <input type="text" name="da" id="da" value="{{ $daAmountFromBackend }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" readonly>
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="total_amount" class="block text-sm font-medium text-gray-700">Total Amount:</label>
-                    <input type="number" name="manual_total_amount[]" id="total_amount_manual" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-                <td class="mb-4 dsa-settlement-no-advance">
-                    <label for="remark" class="block text-sm font-medium text-gray-700">Remarks:</label>
-                    <input type="text" name="manual_remark[]" id="remark" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                </td>
-            </tr>
-        </table>
-        <div class="mb-4">
-            <button type="button" id="addManualSettlementButton" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.1rem 0.5rem; border-radius: 0.25rem; cursor: pointer;">Add Manual Settlement</button>
-        </div>
-        <div class="mb-4">
-            <button type="submit" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.1rem 0.5rem; border-radius: 0.25rem; cursor: pointer;">Submit</button>
-        </div>
-    </form>   
-    <script>
+</style>
+
+<!-- Page Wrapper -->
+ <div class="page-wrapper">  
+    <!-- Page Content -->
+     <div class="content container-fluid"> 
+        <!-- Page Header -->
+         <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">DSA Claim/Settlement</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item active">Dashboard/Expense Management/DSA Claim Settlement</li>
+                    </ul>
+                </div>
+            </div>
+        </div> 
+       <!-- Add DSA Settlement -->
+					<div class="modal-content">
+						<div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <form method="POST" action="{{ route('calculate-dsa-settlement') }}" enctype="multipart/form-data">
+                                        @csrf
+                                        @if(session('success'))
+                                        <div class="bg-gray-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                                            {{ session('success') }}
+                                        </div>
+                                        @endif
+                                        <!-- DSA Settlement with advance -->
+                                            <div class="row" id="dsa_settlement_fields_with_advance">
+                                                <!-- <div class="col-sm-6 col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label">Employee Name<span class="text-danger">*</span></label>
+                                                        <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
+                                                        <option value="0">Laptop Rent</option>
+                                                        <option value="1">Rent</option>
+                                                        <option value="2">Sales & Promations Exp</option>
+                                                        <option value="3">SIFA Benefits</option>
+                                                        <option value="3">Other</option>
+                                                        <option value="3">Expense Fuel</option>
+                                                        <option value="3">Transfer Claim</option>
+                                                        </select>
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="advance_number">Select Advance No<span class="text-danger">*</span></label>
+                                                        <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px" name="advance_number" id="advance_number">
+                                                        @foreach($userAdvances as $advanceId => $advanceNo)
+                                                        <option value="{{ $advanceNo}}"  data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo}}</option>
+                                                        @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="advance_amount_with_advance">Advance Amount</label>
+                                                        <input class="form-control" type="number" name="advance_amount_with_advance" id="advance_amount_with_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="total_amount_adjusted_with_advance" >Total Amount Adjusted</label>
+                                                        <input class="form-control" type="number" name="total_amount_adjusted_with_advance" id="total_amount_adjusted_with_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="net_payable_amount_with_advance">Net Payable Amount</label>
+                                                        <input class="form-control" type="number"  name="net_payable_amount_with_advance" id="net_payable_amount_with_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="balance_amount_with_advance">Balance Amount</label>
+                                                        <input class="form-control" type="number"  name="balance_amount_with_advance" id="balance_amount_with_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="upload_file_with_advance">Upload PDF</label>
+                                                        <input  class="form-control" type="file" name="upload_file_with_advance" id="upload_file_with_advance" accept=".pdf">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <!-- DSA Settlement with advance -->
+
+                                    <!-- DSA Settlement without advance -->
+                                            <!-- <div class="row" id="dsa_settlement_fields_without_advance">
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label">Employee Name<span class="text-danger">*</span></label>
+                                                        <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
+                                                        <option value="0">Laptop Rent</option>
+                                                        <option value="1">Rent</option>
+                                                        <option value="2">Sales & Promations Exp</option>
+                                                        <option value="3">SIFA Benefits</option>
+                                                        <option value="3">Other</option>
+                                                        <option value="3">Expense Fuel</option>
+                                                        <option value="3">Transfer Claim</option>
+                                                        </select>
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="advance_amount_without_advance">Advance Amount</label>
+                                                        <input class="form-control" type="number" name="advance_amount_without_advance" id="advance_amount_without_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="total_amount_adjusted_without_advance" >Total Amount Adjusted</label>
+                                                        <input class="form-control" type="number" name="total_amount_adjusted_without_advance" id="total_amount_adjusted_without_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="net_payable_amount_without_advance">Net Payable Amount</label>
+                                                        <input class="form-control" type="number"  name="net_payable_amount_without_advance" id="net_payable_amount_without_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="balance_amount_without_advance">Balance Amount</label>
+                                                        <input class="form-control" type="number"  name="balance_amount_without_advance" id="balance_amount_without_advance">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="upload_file_without_advance">Upload PDF</label>
+                                                        <input  class="form-control" type="file" name="upload_file_without_advance" id="upload_file_without_advance" accept=".pdf">
+                                                    </div>
+                                                </div>
+                                         
+                                        </div>
+                                    <!-- DSA settlement without advance -->
+                                            <!-- Tabel -->
+                                                <div class="row mt-5">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <div class="table-responsive">
+                                                            <table id="manual_settlement_container" class="table table-hover table-white manual-settlement" >
+                                                                <tr>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label  for="manual_from_date[]">From Date</label>
+                                                                        <input class="form-control datetimepicker" type="date" style="min-width:150px" name="manual_from_date[]" id="manual_from_date[]" required>
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                    <label for="manual_from_location[]">From Location</label>
+                                                                        <input class="form-control" type="text" style="min-width:150px" name="manual_from_location[]" id="manual_from_location[]" required>
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="manual_to_date[]">To Date</label>
+              
+                                                                        <input class="form-control datetimepicker" type="date" style="min-width:150px" name="manual_to_date[]" id="manual_to_date[]" required  >
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="manual_to_location[]">To Location</label>
+                                                                        <input class="form-control" type="text" style="min-width:150px"  name="manual_to_location[]" id="manual_to_location[]" required>
+                                                                    </td>
+                                                                    
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="ta">TA (Travel Allowance)</label>
+                                                                        <input class="form-control" type="text" style="min-width:100px" name="manual_ta[]" id="manual_ta[]" required>
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="da">DA (Daily Allowance)</label>
+                                                                        <input class="form-control" style="width:100px" type="text" name="da" id="da" value="{{ $daAmountFromBackend }}">
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="total_amount">Total Amount</label>
+                                                                        <input class="form-control" style="width:150px" type="number" name="manual_total_amount[]" id="total_amount_manual" required>
+                                                                    </td>
+                                                                    <td class="dsa-settlement-no-advance">
+                                                                        <label for="remark">Remarks</label>
+                                                                        <input class="form-control"  style="width:120px" type="text" name="manual_remark[]" id="remark" required>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="mb-4">
+                                                                            <a type="button" class="text-success font-18" id="addManualSettlementButton" ><i class="fa fa-plus"></i></a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>					
+                                                    </div>
+                                                </div>
+                                            <!-- End of Table -->
+                                            <div class="modal-footer justify-content-start mt-3">
+                                                    <button type="submit" name="save" class="btn btn-primary">Submit</button>
+                                                    &nbsp;  &nbsp;   &nbsp;
+                                                    <button type="submit" name="cancel" class="btn btn-primary">Reset</button>
+                                            </div> 
+							        </form>
+						        </div>
+					        </div>
+                        </div>
+			        </div>
+            <!-- Add DSA Settlement --> 
+    </div>
+    <!-- /Page Content -->
+</div>
+<!-- Page Wrapper -->
+
+             
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
         document.addEventListener('DOMContentLoaded', function () {
             const advanceNumberSelect = document.getElementById('advance_number');
             const taInputs = document.querySelectorAll('input[name^="manual_ta"]');
@@ -328,13 +442,30 @@
         });
     });
 </script>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+<script>
+    $(document).ready(function() {
+    // Initialize datetimepicker
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Set the desired date format
+        // Add any other options you need
+    });
+});
+</script>
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
 
-    
+
+@endsection
 
 
 
-
-</x-app-layout>
-
-
-    

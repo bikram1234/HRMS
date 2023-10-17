@@ -34,12 +34,26 @@ use Illuminate\Support\Facades\Redirect;
 
 class advance_apply  extends Controller
 {
+    public function advance_details(){
+
+        $user = Auth::user();
+        // Fetch SalaryAdvance records for the current user
+        $salaryAdvances = SalaryAdvance::with('advanceType')->where('user_id', $user->id)->get();
+
+        // Fetch DsaAdvance records for the current user
+        $dsaAdvances = DsaAdvance::with('advanceType')->where('user_id', $user->id)->get();
+
+        // Combine SalaryAdvance and DsaAdvance records into a single collection
+        $advances = $salaryAdvances->concat($dsaAdvances);
+
+        return view('Advance.advance_apply.advanceloan_details', compact('advances'));
+
+    }
      //Get Advance Application form
      public function showAdvance()
      {
          $advance_type= Advance :: all();
          //dd($advance_type);
- 
          return view('Advance.advance_apply.advanceloan_form', compact('advance_type'));
      }
      // request for advance loan for DSA_Advance and Salary_Advance
@@ -48,7 +62,7 @@ class advance_apply  extends Controller
          // Get the authenticated user's ID
          $user_id = Auth::id();
  
-         DB::beginTransaction();
+         //DB::beginTransaction();
           //dd($request->all()); 
          try {
  
@@ -78,6 +92,8 @@ class advance_apply  extends Controller
                  $validatedData['advance_type_id'] = $advanceType->id;
                  $validatedData['user_id'] = $user_id;
                  $validatedData['advance_no'] = $advanceNo;
+                 $validatedData['status'] = 'pending'; // Set status to pending
+
  
                  DsaAdvance::create($validatedData);
  
@@ -104,14 +120,20 @@ class advance_apply  extends Controller
                  $validatedData['advance_type_id'] = $advanceType->id;
                  $validatedData['user_id'] = $user_id;
                  $validatedData['advance_no'] = $advanceNo;
+                 $validatedData['status'] = 'pending'; // Set status to pending
+
  
                  SalaryAdvance::create($validatedData);
              }
  
              DB::commit();
- 
-             return redirect()->route('show-advance-loan')
-                 ->with('success', 'Advance added successfully');
+              //display the message 
+            $notification = array(
+                'message' => 'Advance added successfully',
+                'alert-type' =>'success'
+            );
+             return redirect()->route('show-advance-details')
+                 ->with($notification);
  
          } catch (\Exception $e) {
              \Log::error('Error:', ['message' => $e->getMessage()]);

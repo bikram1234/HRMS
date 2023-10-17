@@ -19,4 +19,8 @@ class SalaryAdvance extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function advanceType()
+    {
+        return $this->belongsTo(Advance::class, 'advance_type_id');
+    }
 }

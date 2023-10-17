@@ -1,96 +1,129 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('DSA Settlement Form') }}
-        </h2>
-    </x-slot>
 
-    @foreach ($data as $entry)
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <h2 class="text-lg font-semibold mb-4">DSA Settlement ({{ $entry['type'] }}):</h2>
+@extends('layouts.index')
+@section('content')
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-white">
-                            <thead class="table-light">
-                                <tr class="table-light">
-                                    <th class="table-light">Advance Amount</th>
-                                    <th class="table-light">Total Amount Adjusted</th>
-                                    <th class="table-light">Net Payable Amount</th>
-                                    <th class="table-light">Balance Amount</th>
-                                    <th class="table-light">Status</th>
-                                    <th class="table-light">Remark</th>
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
 
+.inactive-button:hover{
+    background-color:#f5a524;
+}
 
-                                    <!-- Add more table headers for DsaSettlement details as needed -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="table-light">
-                                    <td class="table-light">{{ $entry['dsaSettlement']->advance_amount }}</td>
-                                    <td class="table-light">{{ $entry['dsaSettlement']->total_amount_adjusted }}</td>
-                                    <td class="table-light">{{ $entry['dsaSettlement']->net_payable_amount }}</td>
-                                    <td class="table-light">{{ $entry['dsaSettlement']->balance_amount }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap" style="text-color: {{ $entry['dsaSettlement']->status === 'pending' ? 'orange' : ($entry['dsaSettlement']->status === 'approved' ? 'green' : 'red') }}; color: {{ $entry['dsaSettlement']->status === 'pending' ? 'gray' : ($entry['dsaSettlement']->status === 'approved' ? 'green' : 'red') }};">
-                                        {{ $entry['dsaSettlement']->status }}
-                                    </td>
-                                    <td class="table-light">{{ $entry['dsaSettlement']->remark }}</td>
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
 
-                                    
-                                    
-                                    
-                                    
-                                   
-                                    <!-- Add more table cells for DsaSettlement details as needed -->
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+</style>
 
-                    @if ($entry['dsaManualSettlements']->isNotEmpty())
-                    <h2 class="text-lg font-semibold">Manual Settlements:</h2>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-white">
-                            <thead class="table-light">
-                                <tr class="table-light">
-                                    <th class="table-light">From Date</th>
-                                    <th class="table-light">From Location</th>
-                                    <th class="table-light">To Date</th>
-                                    <th class="table-light">To Location</th>
-                                    <th class="table-light">Total Days</th>
-                                    <th class="table-light">DA</th>
-                                    <th class="table-light">TA</th>
-                                    <th class="table-light">Total Amount</th>
-                                    <th class="table-light">Remark</th>
-                                    <!-- Add more table headers for DsaManualSettlement details as needed -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($entry['dsaManualSettlements'] as $manualSettlement)
-                                <tr class="table-light">
-                                    <td class="table-light">{{ $manualSettlement->from_date }}</td>
-                                    <td class="table-light">{{ $manualSettlement->from_location }}</td>
-                                    <td class="table-light">{{ $manualSettlement->to_date }}</td>
-                                    <td class="table-light">{{ $manualSettlement->to_location }}</td>
-                                    <td class="table-light">{{ $manualSettlement->total_days }}</td>
-                                    <td class="table-light">{{ $manualSettlement->da }}</td>
-                                    <td class="table-light">{{ $manualSettlement->ta }}</td>
-                                    <td class="table-light">{{ $manualSettlement->total_amount }}</td>
-                                    <td class="table-light">{{ $manualSettlement->remark }}</td>
-                                    <!-- Add more table cells for DsaManualSettlement details as needed -->
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    @else
-                    <p class="text-lg font-semibold">No Manual Settlements found for this DSA.</p>
-                    @endif
+<!-- Page Wrapper -->
+<div class="page-wrapper">      
+    <!-- Page Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">DSA Claim/Settlement</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item active">Dashboard/Expense Management/DSA Claim/DSA Claim List</li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-    @endforeach
-</x-app-layout>
+        <!-- /Page Header -->     
+        <div class="row mt-4">
+            <div class="col-md-12 stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <div class="container table-responsive">  
+                                <table id="example" class="table table-striped custom-table" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px;">
+                                            <label>
+                                                <input type="checkbox" id="selectAllCheckbox">
+                                                <span>SI</span>
+                                            </label>
+                                            </th>
+                                            <th>Employee</th>
+                                            <th>Creation Date</th>
+                                            <th>Total Payable Amount</th>
+                                            <th>Adv.Balance Amt Date</th>
+                                            <th>Total Amt</th>
+                                            <th>Status</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($dsa as $key=> $dsa)
+                                        <tr>
+                                            <td style="width: 30px;">
+                                                <label>
+                                                    <input type="checkbox" id="selectAllCheckbox">
+                                                    <span>{{ $key + 1 }}</span>
+                                                </label>
+                                            </td>
+                                            <td>{{ $dsa->user->name}}</td>
+                                            <td>{{ $dsa->created_at}}</td>
+                                            <td>{{ $dsa->total_amount_adjusted }}</td>
+                                            <td>{{ $dsa->net_payable_amount }}</td>
+                                            <td>{{ $dsa->balance_amount }}</td>
+                                            <td>
+                                            @if ($dsa->status === 'pending')
+                                                <button class="btn btn-warning">Pending</button>
+                                            @elseif ($dsa->status === 'approved')
+                                                <button class="btn btn-success">Approved</button>
+                                            @elseif ($dsa->status === 'rejected')
+                                                <button class="btn btn-danger">Rejected</button>
+                                            @endif
+                                            </td>
+                                            <td>{{ $dsa->remark}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /Page Content -->
+</div><!-- Page Wrapper -->     
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+<script>
+    $(document).ready(function() {
+    // Initialize datetimepicker
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Set the desired date format
+        // Add any other options you need
+    });
+});
+</script>
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
+
+
+@endsection

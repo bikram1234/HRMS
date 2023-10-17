@@ -34,10 +34,17 @@ use Illuminate\Support\Facades\Redirect;
 
 class dsa_settlement  extends Controller
 {
+    public function getdsa(){
+        $dsa = DSASettlement :: all();
+
+        return view('Expense.dsa_claim.dsalist', compact('dsa'));
+    }
       //Get DsaSettlment Form
 public function dsaSettlementForm() {
-    
+
+
     $user = Auth::user();
+    $dsa = DsaSettlement:: where('user_id', $user)->get();
     $userAdvances = $user->dsaAdvances->pluck('advance_no', 'id');
     $advanceAmounts = $user->dsaAdvances->pluck('amount', 'id');
     //dd($advanceAmounts);
@@ -75,6 +82,7 @@ public function dsaSettlementForm() {
         'userAdvances' => $userAdvances,
         'advanceAmounts' => $advanceAmounts,
         'daAmountFromBackend' => $daAmountFromBackend,
+        'dsa'=>$dsa,
     ]);
     }
     public function calculateDsaSettlement(Request $request)
@@ -139,7 +147,7 @@ public function dsaSettlementForm() {
                     empty($manualFromLocation) || empty($manualToDate) ||
                     empty($manualToLocation) || empty($manualTotalAmount)
                 ) {
-                    return redirect()->route('dsa-settlement-form')
+                    return redirect()->route('dsa-data')
                         ->with('success', 'Invalid or empty manual settlement data');
                 }
     
@@ -214,9 +222,12 @@ public function dsaSettlementForm() {
                 if ($request->hasFile('upload_file')) {
                     // Handle file upload here if needed
                 }
-                
-                return redirect()->route('dsa-settlement-form')
-                    ->with('success', 'DSA Settlement added successfully');
+                 //display the message 
+            $notification = array(
+                'message' => 'DSA Settlement Added successfully.',
+                'alert-type' =>'success'
+            );
+                return redirect()->route('dsa-data')->with($notification);
                 
             }
             if ($selectedAdvance && $advanceNumber) {
@@ -254,8 +265,12 @@ public function dsaSettlementForm() {
                 // Insert DsaManualSettlement records and associate them with DsaSettlement
                 $dsaSettlement->manualSettlements()->create($dsaManualSettlementAttributes);
             
-                return redirect()->route('dsa-settlement-form')
-                    ->with('success', 'DSA Settlement added successfully');
+                 //display the message 
+            $notification = array(
+                'message' => 'DSA Settlement Added Successfully',
+                'alert-type' =>'success'
+            );
+                return redirect()->route('dsa-data')->with($notification);
             }
             
             
@@ -298,7 +313,7 @@ public function dsaSettlementForm() {
             ];
         }
     
-        return view('Expense.dsa_claim.dsalist', [
+        return view('Expense.dsa_claim.dsa_settlement_form', [
             'data' => $data,
         ]);
     }

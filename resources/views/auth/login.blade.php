@@ -24,7 +24,7 @@
 								<div>
 								<div class="form-group position-relative">
 									<input class="form-control" type="password" id="password" name="password" placeholder="Password">
-									<i class="bi bi-eye-slash-fill eye-icon"></i>
+									<!-- <i class="bi bi-eye-slash-fill eye-icon"></i> -->
 									@error('password')<span class="text-danger">{{ $message }}</span>
                        				 @enderror
 								</div>

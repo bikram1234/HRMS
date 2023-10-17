@@ -31,5 +31,9 @@ class DsaAdvance extends Model
     {
         return $this->hasMany(DsaManualSettlement::class, 'advance_no', 'advance_no');
     }
+    public function advanceType()
+    {
+        return $this->belongsTo(Advance::class, 'advance_type_id');
+    }
 }
 

@@ -34,7 +34,7 @@ class RoleController extends Controller
             abort(403, 'Unauthorized action.');
         }
         
-        return view('settings.role.roleAdd');    
+        return view('settings.role.role');    
     }
 
     /**
@@ -47,7 +47,12 @@ class RoleController extends Controller
         }
 
         Role::create($request->validated());
-        return redirect()->back()->with('success', 'Role added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Role Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
     /**
      * Display the specified resource.
