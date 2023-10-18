@@ -11,7 +11,7 @@ class level extends Model
     protected $fillable = [
         'level',
         'value',
-        'employee_id',
+        'user_id',
         'start_date',
         'end_date',
         'status',
@@ -19,7 +19,7 @@ class level extends Model
     ];
     public function employeeName()
     {
-        return $this->belongsTo(User::class, 'employee_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function hierarchy()

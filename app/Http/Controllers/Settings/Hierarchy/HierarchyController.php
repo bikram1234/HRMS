@@ -53,7 +53,7 @@ class HierarchyController extends Controller
             $levelData = [
                 'level' => $levelRequest->input('level'),
                 'value' => $levelRequest->input('value'),
-                'employee_id' => $levelRequest->input('employee_id'),
+                'user_id' => $levelRequest->input('user_id'),
                 'start_date' => $levelRequest->input('start_date'),
                 'end_date' => $levelRequest->input('end_date'),
                 'status' => $levelRequest->input('status'),
@@ -61,8 +61,12 @@ class HierarchyController extends Controller
             ];
 
             $level = Level::create($levelData);
-
-            return redirect()->back()->with('success', 'Hierarchy added successfully.');
+                //display the message 
+            $notification = array(
+                'message' => 'Hierarchy Added successfully',
+                'alert-type' =>'success'
+            );
+            return redirect()->back()->with($notification);
         }
 
         public function storeLevel($hierarchyId, StoreLevelRequest $levelRequest)
@@ -74,7 +78,7 @@ class HierarchyController extends Controller
             $levelData = [
                 'level' => $levelRequest->input('level'),
                 'value' => $levelRequest->input('value'),
-                'employee_id' => $levelRequest->input('employee_id'),
+                'user_id' => $levelRequest->input('user_id'),
                 'start_date' => $levelRequest->input('start_date'),
                 'end_date' => $levelRequest->input('end_date'),
                 'status' => $levelRequest->input('status'),
@@ -82,8 +86,13 @@ class HierarchyController extends Controller
             ];
 
             $level = Level::create($levelData);
+               //display the message 
+               $notification = array(
+                'message' => 'Level Added successfully to the hierarchy',
+                'alert-type' =>'success'
+            );
 
-            return redirect()->back()->with('success', 'Level added successfully to the hierarchy.');
+            return redirect()->back()->with($notification);
 }
 
 

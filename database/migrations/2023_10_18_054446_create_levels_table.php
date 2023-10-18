@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreign('hierarchy_id')->references('id')->on('hierarchies')->onDelete('cascade');
             $table->string('level');
             $table->string('value');
-            $table->foreignId('employee_id')->nullable()->constrained('users');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('status');
