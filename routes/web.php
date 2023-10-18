@@ -13,7 +13,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Settings\RolesAndPermission\PermissionController;
 use App\Http\Controllers\Settings\Hierarchy\HierarchyController;
 use App\Http\Controllers\Settings\Approval\ApprovalRuleController;
+use App\Http\Controllers\Settings\Approval\AdvanceApprovalRuleController;
 use App\Http\Controllers\Settings\Approval\ApprovalConditionController;
+use App\Http\Controllers\Settings\Approval\AdvanceApprovalConditionController;
 use App\Http\Controllers\Settings\Formula\FormulaController;
 use App\Http\Controllers\Leave\Type\LeavetypeController;
 use App\Http\Controllers\Leave\Policy\LeavePolicyController;
@@ -37,6 +39,7 @@ use App\Http\Controllers\Expense\transfer_claim\transfer_claim;
 use App\Http\Controllers\Expense\transfer_claim_approval\transfer_claim_approval_Controller;
 use App\Http\Controllers\Expense\requisition\requisitionController;
 use App\Http\Controllers\WorkStructure\basic_pay\basic_payController;
+use App\Http\Controllers\WorkStructure\Add_Vehicle\add_vehicle_Controller;
 
 
 
@@ -135,11 +138,23 @@ Route::namespace('Settings')->group(function () {
     Route::patch('/approval/{approvalRule}', [ApprovalRuleController::class, 'update'])->name('approval.update');
     Route::get('/fetch-types/{for}', [ApprovalRuleController::class, 'fetchTypes'])->name('fetch-types');
 
+    Route::get('/advance-approvalrule', [AdvanceApprovalRuleController::class, 'index'])->name('advance-approvalrule.index');
+    Route::get('/advance-approvalAdd', [AdvanceApprovalRuleController::class, 'create'])->name('advance-approval.create');
+    Route::post('/advance-approval', [AdvanceApprovalRuleController::class, 'store'])->name('advance-approval.store');
+    Route::get('/advance-approval/{approvalRule}', [AdvanceApprovalRuleController::class, 'show'])->name('advance-approval.show');
+    Route::patch('/advance-approval/{approvalRule}', [AdvanceApprovalRuleController::class, 'update'])->name('advance-approval.update');
+    Route::get('/advance-fetch-types/{for}', [AdvanceApprovalRuleController::class, 'fetchTypes'])->name('advance-fetch-types');
+
 
     Route::get('/condition/{approval_rule_id}', [ApprovalConditionController::class, 'create'])->name('condition.create');
     Route::post('/condition', [ApprovalConditionController::class, 'store'])->name('condition.store');
     Route::get('/approval_condition/{approval_condition}/edit', [ApprovalConditionController::class, 'edit'])->name('approval_condition.edit');
     Route::patch('/condition/{approval_condition}', [ApprovalConditionController::class, 'update'])->name('condition.update');
+
+    Route::get('/advanceCondition/{approval_rule_id}', [AdvanceApprovalConditionController::class, 'create'])->name('advance-condition.create');
+    Route::post('/advance-condition', [AdvanceApprovalConditionController::class, 'store'])->name('advance-condition.store');
+    Route::get('/advance-approval_condition/{approval_condition}/edit', [AdvanceApprovalConditionController::class, 'edit'])->name('advance-approval_condition.edit');
+    Route::patch('/advance-condition/{approval_condition}', [AdvanceApprovalConditionController::class, 'update'])->name('advance-condition.update');
 
     Route::get('/formula/create-for-approval-condition/{approvalConditionId}', [FormulaController::class, 'createForApprovalCondition'])
     ->name('formula.createForApprovalCondition');
@@ -181,6 +196,14 @@ Route::namespace('Leave')->group(function () {
 
     
 });
+
+//Add Vehicle Type Route
+Route::get('/vehicles', [add_vehicle_Controller::class, 'index'])->name('vehicles.index');
+Route::get('/vehicles/create', [add_vehicle_Controller::class, 'create'])->name('vehicles.create');
+Route::post('/vehicles', [add_vehicle_Controller::class, 'store'])->name('vehicles.store');
+Route::get('/vehicles/{vehicle}/edit', [add_vehicle_Controller::class, 'edit'])->name('vehicles.edit');
+Route::put('/vehicles/{vehicle}', [add_vehicle_Controller::class, 'update'])->name('vehicles.update');
+
 
 
 //DSA Route
@@ -244,6 +267,8 @@ Route::post('/apply-expense', [apply::class, 'submitApplication'])
 
 //Expense_Approval Route
 Route::get('/expense-approval', [expense_approval_Controller::class,'show_pending_expense_application'])->name('expense.approval.index');
+Route::post('/expense-approval/{id}', [expense_approval_Controller::class, 'approveexpense'])->name('expense.approve');
+
 
 
 // Add_Advance_Type
@@ -277,6 +302,8 @@ Route::get('/retrieve-dsa-data', [dsa_settlement::class,'DSAretrieveData'])->nam
 Route::get('/dsa-approval', [dsa_approval_Controller::class,'show_dsa_approval_application'])->name('dsa.approval.index');
 Route::get('/dsa-settlement/{id}', [dsa_approval_Controller::class, 'view_DsaSettlement_detail'])
     ->name('dsa-settlement.view'); 
+ Route::post('/dsa-approval/{id}', [dsa_approval_Controller::class, 'approvedsa'])->name('dsa.approve');
+
 
 
 
@@ -305,6 +332,8 @@ Route::delete('fuels/{fuel}', [fuel_claim::class, 'destroy'])->name('fuels.destr
 //Fuel Approval Route
 Route::get('/fuel-approval', [fuel_approval_Controller::class, 'fuel_approval'])
     ->name('fuel.approval.index');
+Route::post('/fuel-approval/{id}', [fuel_approval_Controller::class, 'approvefuel'])->name('fuel.approve');
+
 
 
 
@@ -332,6 +361,8 @@ Route::get('products/{product}', [transfer_claim::class, 'show'])->name('product
 //transfer Approval Route
 Route::get('/transfer-approval', [transfer_claim_approval_Controller::class, 'transfer_claim_approval_show'])
     ->name('transfer.approval.index');
+Route::post('/transfer-approval/{id}', [transfer_claim_approval_Controller::class, 'approvetransfer'])->name('transfer.approve');
+
 
 
 

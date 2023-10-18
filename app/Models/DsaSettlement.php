@@ -18,9 +18,28 @@ class DsaSettlement extends Model
         'level2',
         'level3',
         'status',
-        'remark'
+        'remark',
+        'creation_date',
+        'expensetype_id'
 
     ];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->creation_date = now(); // Set the 'creation_date' attribute to the current date
+
+            // Fetch the expense type and set the 'expensetype_id' attribute
+            $expenseType = ExpenseType::where('name', 'DSA Settlement')->first();
+            if ($expenseType) {
+                $model->expensetype_id = $expenseType->id;
+            } else {
+                // Handle the case where the expense type does not exist
+                echo "Expense type not found.";
+            }
+        });
+    }
 
     public function user()
     {

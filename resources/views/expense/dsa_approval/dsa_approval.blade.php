@@ -1,4 +1,4 @@
-@extends('layout') <!-- Extend your layout file -->
+{{-- @extends('layout') <!-- Extend your layout file -->
 
 @section('content')
 <div class="container">
@@ -66,4 +66,84 @@
         });
     });
 </script>
+@endsection --}}
+
+
+@extends('layout')  <!-- Extend your layout file -->
+
+@section('content')
+<div class="container">
+@if(session('success'))
+            <div id="success-message" class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+              
+    @if(session('error'))
+            <div id="error-message" class="alert alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Total Amount Adjusted</th>
+                <th>Net Payable Amount</th>
+                <th>Balance Amount</th>
+                <th>Status</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($expenseApplications as $expenseApplication)
+                <tr>
+                    <td>{{ $expenseApplication->user->name }}</td>
+                    <td>{{ $expenseApplication->total_amount_adjusted }}</td>
+                    <td>{{ $expenseApplication->net_payable_amount }}</td>
+                    <td>{{ $expenseApplication->balance_amount }}</td>
+                    <td>{{ $expenseApplication->status }}</td>
+
+
+
+                    <td>
+                        <a type="button"  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#acceptleave{{ $expenseApplication->id}}">Accept</a>
+                        <a href="" class="btn btn-primary btn-sm">View</a> 
+                        </td>
+                <div class="modal" id="acceptleave{{ $expenseApplication->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <span class="modal-title">Leave Approval</span>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                    
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('dsa.approve', ['id' => $expenseApplication->id]) }}">
+                                @csrf
+                            <h4>Are you sure you want to approve this leave?</h4>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Approve Now</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                               
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+                        
+                    <!-- Add more columns as needed -->
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+</div>
+
 @endsection

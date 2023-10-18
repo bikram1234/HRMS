@@ -54,6 +54,12 @@
                                         @endcan
                                         @can('read: grade')
                                         <a class="dropdown-item" href="{{ route('grade.index') }}">{{ __('Grade') }}</a>
+                                        @endcan   
+                                        @can('read: grade')
+                                        <a class="dropdown-item" href="{{ route('vehicles.index') }}">{{ __('Add Vehicle') }}</a>
+                                        @endcan    
+                                        @can('read: grade')
+                                        <a class="dropdown-item" href="{{ route('basic_pay.index') }}">{{ __('Basic Pay') }}</a>
                                         @endcan                                  
                                     </div>
                             </div>
@@ -65,6 +71,8 @@
                                         <a class="dropdown-item" href="{{ route('permission.index') }}">{{ __('Permission') }}</a>
                                         <a class="dropdown-item" href="{{ route('hierarchy.index') }}">{{ __('Hierarchy') }}</a>
                                         <a class="dropdown-item" href="{{ route('approval.index') }}">{{ __('ApprovalRules') }}</a>
+                                        <a class="dropdown-item" href="{{ route('advance-approvalrule.index') }}">{{ __('AdvanceApprovalRules') }}</a>
+
                                     </div>
                             </div>
                                 <li class="nav-item">
@@ -98,6 +106,7 @@
                                         <a class="dropdown-item" href="{{ route('transfer.approval.index') }}">{{ __('Transfer Claim Approval') }}</a>
                                         <a class="dropdown-item" href="{{ route('requisitions.index') }}">{{ __('Requisition') }}</a>
                                         <a class="dropdown-item" href="{{ route('basic_pay.index') }}">{{ __('Basic Pay') }}</a>
+
                                     </div>
                             </div>
                              <div class="dropdown show">

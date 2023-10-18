@@ -31,6 +31,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\AdvanceapprovalRule;
+use App\Models\Advanceapproval_condition;
+use App\Models\level;
+use App\Mail\ExpenseApplicationMail;
 
 class advance_apply  extends Controller
 {
@@ -82,7 +86,7 @@ class advance_apply  extends Controller
                      'upload_file' => 'nullable|file|mimes:pdf|max:2048', // Max size of 2 MB
                  ]);
  
-                 \Log::info('Processing DSA Advance', ['data' => $validatedData]);
+                //  \Log::info('Processing DSA Advance', ['data' => $validatedData]);
  
                  // Generate an advance number based on the current date and time
                  $currentDateTime = now();
@@ -93,6 +97,49 @@ class advance_apply  extends Controller
                  $validatedData['user_id'] = $user_id;
                  $validatedData['advance_no'] = $advanceNo;
                  $validatedData['status'] = 'pending'; // Set status to pending
+
+                 $advance_id = $request->input('advance_type');
+
+                 $sectionId = auth()->user()->section_id;
+                 $sectionHead = User::where('section_id', $sectionId)
+                 ->whereHas('designation', function($query) {
+                     $query->where('name', 'Section Head');
+                 })->first();
+
+                 $departmentId = auth()->user()->department_id;
+                 $departmentHead = User::where('department_id', $departmentId)
+                 ->whereHas('designation', function ($query) {
+                     $query->where('name', 'Department Head');
+                 })
+                 ->first();
+
+                 $approvalRuleId = AdvanceapprovalRule::where('type_id', $advance_id)->value('id');
+                 $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                 $hierarchy_id = $approvalType->hierarchy_id;
+                 $currentUser = auth()->user();
+
+                 if ($approvalType->approval_type == "Hierarchy") {
+                    // Fetch the record from the levels table based on the $hierarchy_id
+                    $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+        
+                    if ($levelRecord) {
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+        
+                        // Determine the recipient based on the levelValue
+                        $recipient = '';
+        
+                        // Check the levelValue and set the recipient accordingly
+                        if ($levelValue === "SH") {
+                            // Set the recipient to the section head's email address or user ID
+                            $recipient = $sectionHead->email; // Replace with the actual field name
+                        }
+                        $approval = $sectionHead;
+        
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                    }
+                }
+
 
  
                  DsaAdvance::create($validatedData);
@@ -110,7 +157,7 @@ class advance_apply  extends Controller
                      'upload_file' => 'nullable|file|mimes:pdf|max:2048', // Max size of 2 MB
                  ]);
  
-                 \Log::info('Processing Salary Advance', ['data' => $validatedData]);
+                //  \Log::info('Processing Salary Advance', ['data' => $validatedData]);
  
                  // Generate an advance number based on the current date and time
                  $currentDateTime = now();
@@ -122,6 +169,48 @@ class advance_apply  extends Controller
                  $validatedData['advance_no'] = $advanceNo;
                  $validatedData['status'] = 'pending'; // Set status to pending
 
+
+                 $advance_id = $request->input('advance_type');
+
+                 $sectionId = auth()->user()->section_id;
+                 $sectionHead = User::where('section_id', $sectionId)
+                 ->whereHas('designation', function($query) {
+                     $query->where('name', 'Section Head');
+                 })->first();
+
+                 $departmentId = auth()->user()->department_id;
+                 $departmentHead = User::where('department_id', $departmentId)
+                 ->whereHas('designation', function ($query) {
+                     $query->where('name', 'Department Head');
+                 })
+                 ->first();
+
+                 $approvalRuleId = AdvanceapprovalRule::where('type_id', $advance_id)->value('id');
+                 $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                 $hierarchy_id = $approvalType->hierarchy_id;
+                 $currentUser = auth()->user();
+
+                 if ($approvalType->approval_type == "Hierarchy") {
+                    // Fetch the record from the levels table based on the $hierarchy_id
+                    $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+        
+                    if ($levelRecord) {
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+        
+                        // Determine the recipient based on the levelValue
+                        $recipient = '';
+        
+                        // Check the levelValue and set the recipient accordingly
+                        if ($levelValue === "SH") {
+                            // Set the recipient to the section head's email address or user ID
+                            $recipient = $sectionHead->email; // Replace with the actual field name
+                        }
+                        $approval = $sectionHead;
+        
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                    }
+                }
  
                  SalaryAdvance::create($validatedData);
              }

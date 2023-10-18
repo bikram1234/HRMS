@@ -31,6 +31,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\approvalRule;
+use App\Models\approval_condition;
+use App\Models\level;
+use App\Mail\LeaveApplicationMail;
+use App\Mail\ExpenseApplicationMail;
+
+
+
 
 class apply  extends Controller
 {
@@ -150,6 +158,54 @@ class apply  extends Controller
         $validatedData['user_id'] = Auth::id(); // Assign the current user's ID
         $validatedData['application_date'] = now(); // Current date
         $validatedData['status'] = 'pending'; // Set status to pending
+
+        $expense_id = $request->input('expense_type_id');
+
+        $sectionId = auth()->user()->section_id;
+        $sectionHead = User::where('section_id', $sectionId)
+        ->whereHas('designation', function($query) {
+            $query->where('name', 'Section Head');
+        })->first();
+
+        $departmentId = auth()->user()->department_id;
+        $departmentHead = User::where('department_id', $departmentId)
+        ->whereHas('designation', function ($query) {
+            $query->where('name', 'Department Head');
+        })
+        ->first();
+
+        $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
+        $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+        $hierarchy_id = $approvalType->hierarchy_id;
+        $currentUser = auth()->user();
+
+
+        
+        if ($approvalType->approval_type == "Hierarchy") {
+            // Fetch the record from the levels table based on the $hierarchy_id
+            $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+
+            if ($levelRecord) {
+                // Access the 'value' field from the level record
+                $levelValue = $levelRecord->value;
+
+                // Determine the recipient based on the levelValue
+                $recipient = '';
+
+                // Check the levelValue and set the recipient accordingly
+                if ($levelValue === "SH") {
+                    // Set the recipient to the section head's email address or user ID
+                    $recipient = $sectionHead->email; // Replace with the actual field name
+                }
+                $approval = $sectionHead;
+
+                Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+            }
+        
+    }
+
+
+
     
         ExpenseApplication::create($validatedData);
     

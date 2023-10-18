@@ -15,6 +15,11 @@
         </div>
     </div>
 </div>
+@if (session('success'))
+<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+    {{ session('success') }}
+</div>
+@endif
    
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -53,26 +58,21 @@
         </div>
         <div class="col-md-6 mt-3">
             <div class="form-group">
-                <strong>Vehicle No</strong>
-                <input type="text" name="vehicle_no" class="form-control" placeholder="Vehicle No">
+                <strong>Vehicle Type</strong>
+                <select class="form-select" name="vehicle_type" id="vehicleTypeSelect" onchange="fetchVehicleData(this.value)">
+                    <option value="" selected>Select a vehicle type</option>
+                    @foreach($vehicle->unique('vehicle_type') as $v)
+                        <option value="{{ $v->vehicle_type }}">{{ $v->vehicle_type }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="col-md-6 mt-3">
             <div class="form-group">
-                <strong>Vehicle Type</strong>
-                <select class="form-select" name="vehicle_type" id="vehicleTypeSelect">
-                    <option value="" selected>Select a vehicle type</option>
-                    <option value="Creta">Creta</option>
-                    <option value="Maruti Ecco">Maruti Ecco</option>
-                    <option value="Bolero">Bolero</option>
-                    <option value="Santafee">Santafee</option>
-                    <option value="Isuzu D Max">Isuzu D Max</option>
-                    <option value="Isuzu S Cabin">Isuzu S Cabin</option>
-                    <option value="Motorbikes">Motorbikes</option>
-                    <option value="i-20 Active">i-20 Active</option>
-                    <option value="COW">COW</option>
-                    <option value="MUX">MUX</option>
-                    <option value="TUV">TUV</option>
+                <strong>Vehicle Number</strong>
+                <select class="form-select" name="vehicle_no" id="vehicleNumberSelect" onchange="fetchVehicleMileage(this.value)">
+                    <option value="" selected>Select a vehicle number</option>
+                    <!-- Vehicle numbers for the selected type will be dynamically loaded here -->
                 </select>
             </div>
         </div>
@@ -112,6 +112,14 @@
                 <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount" readonly>
             </div>
         </div>
+         <!-- Upload Attachment -->
+         <div class="col-md-6 mt-3">
+            <label for="attachment" class="block text-gray-700 text-sm font-bold mb-2">
+                {{ __('Upload Attachment (Max 2MB)') }}
+            </label>
+            <input type="file" name="attachment" id="attachment"
+                class="form-input rounded-md shadow-sm mt-1 block w-full">
+        </div>
     </div>
    
     <div class="row mt-5 justify-content-center">
@@ -121,21 +129,6 @@
     </div>
 
     <script>
-    const mileageValues = {
-        Creta: 12,
-        "Maruti Ecco": 8.5,
-        Bolero: 8,
-        Santafee: 11,
-        "Isuzu D Max": 8.5,
-        "Isuzu S Cabin": 8.5,
-        Motorbikes: 28,
-        "i-20 Active": 4,
-        COW: 4,
-        MUX: 13,
-        TUV: 19,
-        // Add more vehicle-mileage pairs here
-    };
-
     const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
     const vehicleMileageInput = document.getElementById('vehicleMileage');
     const initialKmInput = document.getElementById('initial_km');
@@ -190,4 +183,58 @@
     calculateMileage();
 </script>
 
+<script>
+    function fetchVehicleData(selectedType) {
+        const vehicleNumbersSelect = document.getElementById('vehicleNumberSelect');
+        const vehicleMileageInput = document.getElementById('vehicleMileage');
+        
+        // Clear previous options
+        vehicleNumbersSelect.innerHTML = '<option value="" selected>Select a vehicle number</option>';
+        vehicleMileageInput.value = ''; // Clear mileage value
+
+        // Fetch vehicles based on the selected type
+        const vehicles = @json($vehicle);
+
+        vehicles.forEach(vehicle => {
+            if (vehicle.vehicle_type === selectedType) {
+                const option = document.createElement('option');
+                option.value = vehicle.vehicle_number;
+                option.text = vehicle.vehicle_number;
+                vehicleNumbersSelect.appendChild(option);
+            }
+        });
+    }
+
+    function fetchVehicleMileage(selectedNumber) {
+        const selectedType = document.getElementById('vehicleTypeSelect').value;
+        const vehicles = @json($vehicle);
+
+        vehicles.forEach(vehicle => {
+            if (vehicle.vehicle_type === selectedType && vehicle.vehicle_number === selectedNumber) {
+                document.getElementById('vehicleMileage').value = vehicle.vehicle_mileage;
+            }
+        });
+    }
+</script>
+
 </x-app-layout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -93,6 +93,7 @@ class AdminController extends Controller
     //  Add User Method
     public function storeUser(Request $request)
     {
+        try{
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -101,6 +102,7 @@ class AdminController extends Controller
             'section' => ['required', 'exists:sections,id'], // Validate section
             'designation' => ['required', 'exists:designations,id'],
             'grade' => ['required', 'exists:grades,id'],
+
         ],
         [
             'employee_id.unique' => 'The employee ID must be unique.',
@@ -120,6 +122,9 @@ class AdminController extends Controller
             'section' => $request->section,
             'designation' => $request->designation,
             'grade' => $request->grade,
+            'gender' => $request->gender,
+
+
         ]);
     
         $role = Role::findOrFail($request->role); // Get the selected role by ID
@@ -128,6 +133,14 @@ class AdminController extends Controller
         Mail::to($user->email)->send(new UserCreatedMail($user, $randomPassword));
     
         return redirect()->route('users.create')->with('success', 'User created successfully.');
+
+    } catch (\Exception $e) {
+        $errorMessage = 'An error occurred while saving the User';
+        \Log::error($errorMessage . ': ' . $e->getMessage());
+        \Log::error('Stack Trace: ' . $e->getTraceAsString());
+
+        return response()->json(['error' => $errorMessage], 500);
+    }
     }
     
 

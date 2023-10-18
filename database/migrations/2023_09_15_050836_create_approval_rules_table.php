@@ -20,12 +20,17 @@ return new class extends Migration
             $table->boolean('status');
             $table->timestamps();
 
+            // $table->foreign('type_id')
+            // ->references('id')
+            // ->on('leavetypes')
+            // ->onDelete('cascade')
+            // ->when(fn ($query) => $query->where('For', 'Leave')); // Conditional foreign key for Leave
+
             $table->foreign('type_id')
                 ->references('id')
-                ->on('leavetypes')
+                ->on('expense_types')
                 ->onDelete('cascade')
-                ->when(fn ($query) => $query->where('For', 'Leave'));
-
+                ->when(fn ($query) => $query->where('For', 'Expense')); // Conditional foreign key for Expense
         });
     }
 

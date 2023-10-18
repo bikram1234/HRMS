@@ -1,5 +1,3 @@
-
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -17,6 +15,7 @@
             {{ session('success') }}
         </div>
         @endif
+        <input type="hidden" id="expensetype_id" value="{{ $expenseTypeId }}">
         <div class="mb-4">
             <label for="advance_number" class="block text-sm font-medium text-gray-700">Select Advance Number:</label>
             <select name="advance_number" id="advance_number" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">

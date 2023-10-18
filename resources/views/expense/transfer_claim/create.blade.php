@@ -25,6 +25,11 @@
                 </ul>
             </div>
         @endif
+        @if (session('success'))
+<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+    {{ session('success') }}
+</div>
+@endif
        
         <form action="{{ route('products.store') }}" method="POST">
             @csrf
@@ -55,8 +60,12 @@
                 <div class="col-md-6 mt-3">
                     <div class="form-group">
                         <strong>Basic Pay</strong>
+                        @if(Auth::user()->grade && Auth::user()->grade->basicPay)
                         <input type="text" name="basic_pay" class="form-control" placeholder="Basic Pay" value="{{ Auth::user()->grade->basicPay->amount }}" readonly>
-                    </div>
+                    @else
+                        No basic pay for the user
+                    @endif
+                                        </div>
                 </div>
                 <div class="col-md-6 mt-3">
                     <div class="form-group">
@@ -94,6 +103,15 @@
                         <input type="text" name="distance_km" class="form-control" placeholder="Distance(KM)">
                     </div>
                 </div>
+                  <!-- Upload Attachment -->
+         <div class="col-md-6 mt-3">
+            <label for="attachment" class="block text-gray-700 text-sm font-bold mb-2">
+                {{ __('Upload Attachment (Max 2MB)') }}
+            </label>
+            <input type="file" name="attachment" id="attachment"
+                class="form-input rounded-md shadow-sm mt-1 block w-full">
+        </div>
+    </div>
            
             <div class="row mt-5 justify-content-center">
                 <button type="submit" class="btn btn-info btn-block col-md-4">Submit</button>

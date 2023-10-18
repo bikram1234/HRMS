@@ -8,6 +8,7 @@
                 {{ session('success') }}
             </div>
         @endif
+        
         <a href="{{ route('approval.create') }}" class="btn btn-primary mb-2">Add New Approval</a>
 
         <table class="table">

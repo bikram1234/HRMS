@@ -31,6 +31,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\approvalRule;
+use App\Models\approval_condition;
+use App\Models\level;
+use App\Mail\LeaveApplicationMail;
+use App\Mail\ExpenseApplicationMail;
+
 
 class dsa_settlement  extends Controller
 {
@@ -55,6 +61,15 @@ public function dsaSettlementForm() {
     
     // Find the ExpenseType with name "DSA Settlement"
     $expenseType = ExpenseType::where('name', 'DSA Settlement')->first();
+    if ($expenseType) {
+        $expenseTypeId = $expenseType->id;
+        // Use the $expenseTypeId as needed
+        echo $expenseTypeId; // or return $expenseTypeId; if you're in a function
+    } else {
+        // Handle the case where the expense type does not exist
+        echo "Expense type not found.";
+    }
+    //dd($expenseTypeId);
     
     if ($expenseType) {
         // Find the Policies associated with the ExpenseType
@@ -86,11 +101,21 @@ public function dsaSettlementForm() {
         'userAdvances' => $userAdvances,
         'advanceAmounts' => $advanceAmounts,
         'daAmountFromBackend' => $daAmountFromBackend,
+        'expenseTypeId'=>$expenseTypeId,
     ]);
     }
     public function calculateDsaSettlement(Request $request)
     {
         try {
+            $expenseType = ExpenseType::where('name', 'DSA Settlement')->first();
+            if ($expenseType) {
+                $expenseTypeId = $expenseType->id;
+                // Use the $expenseTypeId as needed
+                echo $expenseTypeId; // or return $expenseTypeId; if you're in a function
+            } else {
+                // Handle the case where the expense type does not exist
+                echo "Expense type not found.";
+            }
             //dd($request->all()); 
             $validatedData = $request->validate([
                 'advance_number' => 'sometimes|required|string', // Use 'sometimes' to conditionally require the field.
@@ -164,6 +189,8 @@ public function dsaSettlementForm() {
                     'net_payable_amount' => array_sum($manualTotalAmount),
                     'balance_amount' => 0,
                     'status' => 'pending',
+
+
                 ]);
                 
                 $dsaSettlement->save();
@@ -216,6 +243,48 @@ public function dsaSettlementForm() {
                         'total_amount' => ($da * $totalDays) + $ta,
                         'remark' => $manualRemark[$index],
                     ];
+
+                    $expense_id = $expenseTypeId;
+                    $sectionId = auth()->user()->section_id;
+                    $sectionHead = User::where('section_id', $sectionId)
+                    ->whereHas('designation', function($query) {
+                        $query->where('name', 'Section Head');
+                    })->first();
+
+                    $departmentId = auth()->user()->department_id;
+                    $departmentHead = User::where('department_id', $departmentId)
+                    ->whereHas('designation', function ($query) {
+                        $query->where('name', 'Department Head');
+                    })
+                    ->first();
+
+                    $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
+                    $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                    $hierarchy_id = $approvalType->hierarchy_id;
+                    $currentUser = auth()->user();
+
+                    if ($approvalType->approval_type == "Hierarchy") {
+                        // Fetch the record from the levels table based on the $hierarchy_id
+                        $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+            
+                        if ($levelRecord) {
+                            // Access the 'value' field from the level record
+                            $levelValue = $levelRecord->value;
+            
+                            // Determine the recipient based on the levelValue
+                            $recipient = '';
+            
+                            // Check the levelValue and set the recipient accordingly
+                            if ($levelValue === "SH") {
+                                // Set the recipient to the section head's email address or user ID
+                                $recipient = $sectionHead->email; // Replace with the actual field name
+                            }
+                            $approval = $sectionHead;
+            
+                            Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                        }
+                    }    
+
                 
                     // Insert DsaManualSettlement records and associate them with DsaSettlement
                     $dsaManualSettlement = new DsaManualSettlement($manualSettlement);
@@ -241,6 +310,8 @@ public function dsaSettlementForm() {
                     'net_payable_amount' => $advanceAmount,
                     'balance_amount' => 0,
                     'status' => 'pending',
+
+
                 ]);
             
                 $selectedAdvance->dsaSettlement()->save($dsaSettlement);
@@ -261,6 +332,47 @@ public function dsaSettlementForm() {
                     'total_amount' => null,
                     'remark' => null,
                 ];
+
+                $expense_id = $expenseTypeId;
+                $sectionId = auth()->user()->section_id;
+                $sectionHead = User::where('section_id', $sectionId)
+                ->whereHas('designation', function($query) {
+                    $query->where('name', 'Section Head');
+                })->first();
+
+                $departmentId = auth()->user()->department_id;
+                $departmentHead = User::where('department_id', $departmentId)
+                ->whereHas('designation', function ($query) {
+                    $query->where('name', 'Department Head');
+                })
+                ->first();
+
+                $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
+                $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                $hierarchy_id = $approvalType->hierarchy_id;
+                $currentUser = auth()->user();
+
+                if ($approvalType->approval_type == "Hierarchy") {
+                    // Fetch the record from the levels table based on the $hierarchy_id
+                    $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+        
+                    if ($levelRecord) {
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+        
+                        // Determine the recipient based on the levelValue
+                        $recipient = '';
+        
+                        // Check the levelValue and set the recipient accordingly
+                        if ($levelValue === "SH") {
+                            // Set the recipient to the section head's email address or user ID
+                            $recipient = $sectionHead->email; // Replace with the actual field name
+                        }
+                        $approval = $sectionHead;
+        
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                    }
+                } 
             
                 // Insert DsaManualSettlement records and associate them with DsaSettlement
                 $dsaSettlement->manualSettlements()->create($dsaManualSettlementAttributes);

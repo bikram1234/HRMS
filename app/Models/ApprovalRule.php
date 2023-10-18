@@ -20,32 +20,15 @@ class ApprovalRule extends Model
     ];
 
     
-    public function type()
-    {
-        return $this->belongsTo(leavetype::class, 'type_id');
-    }
+    // public function type()
+    // {
+    //     return $this->belongsTo(leavetype::class, 'type_id');
+    // }
     public function types()
     {
         return $this->belongsTo(ExpenseType::class, 'type_id');
     }
-//     public function type()
-// {
-//     return $this->belongsTo(leavetype::class, 'type_id');
-// }
 
-// public function types()
-// {
-//     return $this->belongsTo(ExpenseType::class, 'type_id');
-// }
-
-// public function getTypeAttribute()
-// {
-//     if ($this->For === 'Expense') {
-//         return $this->types;
-//     } else {
-//         return $this->type;
-//     }
-// }
 
   
     

@@ -24,8 +24,9 @@ class StoreApprovalRuleRequest extends FormRequest
     public function rules(): array
     {
         return [
+           
             'For' => 'required|string|max:255',
-            'type_id' => 'required|integer|exists:leavetypes,id',
+            'type_id' => 'required|integer|exists:expense_types,id',
             'RuleName' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
