@@ -117,6 +117,7 @@
                                         <a class="dropdown-item" href="{{ url('/admin/advance/add') }}">{{ __('Type') }}</a>
                                         <a class="dropdown-item" href="{{ url('/advance-details') }}">{{ __('Apply Advance') }}</a>
                                         <a class="dropdown-item" href="{{ route('advance.approval.index') }}">{{ __('Approval') }}</a>
+                                        <a class="dropdown-item" href="{{ route('show_advance') }}">{{ __('Apply') }}</a>
 
                                        </div>
                             </div>

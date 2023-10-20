@@ -31,10 +31,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\AdvanceapprovalRule;
+use App\Models\AdvanceApprovalRule;
 use App\Models\Advanceapproval_condition;
 use App\Models\level;
 use App\Mail\ExpenseApplicationMail;
+use App\Models\AdvanceApplication;
+
 
 class advance_apply  extends Controller
 {
@@ -73,6 +75,7 @@ class advance_apply  extends Controller
              if ($request->input('advance_type') === 'dsa_advance') {
  
                  $advanceType = Advance::where('name', 'DSA Advance')->first();
+
  
                  $validatedData = $request->validate([
                      'advance_type' => 'required|in:dsa_advance',
@@ -98,7 +101,7 @@ class advance_apply  extends Controller
                  $validatedData['advance_no'] = $advanceNo;
                  $validatedData['status'] = 'pending'; // Set status to pending
 
-                 $advance_id = $request->input('advance_type');
+                 $advance_id = $advanceType->id;
 
                  $sectionId = auth()->user()->section_id;
                  $sectionHead = User::where('section_id', $sectionId)
@@ -113,8 +116,8 @@ class advance_apply  extends Controller
                  })
                  ->first();
 
-                 $approvalRuleId = AdvanceapprovalRule::where('type_id', $advance_id)->value('id');
-                 $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                 $approvalRuleId = AdvanceApprovalRule::where('type_id', $advance_id)->value('id');
+                 $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();                             
                  $hierarchy_id = $approvalType->hierarchy_id;
                  $currentUser = auth()->user();
 
@@ -170,7 +173,7 @@ class advance_apply  extends Controller
                  $validatedData['status'] = 'pending'; // Set status to pending
 
 
-                 $advance_id = $request->input('advance_type');
+                 $advance_id = $advanceType->id;
 
                  $sectionId = auth()->user()->section_id;
                  $sectionHead = User::where('section_id', $sectionId)
@@ -227,7 +230,101 @@ class advance_apply  extends Controller
              return back()->withInput()
              ->with('success', 'An error occurred while adding the advance: ' . $e->getMessage());        }
      }
- 
- 
- 
+
+      //Get Advance Application form
+      public function show_Advance()
+      {
+          $advance_type= Advance :: all();
+        //   $user_id = Auth::id();
+        //   $user = User::find($user_id);
+        //   $empy_id = $user->employee_id;
+        // dd($empy_id);
+          //dd($advance_type);
+          return view('Advance.advance_apply.advance_form', compact('advance_type'));
+      }
+      public function store_advance(Request $request)
+      {
+        $user_id = Auth::id();
+        $user = User::find($user_id);
+
+
+        $validatedData = $request->validate([
+            'advance_type_id' => 'required|exists:advances,id',
+            'mode_of_travel' => 'nullable|string|max:255',
+            'from_location' => 'nullable|string|max:255',
+            'to_location' => 'nullable|string|max:255',
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date|after_or_equal:from_date',
+            'emi_count' => 'nullable|integer|min:1',
+            'deduction_period' => 'nullable|date',
+            'interest_rate' => 'nullable|numeric|min:0',
+            'total_amount' => 'nullable|numeric|min:0',
+            'monthly_emi_amount' => 'nullable|numeric|min:0',
+            'amount' => 'nullable|numeric|min:0',
+            'purpose' => 'nullable|string|max:255',
+            'upload_file' => 'nullable|file|mimes:pdf|max:2048', // Max size of 2 MB
+        ]);
+
+
+        $currentDateTime = now();
+        $empy_id = $user->employee_id;
+        $advanceNo = 'ADL|EM|'.$empy_id.'|'.$currentDateTime->format('YmdHis');
+
+
+        $validatedData['user_id'] = $user_id;
+        $validatedData['advance_no'] = $advanceNo;
+        $validatedData['status'] = 'pending'; // Set st
+
+
+        $advance_id = $request->input('advance_type_id');
+
+        $sectionId = auth()->user()->section_id;
+        $sectionHead = User::where('section_id', $sectionId)
+        ->whereHas('designation', function($query) {
+            $query->where('name', 'Section Head');
+        })->first();
+
+        $departmentId = auth()->user()->department_id;
+        $departmentHead = User::where('department_id', $departmentId)
+        ->whereHas('designation', function ($query) {
+            $query->where('name', 'Department Head');
+        })
+        ->first();
+
+        $approvalRuleId = AdvanceapprovalRule::where('type_id', $advance_id)->value('id');
+        $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();
+        $hierarchy_id = $approvalType->hierarchy_id;
+        $currentUser = auth()->user();
+
+        if ($approvalType->approval_type == "Hierarchy") {
+           // Fetch the record from the levels table based on the $hierarchy_id
+           $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+
+           if ($levelRecord) {
+               // Access the 'value' field from the level record
+               $levelValue = $levelRecord->value;
+
+               // Determine the recipient based on the levelValue
+               $recipient = '';
+
+               // Check the levelValue and set the recipient accordingly
+               if ($levelValue === "SH") {
+                   // Set the recipient to the section head's email address or user ID
+                   $recipient = $sectionHead->email; // Replace with the actual field name
+               }
+               $approval = $sectionHead;
+
+               Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+           }
+       }
+
+        AdvanceApplication::create($validatedData);
+
+
+
+        return back()->withInput()
+        ->with('success', 'Successfully Submitted'); 
+
+
+    }
 }

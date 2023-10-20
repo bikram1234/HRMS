@@ -20,7 +20,9 @@
             <label for="advance_number" class="block text-sm font-medium text-gray-700">Select Advance Number:</label>
             <select name="advance_number" id="advance_number" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                 @foreach($userAdvances as $advanceId => $advanceNo)
-                <option value="{{ $advanceNo }}" data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo }}</option>
+                 <option value="{{ $advanceNo }}" data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo }}</option> --}}
+                {{-- <option value="{{ $advanceNo }}" data-amount="{{ isset($advanceAmounts[$advanceId]) ? $advanceAmounts[$advanceId] : 'Default Value' }}">{{ $advanceNo }}</option> --}}
+
                 @endforeach
             </select>
         </div>

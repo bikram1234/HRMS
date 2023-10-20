@@ -33,6 +33,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\approvalRule;
 use App\Models\approval_condition;
+use App\Models\AdvanceApplication;
 use App\Models\level;
 use App\Mail\LeaveApplicationMail;
 use App\Mail\ExpenseApplicationMail;
@@ -45,10 +46,17 @@ public function dsaSettlementForm() {
     
     $user = Auth::user();
    // Retrieve all advances from the user's dsaAdvances relationship with status "approved"
-   $userAdvances = $user->dsaAdvances->where('status', 'approved')->pluck('advance_no', 'id');
+   //$userAdvances = $user->dsaAdvances->where('status', 'approved')->pluck('advance_no', 'id');
+   $userAdvances = AdvanceApplication::whereHas('advanceType', function ($query) {
+    $query->where('name', 'DSA Advance');
+    })
+    ->where('status', 'approved')
+    ->where('user_id', $user->id) // Assuming user_id is the column in the AdvanceApplication table that corresponds to the user
+    ->pluck('advance_no', 'id');
+    //dd($userAdvances);
 
    // Get the IDs of advances that exist in the dsa_settlements table
-   $existingAdvanceIds = DB::table('dsa_settlements')->pluck('dsa_advance_id');
+   $existingAdvanceIds = DB::table('dsa_settlements')->pluck('advance_application_id');
 
   // Filter the user's advances to include only those that do not exist in the dsa_settlements table
   $userAdvances = $userAdvances->filter(function ($advanceNo, $id) use ($existingAdvanceIds) {
@@ -56,7 +64,12 @@ public function dsaSettlementForm() {
 });
 
     
-    $advanceAmounts = $user->dsaAdvances->pluck('amount', 'id');
+    $advanceAmounts = AdvanceApplication::whereHas('advanceType', function ($query) {
+        $query->where('name', 'DSA Advance');
+        })
+        ->where('status', 'approved')
+        ->where('user_id', $user->id) // Assuming user_id is the column in the AdvanceApplication table that corresponds to the user
+        ->pluck('amount', 'id');
     //dd($advanceAmounts);
     
     // Find the ExpenseType with name "DSA Settlement"
@@ -116,7 +129,7 @@ public function dsaSettlementForm() {
                 // Handle the case where the expense type does not exist
                 echo "Expense type not found.";
             }
-            //dd($request->all()); 
+        //dd($request->all()); 
             $validatedData = $request->validate([
                 'advance_number' => 'sometimes|required|string', // Use 'sometimes' to conditionally require the field.
                 'manual_ta' => $request->has('advance_number') ? 'nullable|array' : 'required_if:advance_number,null|array', // Set to null when 'advance_number' is present.
@@ -158,9 +171,16 @@ public function dsaSettlementForm() {
             $user_id = Auth::id();
             $advanceNumber = $request->input('advance_number');
     
-            $selectedAdvance = DsaAdvance::where('user_id', $user_id)
+            $selectedAdvance = AdvanceApplication::where('user_id', $user_id)
                 ->where('advance_no', $advanceNumber)
                 ->first();
+            // $selectedAdvance = AdvanceApplication::whereHas('advanceType', function ($query) {
+            //     $query->where('name', 'DSA Advance');
+            //     })
+            //     ->where('status', 'approved')
+            //     ->where('user_id', $user_id) // Assuming user_id is the column in the AdvanceApplication table that corresponds to the user
+            //     ->where('advance_no', $advanceNumber)
+            //     ->first();
     
             if (!$selectedAdvance || !$advanceNumber) {
                 $manualTa = $request->input('manual_ta', []);

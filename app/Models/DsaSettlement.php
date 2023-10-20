@@ -46,10 +46,15 @@ class DsaSettlement extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function dsaAdvance()
+    // public function dsaAdvance()
+    // {
+    //     return $this->belongsTo(DsaAdvance::class);
+    // }
+    public function advanceapplication()
     {
-        return $this->belongsTo(DsaAdvance::class);
+        return $this->belongsTo(AdvanceApplication::class);
     }
+
    
     public function manualSettlements()
     {

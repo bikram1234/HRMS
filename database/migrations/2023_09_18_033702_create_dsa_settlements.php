@@ -21,7 +21,7 @@ return new class extends Migration
                 Schema::create('dsa_settlements', function (Blueprint $table)use ($expenseTypeId) {
                     $table->id();
                     $table->unsignedBigInteger('user_id');
-                    $table->unsignedBigInteger('dsa_advance_id')->nullable(); // Make it nullable
+                    $table->unsignedBigInteger('advance_application_id')->nullable(); // Make it nullable
                     $table->string('advance_no')->nullable();
                     $table->decimal('advance_amount', 10, 2)->default(0);
                     $table->decimal('total_amount_adjusted', 10, 2)->nullable(); // Make it nullable

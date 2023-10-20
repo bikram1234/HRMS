@@ -282,9 +282,17 @@ Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-a
 Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
 
 
+
+Route::get('/advance_form', [advance_apply::class, 'show_Advance'])->name('show_advance');
+// Route to handle the advance submission
+Route::post('/Add_Advance', [advance_apply::class, 'store_advance'])->name('Add_Advance');
+
+
 //Advance Approval Route
 Route::get('/advance-approval', [advance_approval_Controller::class, 'advance_approval_show'])
     ->name('advance.approval.index');
+Route::post('/advance-approval/{id}', [advance_approval_Controller::class, 'approveadvance'])->name('advance.approve');
+
 
 
 // Route to display the DSA settlement form

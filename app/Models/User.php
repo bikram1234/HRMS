@@ -75,4 +75,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(DsaAdvance::class, 'user_id');
     }
+
+    public function advance_applications()
+{
+    return $this->hasMany(AdvanceApplication::class);
+}
 }

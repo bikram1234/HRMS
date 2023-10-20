@@ -23,4 +23,8 @@ class Advance extends Model
     {
         return $this->belongsTo(ExpenseType::class);
     }
+    public function advancetype()
+{
+    return $this->hasMany(AdvanceApplication::class, 'advance_type_id');
+}
 }
