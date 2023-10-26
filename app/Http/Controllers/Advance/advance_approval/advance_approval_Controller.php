@@ -132,6 +132,39 @@ class advance_approval_Controller extends Controller
 //     return view('Advance.advance_approval.advance_approval_show', compact('advances'));
 // }
 
+// public function advance_approval_show(Request $request){
+//     $designationId = auth()->user()->designation_id;
+//     $designationName = Designation::where('id', $designationId)->value('name');
+//     $query = AdvanceApplication::with('advanceType');
+
+//     if ($designationName == 'Section Head') {
+//         $sectionHeadId = auth()->user()->section_id;
+//         $query->whereHas('user.section', function ($query) use ($sectionHeadId) {
+//             $query->where('id', $sectionHeadId);
+//         })->where('level1', 'pending')->where('status', 'pending');
+
+        
+//     } else if ($designationName == "Department Head") {
+//         $DepartmentHeadId = auth()->user()->department_id;
+//         $query->whereHas('user.department', function ($query) use ($DepartmentHeadId) {
+//             $query->where('id', $DepartmentHeadId);
+//         })->where('level1', 'approved')->where('level2')->where('status', 'pending');
+//     } else if ($designationName == "Management") {
+//         $query->where('level3', 'pending')->where('level2', 'Approved')->where('status', 'pending');
+//     }
+
+//     $status = $request->input('status');
+//     if ($status) {
+//         $query->where('status', $status);
+//     } else {
+//         $query->whereIn('status', ['pending', 'approved']);
+//     }
+
+//     $advanceApplications = $query->get();
+
+//      return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
+
+// }
 public function advance_approval_show(Request $request){
     $designationId = auth()->user()->designation_id;
     $designationName = Designation::where('id', $designationId)->value('name');
@@ -143,14 +176,23 @@ public function advance_approval_show(Request $request){
             $query->where('id', $sectionHeadId);
         })->where('level1', 'pending')->where('status', 'pending');
 
-        
+        $advanceApplications = $query->get();
+        return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
+
     } else if ($designationName == "Department Head") {
         $DepartmentHeadId = auth()->user()->department_id;
         $query->whereHas('user.department', function ($query) use ($DepartmentHeadId) {
             $query->where('id', $DepartmentHeadId);
-        })->where('level1', 'approved')->where('status', 'pending');
+        })->where('level1', 'approved')->where('level2','pending')->where('status', 'pending');
+
+        $advanceApplications = $query->get();
+        return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
+
     } else if ($designationName == "Management") {
         $query->where('level3', 'pending')->where('level2', 'Approved')->where('status', 'pending');
+        
+        $advanceApplications = $query->get();
+        return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
     }
 
     $status = $request->input('status');
@@ -160,11 +202,11 @@ public function advance_approval_show(Request $request){
         $query->whereIn('status', ['pending', 'approved']);
     }
 
-    $advanceApplications = $query->get();
+    // $advanceApplications = $query->get();
 
-     return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
-
+    // return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
 }
+
 
 public function Advance_details ($id){
     $advance = AdvanceApplication::findOrFail($id); // Assuming Expense is the model for your expenses
@@ -307,7 +349,7 @@ public function rejectadvance(Request $request, $id)
     $remark = $request->input('remark'); // Fetch the remark from the request
 
     $advanceApplication->update([
-        'status' => 'rejected',
+        'status' => 'rejected',//update the provided status as rejected
         'remark' => $remark, // Save the provided remark
     ]);
 

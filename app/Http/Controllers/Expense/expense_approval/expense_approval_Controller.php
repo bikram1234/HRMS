@@ -110,16 +110,27 @@ class expense_approval_Controller  extends Controller
             $sectionHeadId = auth()->user()->section_id;
             $query->whereHas('user.section', function ($query) use ($sectionHeadId) {
                 $query->where('id', $sectionHeadId);
-            });
+            })->where('level1', 'pending')->where('status', 'pending');
+    
+            $expenseApplications = $query->get();
+            return view('Expense.expense_approval.expense_approval', compact('expenseApplications'));
+    
         } else if ($designationName == "Department Head") {
             $DepartmentHeadId = auth()->user()->department_id;
             $query->whereHas('user.department', function ($query) use ($DepartmentHeadId) {
                 $query->where('id', $DepartmentHeadId);
-            })->where('level1', 'approved')->where('status', 'pending');
+            })->where('level1', 'approved')->where('level2','pending')->where('status', 'pending');
+    
+            $expenseApplications = $query->get();
+            return view('Expense.expense_approval.expense_approval', compact('expenseApplications'));
+    
         } else if ($designationName == "Management") {
-            $query->where('level3', 'pending')->where('status', 'pending');
+            $query->where('level3', 'pending')->where('level2', 'Approved')->where('status', 'pending');
+            
+            $expenseApplications = $query->get();
+            return view('Expense.expense_approval.expense_approval', compact('expenseApplications'));
         }
-
+    
         $status = $request->input('status');
         if ($status) {
             $query->where('status', $status);
@@ -127,9 +138,9 @@ class expense_approval_Controller  extends Controller
             $query->whereIn('status', ['pending', 'approved']);
         }
 
-        $expenseApplications = $query->get();
+        // $expenseApplications = $query->get();
 
-        return view('Expense.expense_approval.expense_approval', compact('expenseApplications'));
+        // return view('Expense.expense_approval.expense_approval', compact('expenseApplications'));
     }
 
     public function view_details ($id){

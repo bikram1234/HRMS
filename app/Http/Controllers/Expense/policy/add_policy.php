@@ -259,20 +259,18 @@ class add_policy  extends Controller
              return redirect()->route('add-policy')
                  ->with('success', 'Changes canceled');
          }
-         
- 
          // Handle saving changes here.
          // Update or create policy details, rate definitions, rate limits, and policy enforcement records.
          // You'll need to adjust this code based on your data structure.
  
          // Example of updating or creating policy enforcement options
-         EnforcementOption::updateOrCreate(
-             ['policy_id' => $policy->id],
-             [
-                 'prevent_submission' => $request->has('prevent_submission'),
-                 'display_warning' => $request->has('display_warning'),
-             ]
-         );
+        //  EnforcementOption::updateOrCreate(
+        //      ['policy_id' => $policy->id],
+        //      [
+        //          'prevent_submission' => $request->has('prevent_submission'),
+        //          'display_warning' => $request->has('display_warning'),
+        //      ]
+        //  );
  
          return redirect()->route('add-policy')
              ->with('success', 'Changes saved successfully');
