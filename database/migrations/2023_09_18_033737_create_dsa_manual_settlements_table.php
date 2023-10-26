@@ -26,11 +26,11 @@ return new class extends Migration
             $table->text('remark')->nullable();
             $table->timestamps();
             
-             // Define the foreign key constraints
-             $table->foreign('dsa_settlement_id')
-             ->references('id')
-             ->on('dsa_settlements')
-             ->onDelete('cascade');
+             // // Define the foreign key constraints
+             // $table->foreign('dsa_settlement_id')
+             // ->references('id')
+             // ->on('dsa_settlements')
+             // ->onDelete('cascade');
 
             $table->foreign('user_id')
              ->references('id')
