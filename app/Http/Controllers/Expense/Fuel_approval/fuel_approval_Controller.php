@@ -58,6 +58,12 @@ class fuel_approval_Controller extends Controller
     return view('Expense.Fuel_approval.fuel_approval_show', compact('expenseApplications'));
     }
 
+    public function show_details ($id){
+        $fuel = Fuel::findOrFail($id); // Assuming Expense is the model for your expenses
+    
+        return view('Expense.Fuel_approval.details', compact('fuel'));
+    }
+
 
     public function approvefuel(Request $request, $id){
         // Find the leave application by ID
@@ -171,5 +177,65 @@ class fuel_approval_Controller extends Controller
             return redirect()->back()->with('success', 'Fuel application cannot be approved.');
         }
 
+    }
+
+
+    public function rejectfuel(Request $request, $id) 
+    {
+        // Validate the request data, ensuring the 'remark' field is present and not empty
+        $request->validate([
+            'remark' => 'required',
+        ]);
+    
+        // Find the leave application by ID
+        $expenseApplication = Fuel::findOrFail($id);
+        $expense_id = $expenseApplication->expensetype_id;
+        $userID = $expenseApplication->user_id;
+        $user = User::where('id', $userID)->first();
+        $Approvalrecipient = $user->email;
+    
+        $remark = $request->input('remark'); // Fetch the remark from the request
+    
+        $expenseApplication->update([
+            'status' => 'rejected',
+            'remark' => $remark, // Save the provided remark
+        ]);
+    
+        // Update the status and remark based on conditions
+        if ($expenseApplication->level1 === 'pending' && $expenseApplication->level2 === 'pending' && $expenseApplication->level3 === 'pending') {
+            // All levels are approved, so update the status to 'rejected' and reset level1, level2, and level3.
+            $expenseApplication->update([
+                'status' => 'rejected',
+                'remark' => $remark, // Save the provided remark
+                'level1' => 'rejected',
+            ]);
+        } elseif ($expenseApplication->level1 === 'approved' && $expenseApplication->level2 === 'pending' && $expenseApplication->level3 === 'pending') {
+            // Level1 is approved, update level2 to 'rejected' and reset level3.
+            $expenseApplication->update([
+                'status' => 'rejected',
+                'remark' => $remark, // Save the provided remark
+                'level2' => 'rejected',
+            ]);
+        } elseif ($expenseApplication->level1 === 'approved' && $expenseApplication->level2 === 'approved' && $expenseApplication->level3 === 'pending') {
+            // Level1 and Level2 are approved, update level3 to 'rejected'.
+            $expenseApplication->update([
+                'status' => 'rejected',
+                'remark' => $remark, // Save the provided remark
+                'level3' => 'rejected',
+            ]);
+        } else {
+            // If status is not approved, no further updates needed. Just update the remark.
+            $expenseApplication->update([
+                'remark' => $remark, // Save the provided remark
+            ]);
+        }
+        
+        $content = "The leave you applied for is Rejected. Remark: " . $remark;
+    
+        // Send mail to the recipient
+        Mail::to($Approvalrecipient)->send(new ExpenseApprovedMail($user, $content));
+    
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Expense application rejected successfully.');
     }
 }

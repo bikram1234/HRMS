@@ -15,6 +15,7 @@
             <div class="form-group">
                 <label for="advance_type_id">Advance Type</label>
                 <select name="advance_type_id" class="form-control" id="advanceType" required>
+                    <option value="" selected >Select Advance Type</option>
                     @foreach ($advance_type as $advance)
                         <option value="{{ $advance->id }}">{{ $advance->name }}</option>
                     @endforeach
@@ -137,6 +138,48 @@
                         <input type="text" name="purpose" class="form-control" maxlength="255" required>
                     </div>
                 `;
+            } else if (selectedType === 'Device EMI') {
+                    dynamicFields.innerHTML = `
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select name="type" class="form-control" id="type" required onchange="updateAmount()">
+                            <option value="" selected >Select device</option>
+                            @foreach ($device as $item)
+                                <option value="{{ $item->id }}" data-amount="{{ $item->amount }}">{{ $item->type }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" name="amount" class="form-control" id="amount" min="0" required readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest_rate">Interest Rate</label>
+                        <input type="number" name="interest_rate" class="form-control" min="0" required onchange="calculateTotalAndMonthly()">
+                    </div>
+                    <div class="form-group">
+                        <label for="total_amount">Total Amount</label>
+                        <input type="number" id="total_amount" name="total_amount" class="form-control" min="0" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="emi_count">EMI Count</label>
+                        <input type="number" name="emi_count" class="form-control" min="1" required onchange="calculateTotalAndMonthly()">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthly_emi_amount">Monthly EMI Amount</label>
+                        <input type="number" name="monthly_emi_amount" class="form-control" min="0" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="deduction_period">Deduction Period</label>
+                        <input type="date" name="deduction_period" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose">Purpose</label>
+                        <input type="text" name="purpose" class="form-control" maxlength="255" required>
+                    </div>
+                `;
                 
             }
         }
@@ -190,12 +233,11 @@ function calculateMonthly(emiCount, totalAmount, monthlyEMIField) {
     }
 }
 
-
-
-
-
-
-
+function updateAmount() {
+        var selectBox = document.getElementById("type");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].getAttribute('data-amount');
+        document.getElementById("amount").value = selectedValue;
+    }
 
 </script>
 

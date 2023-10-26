@@ -29,6 +29,7 @@ use App\Http\Controllers\Expense\policy\edit_policy;
 use App\Http\Controllers\Expense\expense_apply\apply;
 use App\Http\Controllers\Expense\expense_approval\expense_approval_Controller;
 use App\Http\Controllers\Advance\advance_type\advance_type;
+use App\Http\Controllers\Advance\add_device_emi\device_emiController;
 use App\Http\Controllers\Advance\apply\advance_apply;
 use App\Http\Controllers\Advance\advance_approval\advance_approval_Controller;
 use App\Http\Controllers\Expense\dsa_claim\dsa_settlement;
@@ -40,6 +41,7 @@ use App\Http\Controllers\Expense\transfer_claim_approval\transfer_claim_approval
 use App\Http\Controllers\Expense\requisition\requisitionController;
 use App\Http\Controllers\WorkStructure\basic_pay\basic_payController;
 use App\Http\Controllers\WorkStructure\Add_Vehicle\add_vehicle_Controller;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
 
@@ -267,13 +269,26 @@ Route::post('/apply-expense', [apply::class, 'submitApplication'])
 
 //Expense_Approval Route
 Route::get('/expense-approval', [expense_approval_Controller::class,'show_pending_expense_application'])->name('expense.approval.index');
+Route::get('/expense_details/{id}', [expense_approval_Controller::class, 'view_details'])
+    ->name('expense_details.view'); 
 Route::post('/expense-approval/{id}', [expense_approval_Controller::class, 'approveexpense'])->name('expense.approve');
+Route::post('/expense-reject/{id}', [expense_approval_Controller::class, 'rejectexpense'])->name('expense.reject');
+
 
 
 
 // Add_Advance_Type
 Route::get('/admin/advance/add', [advance_type::class, 'showAdvanceForm'])->name('show-advance-form');
 Route::post('/admin/advance/add', [advance_type::class, 'addAdvance'])->name('add-advance');
+
+
+//ADD Device_emi Route
+Route::get('/devices', [device_emiController::class, 'show'])->name('device.index');
+Route::get('/devices/create', [device_emiController::class, 'create'])->name('device.create');
+Route::post('/devices', [device_emiController::class, 'store'])->name('device.store');
+Route::get('/devices/{device}/edit', [device_emiController::class, 'edit'])->name('device.edit');
+Route::put('/devices/{device}', [device_emiController::class, 'update'])->name('device.update');
+Route::delete('/devices/{device}', [device_emiController::class, 'destroy'])->name('device.destroy');
 
 // Route to show the advance form
 Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
@@ -291,7 +306,11 @@ Route::post('/Add_Advance', [advance_apply::class, 'store_advance'])->name('Add_
 //Advance Approval Route
 Route::get('/advance-approval', [advance_approval_Controller::class, 'advance_approval_show'])
     ->name('advance.approval.index');
+Route::get('/advance/{id}', [advance_approval_Controller::class, 'advance_details'])
+    ->name('advance.view');
 Route::post('/advance-approval/{id}', [advance_approval_Controller::class, 'approveadvance'])->name('advance.approve');
+Route::post('/advance-reject/{id}', [advance_approval_Controller::class, 'rejectadvance'])->name('advance.reject');
+
 
 
 
@@ -310,7 +329,9 @@ Route::get('/retrieve-dsa-data', [dsa_settlement::class,'DSAretrieveData'])->nam
 Route::get('/dsa-approval', [dsa_approval_Controller::class,'show_dsa_approval_application'])->name('dsa.approval.index');
 Route::get('/dsa-settlement/{id}', [dsa_approval_Controller::class, 'view_DsaSettlement_detail'])
     ->name('dsa-settlement.view'); 
- Route::post('/dsa-approval/{id}', [dsa_approval_Controller::class, 'approvedsa'])->name('dsa.approve');
+Route::post('/dsa-approval/{id}', [dsa_approval_Controller::class, 'approvedsa'])->name('dsa.approve');
+Route::post('/dsa-reject/{id}', [dsa_approval_Controller::class, 'rejectdsa'])->name('dsa.reject');
+
 
 
 
@@ -340,7 +361,11 @@ Route::delete('fuels/{fuel}', [fuel_claim::class, 'destroy'])->name('fuels.destr
 //Fuel Approval Route
 Route::get('/fuel-approval', [fuel_approval_Controller::class, 'fuel_approval'])
     ->name('fuel.approval.index');
+Route::get('/fuel/{id}', [fuel_approval_Controller::class, 'show_details'])
+    ->name('fuel.view'); 
 Route::post('/fuel-approval/{id}', [fuel_approval_Controller::class, 'approvefuel'])->name('fuel.approve');
+Route::post('/fuel-reject/{id}', [fuel_approval_Controller::class, 'rejectfuel'])->name('fuel.reject');
+
 
 
 
@@ -369,7 +394,11 @@ Route::get('products/{product}', [transfer_claim::class, 'show'])->name('product
 //transfer Approval Route
 Route::get('/transfer-approval', [transfer_claim_approval_Controller::class, 'transfer_claim_approval_show'])
     ->name('transfer.approval.index');
+Route::get('/transfer/{id}', [transfer_claim_approval_Controller::class, 'details'])
+    ->name('transfer.view');
 Route::post('/transfer-approval/{id}', [transfer_claim_approval_Controller::class, 'approvetransfer'])->name('transfer.approve');
+Route::post('/transfer-reject/{id}', [transfer_claim_approval_Controller::class, 'rejecttransfer'])->name('transfer.reject');
+
 
 
 
@@ -426,4 +455,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 require __DIR__.'/auth.php';
+Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+

@@ -115,8 +115,9 @@
                     <td>{{ $advanceApplication->amount }}</td>
                     <td>{{ $advanceApplication->status }}</td>
                     <td>
-                        <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#acceptleave{{ $advanceApplication->id }}">Accept</a>
-                        <a href="" class="btn btn-primary btn-sm">View</a>
+                        <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#acceptleave{{ $advanceApplication->id }}">Approve</a>
+                        <a type="button"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#declineleave{{ $advanceApplication->id}}">Reject</a> 
+                        <a href="{{ route('advance.view', ['id' => $advanceApplication->id]) }}" class="btn btn-primary btn-sm">View</a>
                     </td>
                 </tr>
                 <div class="modal" id="acceptleave{{ $advanceApplication->id }}">
@@ -137,6 +138,35 @@
                                     <!-- Modal Footer -->
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary">Approve Now</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal" id="declineleave{{ $advanceApplication->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <span class="modal-title">Leave Decline</span>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form method="POST" action="{{ route('advance.reject', ['id' => $advanceApplication->id]) }}">
+                                    @csrf
+                                    <h4>Are you sure you want to reject this expense?</h4>
+                                    <div class="form-group">
+                                        <label for="remark">Remark:</label>
+                                        <textarea class="form-control" id="remark" name="remark" rows="3" required></textarea>
+                                    </div>
+                
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Reject Now</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                     </div>
                                 </form>

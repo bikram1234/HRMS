@@ -31,6 +31,7 @@ class Product extends Model
         'status',
         'expense_type_id',
         'attachment',
+        'remark',
 
     ];
     public function user()

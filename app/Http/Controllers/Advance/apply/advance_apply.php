@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreatedMail;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Advance;
+use App\Models\Device_emi;
 use App\Models\SalaryAdvance;
 use App\Models\DsaAdvance;
 use App\Models\DsaSettlement;
@@ -235,12 +236,13 @@ class advance_apply  extends Controller
       public function show_Advance()
       {
           $advance_type= Advance :: all();
+          $device = Device_emi::all();
         //   $user_id = Auth::id();
         //   $user = User::find($user_id);
         //   $empy_id = $user->employee_id;
         // dd($empy_id);
           //dd($advance_type);
-          return view('Advance.advance_apply.advance_form', compact('advance_type'));
+          return view('Advance.advance_apply.advance_form', compact('advance_type','device'));
       }
       public function store_advance(Request $request)
       {
@@ -262,6 +264,7 @@ class advance_apply  extends Controller
             'monthly_emi_amount' => 'nullable|numeric|min:0',
             'amount' => 'nullable|numeric|min:0',
             'purpose' => 'nullable|string|max:255',
+            'type' => 'nullable|string|max:255',
             'upload_file' => 'nullable|file|mimes:pdf|max:2048', // Max size of 2 MB
         ]);
 
@@ -293,7 +296,12 @@ class advance_apply  extends Controller
 
         $approvalRuleId = AdvanceapprovalRule::where('type_id', $advance_id)->value('id');
         $approvalType = Advanceapproval_condition::where('approval_rule_id', $approvalRuleId)->first();
+        if(!$approvalType || !$approvalType->hierarchy_id){
+            return back()->withInput()
+                ->with('success', 'There is no approval for this Advance type');  
+        }
         $hierarchy_id = $approvalType->hierarchy_id;
+        
         $currentUser = auth()->user();
 
         if ($approvalType->approval_type == "Hierarchy") {

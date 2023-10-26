@@ -141,14 +141,16 @@ public function advance_approval_show(Request $request){
         $sectionHeadId = auth()->user()->section_id;
         $query->whereHas('user.section', function ($query) use ($sectionHeadId) {
             $query->where('id', $sectionHeadId);
-        });
+        })->where('level1', 'pending')->where('status', 'pending');
+
+        
     } else if ($designationName == "Department Head") {
         $DepartmentHeadId = auth()->user()->department_id;
         $query->whereHas('user.department', function ($query) use ($DepartmentHeadId) {
             $query->where('id', $DepartmentHeadId);
         })->where('level1', 'approved')->where('status', 'pending');
     } else if ($designationName == "Management") {
-        $query->where('level3', 'pending')->where('status', 'pending');
+        $query->where('level3', 'pending')->where('level2', 'Approved')->where('status', 'pending');
     }
 
     $status = $request->input('status');
@@ -162,6 +164,12 @@ public function advance_approval_show(Request $request){
 
      return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
 
+}
+
+public function Advance_details ($id){
+    $advance = AdvanceApplication::findOrFail($id); // Assuming Expense is the model for your expenses
+
+    return view('Advance.advance_approval.details', compact('advance'));
 }
 
 
@@ -280,6 +288,65 @@ public function approveadvance(Request $request, $id){
         return redirect()->back()->with('success', 'Expense application cannot be approved.');
     }
 
+}
+
+public function rejectadvance(Request $request, $id) 
+{
+    // Validate the request data, ensuring the 'remark' field is present and not empty
+    $request->validate([
+        'remark' => 'required',
+    ]);
+
+    // Find the leave application by ID
+    $advanceApplication = AdvanceApplication::findOrFail($id);
+    $expense_id = $advanceApplication->advance_type_id;
+    $userID = $advanceApplication->user_id;
+    $user = User::where('id', $userID)->first();
+    $Approvalrecipient = $user->email;
+
+    $remark = $request->input('remark'); // Fetch the remark from the request
+
+    $advanceApplication->update([
+        'status' => 'rejected',
+        'remark' => $remark, // Save the provided remark
+    ]);
+
+    // Update the status and remark based on conditions
+    if ($advanceApplication->level1 === 'pending' && $advanceApplication->level2 === 'pending' && $advanceApplication->level3 === 'pending') {
+        // All levels are approved, so update the status to 'rejected' and reset level1, level2, and level3.
+        $advanceApplication->update([
+            'status' => 'rejected',
+            'remark' => $remark, // Save the provided remark
+            'level1' => 'rejected',
+        ]);
+    } elseif ($advanceApplication->level1 === 'approved' && $advanceApplication->level2 === 'pending' && $advanceApplication->level3 === 'pending') {
+        // Level1 is approved, update level2 to 'rejected' and reset level3.
+        $advanceApplication->update([
+            'status' => 'rejected',
+            'remark' => $remark, // Save the provided remark
+            'level2' => 'rejected',
+        ]);
+    } elseif ($advanceApplication->level1 === 'approved' && $advanceApplication->level2 === 'approved' && $advanceApplication->level3 === 'pending') {
+        // Level1 and Level2 are approved, update level3 to 'rejected'.
+        $advanceApplication->update([
+            'status' => 'rejected',
+            'remark' => $remark, // Save the provided remark
+            'level3' => 'rejected',
+        ]);
+    } else {
+        // If status is not approved, no further updates needed. Just update the remark.
+        $advanceApplication->update([
+            'remark' => $remark, // Save the provided remark
+        ]);
+    }
+    
+    $content = "The leave you applied for is Rejected. Remark: " . $remark;
+
+    // Send mail to the recipient
+    Mail::to($Approvalrecipient)->send(new ExpenseApprovedMail($user, $content));
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Expense application rejected successfully.');
 }
 
 
