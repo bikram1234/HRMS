@@ -290,14 +290,14 @@ Route::get('/devices/{device}/edit', [device_emiController::class, 'edit'])->nam
 Route::put('/devices/{device}', [device_emiController::class, 'update'])->name('device.update');
 Route::delete('/devices/{device}', [device_emiController::class, 'destroy'])->name('device.destroy');
 
-// Route to show the advance form
-Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
-Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-advance-loan');
-// Route to handle the advance submission
-Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
+// // Route to show the advance form
+// Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
+// Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-advance-loan');
+// // Route to handle the advance submission
+// Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
 
 
-
+Route::get('/details', [advance_apply::class, 'details'])->name('advance-details');
 Route::get('/advance_form', [advance_apply::class, 'show_Advance'])->name('show_advance');
 // Route to handle the advance submission
 Route::post('/Add_Advance', [advance_apply::class, 'store_advance'])->name('Add_Advance');

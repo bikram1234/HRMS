@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;" onclick="window.location.href='{{ route('show-advance-loan') }}'">
+                <button type="button" style="background-color: #3490dc; color: white; font-weight: bold; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;" onclick="window.location.href='{{ route('show_advance') }}'">
                     {{ __('Add Advance') }}
                 </button> 
             </div>
@@ -35,7 +35,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white">
-                            @foreach ($advances as $advance)
+                            @foreach ($Advanceapplication as $advance)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                         {{ $advance->advance_no }}

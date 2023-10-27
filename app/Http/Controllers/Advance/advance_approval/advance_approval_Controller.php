@@ -188,7 +188,7 @@ public function advance_approval_show(Request $request){
         $advanceApplications = $query->get();
         return view('Advance.advance_approval.advance_approval_show', compact('advanceApplications'));
 
-    } else if ($designationName == "Management") {
+    } else if ($designationName == "Human Resource") {
         $query->where('level3', 'pending')->where('level2', 'Approved')->where('status', 'pending');
         
         $advanceApplications = $query->get();

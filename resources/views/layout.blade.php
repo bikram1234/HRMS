@@ -116,9 +116,9 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a class="dropdown-item" href="{{ url('/admin/advance/add') }}">{{ __('Type') }}</a>
                                         <a class="dropdown-item" href="{{ route('device.index') }}">{{ __('Device') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/advance-details') }}">{{ __('Apply Advance') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/details') }}">{{ __('Apply Advance') }}</a>
                                         <a class="dropdown-item" href="{{ route('advance.approval.index') }}">{{ __('Approval') }}</a>
-                                        <a class="dropdown-item" href="{{ route('show_advance') }}">{{ __('Apply') }}</a>
+                                        {{-- <a class="dropdown-item" href="{{ route('show_advance') }}">{{ __('Apply') }}</a> --}}
 
                                        </div>
                             </div>
