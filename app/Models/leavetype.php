@@ -14,4 +14,11 @@ class leavetype extends Model
         'short_code',
         'status'
     ];
+
+
+    public function leaveRules()
+    {
+        return $this->hasMany(leave_rule::class, 'leave_id');
+    }
+
 }

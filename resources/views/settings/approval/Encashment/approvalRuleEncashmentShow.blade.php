@@ -1,0 +1,136 @@
+@extends('layout')
+@section('content')
+
+        @if(session('success'))
+            <div id="success-message" class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+<div class="container mt-5">
+    <form method="POST" action="{{ route('approval.update', $leaveEncashmentApprovalRule->id) }}">
+        @csrf
+        @method('patch')
+
+        <div class="form-group">
+            <label for="for">For:</label>
+            <select name="For" id="for" class="form-control">
+                <option disabled selected value="{{ $leaveEncashmentApprovalRule->For}}">{{ $leaveEncashmentApprovalRule->For}}</option>
+                <option value="Leave">Leave</option>
+                <option value="Expense">Expense</option>
+                <option value="Loan">Loan</option>
+            </select>
+            @error('For')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select name="Type" id="type" class="form-control">
+                <option disabled selected>{{ $leaveEncashmentApprovalRule->type->name}}</option>
+                <option value="Casual Leave">Casual Leave</option>
+                <option value="Medical Leave">Medical Leave</option>
+                <option value="Study Leave">Study Leave</option>
+                <option value="Bereavement Leave">Bereavement Leave</option>
+            </select>
+            @error('Type')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="name">RuleName</label>
+            <input type="text" name="RuleName" id="name" value="{{ $leaveEncashmentApprovalRule->RuleName }}" class="form-control" >
+            @error('RuleName')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" value="{{ $leaveEncashmentApprovalRule->start_date }}" class="form-control" >
+            @error('start_date')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" id="end_date" value="{{ $leaveEncashmentApprovalRule->end_date }}" class="form-control" >
+            @error('end_date')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select name="status" id="status" class="form-control">
+                <option value="{{ $leaveEncashmentApprovalRule->status}}">Choose status</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+            @error('status')
+                    <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+
+        <a href="{{ route('encashment_condition.create', ['encashment_approval_rule_id' => $leaveEncashmentApprovalRule->id]) }}" class="btn btn-primary mt-3">Condition</a>
+    </form>
+
+    <table class="table">
+            <thead>
+            <tr>
+                <th>Formula</th>
+                <th>Hierarchy Name</th>
+                <th>Single User</th>
+                <th>Auto Approval</th>
+                <th>Action</th>
+        </tr>
+        </thead>
+<tbody>
+        @foreach ($specificConditions as $approval_condition)
+            <tr>
+            @if (count($formulas) > 0)
+            <td>
+                @foreach ($formulas as $collection)
+                    @foreach ($collection as $formula)
+                        {{ $formula->condition }}{{ $formula->field }} {{ $formula->operator }} @if($formula->value|| $formula->value === 0) {{ $formula->value }} @else {{ $formula->employee->name}} @endif
+                    @endforeach
+                @endforeach
+            </td>
+
+
+            @else
+                <td>No formulas available.</td>
+            @endif
+
+                @if ($approval_condition->approval_type === 'Hierarchy')
+                    <td>{{ $approval_condition->MaxLevel }}</td>
+                    <td>No</td>
+                    <td>No</td>
+                @elseif ($approval_condition->approval_type === 'Single User')
+                    <td>No</td>
+                    <td>{{ $approval_condition->employee_id }}</td>
+                    <td>No</td>
+                @elseif ($approval_condition->approval_type === 'Auto Approval')
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                @endif
+                <td>    
+                <a href="{{ route('formula.createForEncashmentApprovalCondition', $approval_condition->id)}}" class="btn btn-primary btn-sm">Add Formula</a>
+                <a href="{{ route('encashment_approval_condition.edit', $approval_condition->id)}}" class="btn btn-primary btn-sm">Edit</a>
+                </td> <!-- Action column, you can add actions here -->
+            </tr>
+        @endforeach
+
+            </tbody>
+    </table>
+
+</div>
+
+
+
+@endsection

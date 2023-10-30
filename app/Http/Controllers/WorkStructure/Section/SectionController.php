@@ -20,7 +20,8 @@ class SectionController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $sections = section::all();
+        $sections = Section::with('users.designation')->get();
+        
         return view('work_structure.section.section', compact('sections'));
     }
 
@@ -101,7 +102,7 @@ class SectionController extends Controller
 
     public function getSectionsByDepartment($department)
     {
-        $sections = Section::where('department', $department)->get();
+        $sections = Section::where('department_id', $department)->get();
         return response()->json(['sections' => $sections]); 
     }
 

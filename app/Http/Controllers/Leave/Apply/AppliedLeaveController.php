@@ -8,10 +8,17 @@ use App\Models\leavetype;
 use App\Models\leave_rule;
 use App\Models\leave_plan;
 use App\Models\User;
+use App\Models\approvalRule;
+use App\Models\approval_condition;
+use App\Models\level;
 use App\Http\Requests\Storeapplied_leaveRequest;
 use App\Http\Requests\Updateapplied_leaveRequest;
 use Illuminate\Support\Facades\Validator; 
 use Illuminate\Support\Carbon;
+use App\Mail\LeaveApplicationMail;
+use Illuminate\Support\Facades\Mail;
+use App\models\LeaveBalance;
+use App\Models\leave_yearend_processing;
 
 class AppliedLeaveController extends Controller
 {
@@ -20,9 +27,17 @@ class AppliedLeaveController extends Controller
      */
     public function index()
     {
+        $user_id = auth()->user()->id;
+ 
         $leave_types = leavetype::all();
-        $leaveHistory = applied_leave::all();
-        return view('leave.apply.leaveHistory', compact('leaveHistory', 'leave_types'));
+        $leaveHistory = applied_leave::where('user_id', $user_id)->get();
+        $earnedLeaveRecord = leave_yearend_processing::whereHas('leave', function ($query) {
+            $query->where('name', 'Earned Leave');
+        })->first();
+        $encash_balance = LeaveBalance::where('user_id', $user_id)->first();
+
+       
+        return view('leave.apply.leaveHistory', compact('leaveHistory', 'leave_types', 'earnedLeaveRecord', 'encash_balance'));
     }
 
     /**
@@ -154,10 +169,12 @@ class AppliedLeaveController extends Controller
     {
         // Get the user's ID (assuming the user is authenticated)
         $userId = auth()->user()->id;
-    
+        $currentUser = auth()->user();
+
         // Extract the leave_plan_id from the request
         $leave_id = $request->input('leave_id');
-        $userGender = $request->input('gender');
+        $userGender = auth()->user()->gender;
+
         $leavePlanId = leave_plan::where('leave_id', $leave_id)->value('id');
         // Retrieve the employment_type of the user from the users table
         $userEmploymentType = User::where('id', $userId)->value('employment_type');
@@ -192,9 +209,91 @@ class AppliedLeaveController extends Controller
         if ($request->hasFile('file_path')) {
             $appliedLeave->file_path = $request->file('file_path')->store('uploads'); // Set the 'file_path' attribute
         }
+
+        $selectedLeaveType = LeaveType::find($request->leave_id);
+
+        if (!$selectedLeaveType) {
+            return redirect()->route('applyleave.create')->with('error', 'Invalid leave type');
+        }
+
+        $userId = auth()->user()->id;
+
+        $totalAppliedDays = applied_leave::where('user_id', $userId)
+        ->where('leave_id', $leave_id)
+        ->where('status', 'approved')
+        ->sum('number_of_days');
+
+        // 2. Find the leave duration from the leave_rules table for the specified leave type
+        $leaveRule = leave_rule::where('leave_id', $leave_id)
+        ->where('grade_id', auth()->user()->grade_id)
+        ->first();
+
+        
+        $leaveDuration = $leaveRule->duration;
+
+        // 3. Calculate the leave balance by subtracting the applied days from the leave duration
+        $leaveBalance = $leaveDuration - $totalAppliedDays;
+
     
+        // Compare the number of days requested with the leave balance
+        $numberOfDaysRequested = (float) $request->number_of_days;
+
+    
+        
+        
+        if ($numberOfDaysRequested > $leaveBalance) {
+            return redirect()->back()->with('error', 'Number of days requested exceeds the leave balance');
+        }
+    
+
+        $sectionId = auth()->user()->section_id;
+        $sectionHead = User::where('section_id', $sectionId)
+        ->whereHas('designation', function($query) {
+            $query->where('name', 'Section Head');
+        })->first();
+
+        $departmentId = auth()->user()->department_id;
+        $departmentHead = User::where('department_id', $departmentId)
+        ->whereHas('designation', function ($query) {
+            $query->where('name', 'Department Head');
+        })
+        ->first();
+        
+
+    
+        $approvalRuleId = approvalRule::where('type_id', $leave_id)->value('id');
+        $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+        $hierarchy_id = $approvalType->hierarchy_id;
+
+        if ($approvalType->approval_type == "Hierarchy") {
+                // Fetch the record from the levels table based on the $hierarchy_id
+                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+
+                if ($levelRecord) {
+                    // Access the 'value' field from the level record
+                    $levelValue = $levelRecord->value;
+
+                    // Determine the recipient based on the levelValue
+                    $recipient = '';
+
+                    // Check the levelValue and set the recipient accordingly
+                    if ($levelValue === "SH") {
+                        // Set the recipient to the section head's email address or user ID
+                        $recipient = $sectionHead->email; // Replace with the actual field name
+                    }
+                    $approval = $sectionHead;
+  
+                    Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));
+                }
+            
+        }
+        // else if($approvalType->approval_type == "Single User"){
+        //     dd($approvalType->employee_id)
+        // }
+
         // Save the applied_leave record to the database
         $appliedLeave->save();
+
     
         return redirect()->back()->with('success', 'Leave Applied successfully.');
     }
@@ -238,6 +337,7 @@ class AppliedLeaveController extends Controller
 
         $totalAppliedDays = applied_leave::where('user_id', $userId)
         ->where('leave_id', $leaveTypeId)
+        ->where('status', 'approved')
         ->sum('number_of_days');
 
         // 2. Find the leave duration from the leave_rules table for the specified leave type
@@ -270,4 +370,26 @@ class AppliedLeaveController extends Controller
         // Return the include_weekends setting as JSON
         return response()->json(['include_weekends' => $leavePlan->include_weekends]);
     }
+
+    public function fetchIncludePublicHolidays($leaveTypeId) {
+        $leavePlan = leave_plan::where('leave_id', $leaveTypeId)->first();
+
+        if(!$leavePlan) {
+            return response()->json(['error'=>'Leave plan not found'], 404);
+        }
+
+        return response()->json(['include_public_holidays'=> $leavePlan->include_public_holidays]);
+    }
+
+    public function fetchCanBeHalfDay($leaveTypeId) {
+        $leavePlan = leave_plan::where('leave_id', $leaveTypeId)->first();
+
+        if(!$leavePlan) {
+            return response()->json(['error'=>'Leave plan not found'], 404);
+        }
+
+        return response()->json(['can_be_half_day'=> $leavePlan->can_be_half_day]);
+    }
+
+    
 }

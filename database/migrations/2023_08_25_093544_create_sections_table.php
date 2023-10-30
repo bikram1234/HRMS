@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('status')->default(true);
-            $table->foreignId('department')->constrained('departments');
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }

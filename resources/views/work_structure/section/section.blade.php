@@ -22,26 +22,41 @@
             </thead>
             <tbody>
                 @if($sections->count() > 0)
-                @foreach($sections as $section)
-                    <tr>
-                        <td>{{ $section->name }}</td>
-                        <td></td>
-                        <td>{{ $section->departmentName->name }}</td>
-                         @if($section->status == 1 )
-                         <td>Active</td>
-                         @else
-                         <td>Inactive</td>
-                         @endif
-                        <td>
-                            <a href="{{ route('section.edit', $section->id)}}" class="btn btn-primary btn-sm">Edit</a>
-                            <form action="{{ route('section.delete', $section->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this leave type?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
+                @foreach ($sections as $section)
+            <tr>
+                <td>{{ $section->name }}</td>
+                <td>
+                    @php
+                    $sectionHead = $section->users->first(function ($user) {
+                        return $user->designation->name === 'Section Head';
+                    });
+                    @endphp
+
+                    @if ($sectionHead)
+                        {{ $sectionHead->name }}
+                    @else
+                        No Section Head
+                    @endif
+                </td>
+                <td>{{ $section->departmentName->name }}</td>
+                <td>
+                    @if ($section->status == 1)
+                        Active
+                    @else
+                        Inactive
+                    @endif
+                </td>
+                <td>
+                    <a href="{{ route('section.edit', $section->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="{{ route('section.delete', $section->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this leave type?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+
                 @else
                 <h1>No datas</h1>
                 @endif

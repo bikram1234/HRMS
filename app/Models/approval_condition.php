@@ -16,7 +16,6 @@ class approval_condition extends Model
         'employee_id',
         'MaxLevel',
         'AutoApproval',
-        'formula',
     ];
 
     // Define the relationship to approval_rules

@@ -24,7 +24,19 @@
                 @foreach($departments as $department)
                     <tr>
                         <td>{{ $department->name }}</td>
-                        <td></td>
+                        <td>
+                    @php
+                    $departmentHead = $department->users->first(function ($user) {
+                        return $user->designation->name === 'Department Head';
+                    });
+                    @endphp
+
+                    @if ($departmentHead)
+                        {{ $departmentHead->name }}
+                    @else
+                        No Section Head
+                    @endif
+                </td>
                          @if($department->status == 1 )
                          <td>Active</td>
                          @else

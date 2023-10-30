@@ -67,7 +67,32 @@
         </div>
         <button type="submit" class="btn btn-primary mt-4">Submit</button>
     </form>
+    <script>
+    // Listen for changes in the hierarchy select field
+    document.getElementById('hierarchy_id').addEventListener('change', function () {
+        // Get the selected hierarchy ID
+        const hierarchyId = this.value;
 
+        // Send an AJAX request to fetch levels associated with the selected hierarchy
+        fetch(`/levels/${hierarchyId}`)
+            .then(response => response.json())
+            .then(levels => {
+                const levelSelect = document.getElementById('MaxLevel');
+                levelSelect.innerHTML = ''; // Clear existing options
+
+                // Add options for each level
+                levels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = 'Level'+level.level;
+                    option.textContent = 'Level'+level.level;
+                    levelSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
     <script>
         // Add JavaScript logic for enabling/disabling fields based on radio button selection (similar to the create form)
         const radioButtons = document.querySelectorAll('input[name="approval_type"]');

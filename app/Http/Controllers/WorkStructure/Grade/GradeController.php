@@ -78,7 +78,7 @@ class GradeController extends Controller
         }
 
         $grade->update($request->validated());
-        return redirect()->route('grade.index')->with('success', 'Grade added Successfully');
+        return redirect()->route('grade.index')->with('success', 'Grade updated Successfully');
     }
 
     /**

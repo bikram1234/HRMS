@@ -21,7 +21,7 @@ class DepartmentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $departments = department::all();
+        $departments = department::with('users.designation')->get();
         return view('work_structure.department.department', compact('departments'));
     }
 

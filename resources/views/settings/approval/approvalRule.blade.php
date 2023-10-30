@@ -9,7 +9,7 @@
             </div>
         @endif
         <a href="{{ route('approval.create') }}" class="btn btn-primary mb-2">Add New Approval</a>
-
+        <a href="{{ route('encashment_approvalRule.index') }}" class="link-secondary">Leave Encashment</a>
         <table class="table">
             <thead>
                 <tr>

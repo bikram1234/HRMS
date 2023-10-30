@@ -7,7 +7,7 @@
             </div>
         @endif
 <div class="container mt-5">
-    <form method="POST" action="{{ route('approval.store') }}">
+    <form method="POST" action="" id="approvalForm">
         @csrf
 
         <div class="form-group">
@@ -17,6 +17,7 @@
                 <option value="Leave">Leave</option>
                 <option value="Expense">Expense</option>
                 <option value="Loan">Loan</option>
+                <option value="Leave Encashment">Leave Encashment</option>
             </select>
             @error('For')
                 <small class="text-danger">{{ $message }}</small>
@@ -74,16 +75,15 @@
     </form>
 
 <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         var forSelect = document.getElementById('For');
         var typeSelect = document.getElementById('Type');
-        
+
         // ...
 
-        // Function to populate the "Type" dropdown based on the selected "For" value
         function populateTypeDropdown(selectedFor) {
             typeSelect.innerHTML = ''; // Clear existing options
-            
+
             if (selectedFor === '') {
                 // If "Choose For:" is selected, display the default "Select For First" option
                 var defaultOption = document.createElement('option');
@@ -91,21 +91,28 @@
                 defaultOption.selected = true;
                 defaultOption.textContent = 'Select For First';
                 typeSelect.appendChild(defaultOption);
-            } else {
-                // Define and populate options based on the selected "For" value
-                var options;
-                if (selectedFor === 'Leave') {
-                    options = {!! json_encode($leavetypes->pluck('name', 'id')) !!};
-                } else {
-                    options = []; // Default empty options
-                }
-                
+            } else if (selectedFor === 'Leave') {
+                // Define and populate options based on the selected "For" value 'Leave'
+                var options = {!! json_encode($leavetypes->pluck('name', 'id')) !!};
+
                 // Populate the "Type" dropdown with options
                 for (var id in options) {
                     if (options.hasOwnProperty(id)) {
                         var optionElement = document.createElement('option');
                         optionElement.value = id; // Set the value to the ID
                         optionElement.textContent = options[id]; // Set the text content to the name
+                        typeSelect.appendChild(optionElement);
+                    }
+                }
+            } else if (selectedFor === 'Leave Encashment') {
+                // Define and populate options for 'Leave Encashment'
+                var encashments = {!! json_encode($encashments->pluck('name', 'id')) !!};
+
+                for (var id in encashments) {
+                    if (encashments.hasOwnProperty(id)) {
+                        var optionElement = document.createElement('option');
+                        optionElement.value = id; // Set the value for Leave Encashment
+                        optionElement.textContent = encashments[id]; // Set the text content
                         typeSelect.appendChild(optionElement);
                     }
                 }
@@ -122,8 +129,32 @@
             populateTypeDropdown(selectedFor);
         });
     });
+</script>
 
-</script>   
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var forSelect = document.getElementById('For');
+        var approvalForm = document.getElementById('approvalForm');
+
+        forSelect.addEventListener('change', function () {
+            var selectedFor = forSelect.value;
+            var formAction = '';  // Initialize form action
+
+            if (selectedFor === 'Leave') {
+                formAction = "{{ route('approval.leave.store') }}";
+            } else if (selectedFor === 'Expense') {
+            
+            } else if (selectedFor === 'Loan') {
+                
+            } else if (selectedFor === 'Leave Encashment') {
+                formAction = "{{ route('approval.encashment.store') }}";
+            }
+
+            approvalForm.setAttribute('action', formAction);
+        });
+    });
+</script>
 
 
 </div>

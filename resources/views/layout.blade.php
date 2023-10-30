@@ -54,7 +54,19 @@
                                         @endcan
                                         @can('read: grade')
                                         <a class="dropdown-item" href="{{ route('grade.index') }}">{{ __('Grade') }}</a>
-                                        @endcan                                  
+                                        @endcan                       
+                                        <a class="dropdown-item" href="{{ route('country.index') }}">{{ __('Geography') }}</a>   
+                                        <a class="dropdown-item" href="{{ route('holiday.index') }}">{{ __('Holiday') }}</a>          
+                                    </div>
+                            </div>
+
+                            <div class="dropdown show">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    No Due
+                                </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="{{ route('nodue.index') }}">{{ __('Apply') }}</a>
+                                        <a class="dropdown-item" href="{{ route('nodueapproval.index') }}">{{ __('Approval') }}</a>
                                     </div>
                             </div>
                             <div class="dropdown show">
@@ -78,28 +90,9 @@
                                         <a class="dropdown-item" href="{{ route('leavetype.index') }}">{{ __('Types') }}</a>
                                         <a class="dropdown-item" href="{{ route('leavepolicy.index') }}">{{ __('Policy') }}</a>
                                         <a class="dropdown-item" href="{{ route('leave.history') }}">{{ __('Apply') }}</a>
+                                        <a class="dropdown-item" href="{{ route('leaveApproval.index')}}">Approval</a>
+                                        <a class="dropdown-item" href="{{ route('encashment_approval.index')}}">Encashment Approval</a>
                                     </div>
-                            </div>
-                             <div class="dropdown show">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Expense
-                                </a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <a class="dropdown-item" href="{{ url('/expense-types') }}">{{ __('Type') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/add-policy') }}">{{ __('Policy') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/apply-expense') }}">{{ __('Apply') }}</a>
-                                        <a class="dropdown-item" href="{{ url('dsa-settlement') }}">{{ __('DSA Claim') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/retrieve-dsa-data') }}">{{ __('Retrive DSA') }}</a>
-                                    </div>
-                            </div>
-                             <div class="dropdown show">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Advance
-                                </a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <a class="dropdown-item" href="{{ url('/admin/advance/add') }}">{{ __('Type') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/advance-form') }}">{{ __('Apply Advance') }}</a>
-                                       </div>
                             </div>
                                 <!-- Add this code to your HTML template where you want the dropdown to appear -->
 

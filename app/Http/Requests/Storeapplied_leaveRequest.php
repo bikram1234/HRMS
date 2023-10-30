@@ -25,7 +25,7 @@ class Storeapplied_leaveRequest extends FormRequest
             'user_id' => ['required', 'exists:users,id'], // Add validation for user_id
             'leave_id' => ['required', 'exists:leavetypes,id'],
             'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after:start_date'],
             'number_of_days' => ['required', 'numeric', 'min:0.5'], // Add validation for no_of_days
             'remark' => ['nullable', 'string'],
         ];

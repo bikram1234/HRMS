@@ -23,7 +23,7 @@ class UpdatesectionRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'department' => 'required|integer|exists:departments,id',
+            'department_id' => 'required|integer|exists:departments,id',
             'status' => 'required|boolean',
         ];
     }

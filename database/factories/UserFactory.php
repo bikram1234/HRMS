@@ -17,13 +17,24 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $factory->define(User::class, function (Faker $faker) {
+            $departments = Department::pluck('id');
+            $sections = Section::pluck('id');
+            $roles = ['employee', 'manager', 'head'];
+            $usertypes = ['user', 'approval', 'admin'];
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'department_id' => $faker->randomElement($departments),
+            'section_id' => $faker->randomElement($sections),
+            'role' => $faker->randomElement($roles),
+            'usertype' => $faker->randomElement($usertypes),
             'remember_token' => Str::random(10),
         ];
+    });
+
     }
 
     /**

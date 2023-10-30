@@ -19,4 +19,9 @@ class leave_yearend_processing extends Model
         "carryforward_toEL",
         "carryforward_toEL_limit",
     ];
+
+    public function leave()
+    {
+        return $this->belongsTo(LeaveType::class, 'leave_id'); 
+    }
 }

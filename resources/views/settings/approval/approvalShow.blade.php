@@ -96,7 +96,7 @@
             <td>
                 @foreach ($formulas as $collection)
                     @foreach ($collection as $formula)
-                        {{ $formula->condition }}{{ $formula->field }} {{ $formula->operator }} @if($formula->value) {{ $formula->value }} @else {{ $formula->employee->name}} @endif
+                        {{ $formula->condition }}{{ $formula->field }} {{ $formula->operator }} @if($formula->value|| $formula->value === 0) {{ $formula->value }} @else {{ $formula->employee->name}} @endif
                     @endforeach
                 @endforeach
             </td>
@@ -107,7 +107,7 @@
             @endif
 
                 @if ($approval_condition->approval_type === 'Hierarchy')
-                    <td>{{ $approval_condition->hierarchy->name }}</td>
+                    <td>{{ $approval_condition->MaxLevel }}</td>
                     <td>No</td>
                     <td>No</td>
                 @elseif ($approval_condition->approval_type === 'Single User')

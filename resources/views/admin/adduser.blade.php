@@ -2,6 +2,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('content')
     <div class="container">
+    @if(session('success'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -55,7 +61,7 @@
 
                             <div class="form-group">
                                 <label for="department">Department Name:</label>
-                                <select class="form-control" id="department" name="department" onchange="loadSections()">
+                                <select class="form-control" id="department" name="department_id" onchange="loadSections()">
                                     @foreach ($departments as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
                                     @endforeach
@@ -67,7 +73,7 @@
 
                             <div class="form-group">
                                 <label for="section">Section Name:</label>
-                                <select class="form-control" id="section" name="section">
+                                <select class="form-control" id="section" name="section_id">
                                     <!-- Options will be dynamically added using JavaScript -->
                                 </select>
                                 @error('section_id')
@@ -76,8 +82,25 @@
                             </div>
 
                             <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                                <label for="region" class="col-md-4 col-form-label text-md-right">Region</label>
+                                <div class="col-md-6">
+                                    <select id="user_id" class="form-control" name="region_id" required>
+                                        <option value="" disabled selected>Select Region</option>
+                                            @foreach ($regions as $region)
+                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            @endforeach
+                                        </select>
 
+                                    @error('role')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row  mt-4">
+                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
                                 <div class="col-md-6">
                                     <select id="user_id" class="form-control" name="role" required>
                                         <option value="" disabled selected>Select Role</option>
@@ -95,10 +118,9 @@
                             </div>
 
                             <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Designation</label>
-
+                                <label for="designation" class="col-md-4 col-form-label text-md-right">Designation</label>
                                 <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="designation" required>
+                                    <select id="user_id" class="form-control" name="designation_id" required>
                                         <option value="" disabled selected>Select Designation</option>
                                             @foreach ($designations as $designation)
                                             <option value="{{ $designation->id }}">{{ $designation->name }}</option>
@@ -117,7 +139,7 @@
                                 <label for="role" class="col-md-4 col-form-label text-md-right">Grade</label>
 
                                 <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="grade" required>
+                                    <select id="user_id" class="form-control" name="grade_id" required>
                                         <option value="" disabled selected>Select Grade</option>
                                             @foreach ($grades as $grade)
                                             <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -130,6 +152,33 @@
                                         </span>
                                     @enderror
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <select name="gender" id="gender" class="form-control">
+                                    <option disabled selected>Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="A">All</option>
+                                </select>
+                                @error('gender')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="employment_type">Employement Type:</label>
+                                <select name="employment_type" id="employment_type" class="form-control">
+                                    <option disabled selected>Select EmplyType:</option>
+                                    <option value="probation_period">Probation</option>
+                                    <option value="regular_period">Regular</option>
+                                    <option value="contract_period">Contract</option>
+                                    <option value="notice_period">Notice</option>
+                                </select>
+                                @error('employment_type')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group row">
@@ -201,6 +250,7 @@
                     option.value = section.id;
                     option.textContent = section.name;
                     sectionDropdown.appendChild(option);
+                    console.log("Section", option);
                 });
             })
             .catch(function(error) {

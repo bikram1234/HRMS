@@ -11,12 +11,19 @@ class section extends Model
 
     protected $fillable = [
         'name',
-        'department',
+        'department_id',
         'status'
     ];
 
     public function departmentName()
     {
-        return $this->belongsTo(Department::class, 'department');
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+    
+
+    public function users()
+    {
+        // Define the relationship with the User model
+        return $this->hasMany(User::class); // Assuming you have a 'users' table
     }
 }

@@ -36,9 +36,9 @@ class ApprovalConditionController extends Controller
      */
     public function store(Storeapproval_conditionRequest $request)
     {
-
+        $approval_condition = $request->input('approval_rule_id');
         approval_condition::create($request->validated());
-        return redirect()->route('approval_condition.edit')->with('success', 'Approval added successfully.');
+        return redirect()->route('approval.show', ['approvalRule'=>$approval_condition])->with('success', 'Approval Condition added successfully.');
     }
     
 

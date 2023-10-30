@@ -87,7 +87,7 @@
                 <select name="employee_id" id="employee_id" class="form-control">
                     <!-- You can populate this dropdown with users from your database -->
                     @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        <option value="{{ $user->employee_id }}">{{ $user->name }}</option>
                     @endforeach
                 </select>
                 @error('employee_id')

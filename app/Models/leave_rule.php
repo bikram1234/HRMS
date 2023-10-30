@@ -25,4 +25,10 @@ class leave_rule extends Model
         return $this->belongsTo(grade::class, 'grade_id');
     }
 
+    public function leaves()
+    {
+        return $this->hasMany(LeaveType::class); 
+    }
+
+
 }

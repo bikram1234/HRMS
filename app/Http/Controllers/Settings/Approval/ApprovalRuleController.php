@@ -7,6 +7,7 @@ use App\Models\ApprovalRule;
 use App\Models\Formula;
 use App\Models\leavetype;
 use App\Models\approval_condition;
+use App\Models\encashment;
 use App\Http\Requests\StoreApprovalRuleRequest;
 use App\Http\Requests\UpdateApprovalRuleRequest;
 
@@ -27,9 +28,10 @@ class ApprovalRuleController extends Controller
     public function create()
     {
         $leavetypes = leavetype::all();
+        $encashments = encashment::all();
         $expenses = [];
         $loans = [ ];
-        return view('settings.approval.ApprovalAdd', compact('leavetypes', 'expenses', 'loans'));
+        return view('settings.approval.ApprovalAdd', compact('leavetypes', 'expenses', 'loans', 'encashments'));
     }
 
     /**
@@ -118,5 +120,6 @@ class ApprovalRuleController extends Controller
 
             return response()->json(['types' => $types]);
         }
+
 
 }
