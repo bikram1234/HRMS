@@ -47,7 +47,7 @@ class apply  extends Controller
     public function showApplicationForm()
     {        
         
-        $expenseTypes = ExpenseType::all();
+        $expenseTypes = ExpenseType::whereNotIn('name', ['DSA Settlement', 'Expense Fuel', 'Transfer Claim'])->get();
         $user = Auth::user(); // Get the authenticated user
         $userApplications = ExpenseApplication::with('expenseType')->where('user_id', $user->id)->get();
         
