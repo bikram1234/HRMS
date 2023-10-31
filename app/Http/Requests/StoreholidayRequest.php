@@ -29,7 +29,7 @@ class StoreholidayRequest extends FormRequest
             'optradioholidayfrom' => 'in:First Half,Second Half',
             'optradioholidaylto' => 'in:First Half,Second Half',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:1,0',
             'number_of_days' => 'required|integer',
             'description' => 'nullable|string', 

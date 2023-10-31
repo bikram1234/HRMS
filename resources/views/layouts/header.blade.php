@@ -19,7 +19,7 @@
 				
 				<!-- Header Title -->
                 <div class="page-title-box">
-					<h3>Tashi InfoComm Limited</h3>
+					<h3 style="color: black;">Tashi InfoComm Limited</h3>
                 </div>
 				<!-- /Header Title -->
 				

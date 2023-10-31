@@ -36,11 +36,15 @@ class ApprovalConditionController extends Controller
      */
     public function store(Storeapproval_conditionRequest $request)
     {
-
+        $approval_condition = $request->input('approval_rule_id');
         approval_condition::create($request->validated());
-        return redirect()->route('approval_condition.edit')->with('success', 'Approval added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Approval Condition Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('approval.show', ['approvalRule'=>$approval_condition])->with($notification);
     }
-    
 
     /**
      * Display the specified resource.
@@ -68,6 +72,11 @@ class ApprovalConditionController extends Controller
     public function update(Updateapproval_conditionRequest $request, approval_condition $approval_condition)
     {
         $approval_condition->update($request->validated());
+         //display the message 
+         $notification = array(
+            'message' => 'Condition Updated successfully',
+            'alert-type' =>'success'
+        );
         return redirect()->back()->with('success', 'Condition Updated successfully!!');
     }
 

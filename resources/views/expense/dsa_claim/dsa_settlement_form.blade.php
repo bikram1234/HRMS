@@ -54,22 +54,8 @@ background-color:#f5a524;
                                         </div>
                                         @endif
                                         <!-- DSA Settlement with advance -->
-                                            <div class="row" id="dsa_settlement_fields_with_advance">
-                                                <!-- <div class="col-sm-6 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">Employee Name<span class="text-danger">*</span></label>
-                                                        <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
-                                                        <option value="0">Laptop Rent</option>
-                                                        <option value="1">Rent</option>
-                                                        <option value="2">Sales & Promations Exp</option>
-                                                        <option value="3">SIFA Benefits</option>
-                                                        <option value="3">Other</option>
-                                                        <option value="3">Expense Fuel</option>
-                                                        <option value="3">Transfer Claim</option>
-                                                        </select>
-                                                    </div>
-                                                </div> -->
-                                                <div class="col-sm-6 col-md-6">
+                                        <div class="row">  
+                                                <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label class="advance_number">Select Advance No<span class="text-danger">*</span></label>
                                                         <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px" name="advance_number" id="advance_number">
@@ -79,10 +65,12 @@ background-color:#f5a524;
                                                         </select>
                                                     </div>
                                                 </div>
+                                            
+                                            <div id="dsa_settlement_fields_with_advance">
                                                 <div class="col-sm-6 col-md-6">
                                                     <div class="form-group">
                                                         <label for="advance_amount_with_advance">Advance Amount</label>
-                                                        <input class="form-control" type="number" name="advance_amount_with_advance" id="advance_amount_with_advance">
+                                                        <input class="form-control" type="number"  name="advance_amount_with_advance" id="advance_amount_with_advance">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6">
@@ -110,56 +98,46 @@ background-color:#f5a524;
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                     <!-- DSA Settlement with advance -->
 
                                     <!-- DSA Settlement without advance -->
-                                            <!-- <div class="row" id="dsa_settlement_fields_without_advance">
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">Employee Name<span class="text-danger">*</span></label>
-                                                        <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
-                                                        <option value="0">Laptop Rent</option>
-                                                        <option value="1">Rent</option>
-                                                        <option value="2">Sales & Promations Exp</option>
-                                                        <option value="3">SIFA Benefits</option>
-                                                        <option value="3">Other</option>
-                                                        <option value="3">Expense Fuel</option>
-                                                        <option value="3">Transfer Claim</option>
-                                                        </select>
-                                                    </div>
-                                                </div> -->
-                                                <div class="col-sm-6 col-md-6">
+                                    <h4 class="mt-4">DSA Settlement without advance</h4>
+                                        <div class="row">
+                                            <div id="dsa_settlement_fields_without_advance">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="advance_amount_without_advance">Advance Amount</label>
                                                         <input class="form-control" type="number" name="advance_amount_without_advance" id="advance_amount_without_advance">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6 col-md-6">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
-                                                        <label for="total_amount_adjusted_without_advance" >Total Amount Adjusted</label>
+                                                        <label for="total_amount_adjusted_without_advance">Total Amount Adjusted</label>
                                                         <input class="form-control" type="number" name="total_amount_adjusted_without_advance" id="total_amount_adjusted_without_advance">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6 col-md-6">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="net_payable_amount_without_advance">Net Payable Amount</label>
-                                                        <input class="form-control" type="number"  name="net_payable_amount_without_advance" id="net_payable_amount_without_advance">
+                                                        <input class="form-control" type="number" name="net_payable_amount_without_advance" id="net_payable_amount_without_advance">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6 col-md-6">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="balance_amount_without_advance">Balance Amount</label>
-                                                        <input class="form-control" type="number"  name="balance_amount_without_advance" id="balance_amount_without_advance">
+                                                        <input class="form-control" type="number" name="balance_amount_without_advance" id="balance_amount_without_advance">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6 col-md-6">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="upload_file_without_advance">Upload PDF</label>
-                                                        <input  class="form-control" type="file" name="upload_file_without_advance" id="upload_file_without_advance" accept=".pdf">
+                                                        <input class="form-control" type="file" name="upload_file_without_advance" id="upload_file_without_advance" accept=".pdf">
                                                     </div>
                                                 </div>
-                                         
+                                            </div>
                                         </div>
+
                                     <!-- DSA settlement without advance -->
                                             <!-- Tabel -->
                                                 <div class="row mt-5">
@@ -186,12 +164,12 @@ background-color:#f5a524;
                                                                     </td>
                                                                     
                                                                     <td class="dsa-settlement-no-advance">
-                                                                        <label for="ta">TA (Travel Allowance)</label>
-                                                                        <input class="form-control" type="text" style="min-width:100px" name="manual_ta[]" id="manual_ta[]" required>
+                                                                        <label for="ta">TA(TravelAllowance)</label>
+                                                                        <input class="form-control" type="text" style="min-width:150px" name="manual_ta[]" id="manual_ta[]" required>
                                                                     </td>
                                                                     <td class="dsa-settlement-no-advance">
-                                                                        <label for="da">DA (Daily Allowance)</label>
-                                                                        <input class="form-control" style="width:100px" type="text" name="da" id="da" value="{{ $daAmountFromBackend }}">
+                                                                        <label for="da">DA(DailyAllowance)</label>
+                                                                        <input class="form-control" style="width:150px" type="text" name="da" id="da" value="{{ $daAmountFromBackend }}">
                                                                     </td>
                                                                     <td class="dsa-settlement-no-advance">
                                                                         <label for="total_amount">Total Amount</label>
@@ -199,7 +177,7 @@ background-color:#f5a524;
                                                                     </td>
                                                                     <td class="dsa-settlement-no-advance">
                                                                         <label for="remark">Remarks</label>
-                                                                        <input class="form-control"  style="width:120px" type="text" name="manual_remark[]" id="remark" required>
+                                                                        <input class="form-control"  style="width:120px" type="text" name="manual_remark[]" id="remark">
                                                                     </td>
                                                                     <td>
                                                                         <div class="mb-4">
@@ -211,11 +189,11 @@ background-color:#f5a524;
                                                         </div>					
                                                     </div>
                                                 </div>
-                                            <!-- End of Table -->
+                                        <!-- End of Table -->
                                             <div class="modal-footer justify-content-start mt-3">
-                                                    <button type="submit" name="save" class="btn btn-primary">Submit</button>
-                                                    &nbsp;  &nbsp;   &nbsp;
-                                                    <button type="submit" name="cancel" class="btn btn-primary">Reset</button>
+                                                <button type="submit" name="save" class="btn btn-primary">Submit</button>
+                                                &nbsp;  &nbsp;   &nbsp;
+                                                <button type="submit" name="cancel" class="btn btn-primary">Reset</button>
                                             </div> 
 							        </form>
 						        </div>
@@ -230,6 +208,7 @@ background-color:#f5a524;
 
              
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
         document.addEventListener('DOMContentLoaded', function () {
             const advanceNumberSelect = document.getElementById('advance_number');

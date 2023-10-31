@@ -86,10 +86,6 @@ class LeavetypeController extends Controller
      */
     public function destroy(leavetype $leavetype)
     {
-        if (!Gate::allows('delete: leavetype')) {
-            abort(403, 'Unauthorized action.');
-        }
-
         $leavetype->delete();
          //display the message 
          $notification = array(

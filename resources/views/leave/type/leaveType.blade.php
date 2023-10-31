@@ -113,7 +113,7 @@ background-color:#f5a524;
      </tr>
       <!-- Edit Leave Type -->
       <div id="edit_leave_type{{$leavetype->id}}" class="modal custom-modal fade" role="dialog">
-      <form method="POST" action="{{ route('leavetype.update', $leavetype->id) }}">
+            <form method="POST" action="{{ route('leavetype.update', $leavetype->id) }}">
                  @csrf
                  @method('patch')
                     <div class="modal-dialog modal-dialog-centered" role="document">

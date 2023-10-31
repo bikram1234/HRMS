@@ -214,36 +214,45 @@ background-color:#f5a524;
                                             <div class="container">
                                                 <form method="POST" action="{{ route('leaverule.store') }}">
                                                     @csrf
-
+                                                <div class="modal-body">
+                                                    <div class="row">
                                                     <div class="form-group">
                                                             <input type="hidden" id="leave_id" name="leave_id" value="{{ $leave_id }}">
                                                             @error('leave_id')
                                                         <small class="text-danger">{{ $message }}</small>
                                                         @enderror
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="grade_id">Grade:</label>
-                                                        <select id="grade_id" name="grade_id" class="form-control" required>
-                                                            <!-- Populate options dynamically from your database or use a loop -->
-                                                            <option disabled selected>Select</option>
-                                                            @foreach ($grades as $grade)
-                                                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                                            @endforeach
-                                                            <!-- Add more options as needed -->
-                                                        </select>
-                                                        @error('grade_id')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
+
+
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label for="grade_id">Grade:</label>
+                                                            <select id="grade_id" name="grade_id" class="form-control" required>
+                                                                <!-- Populate options dynamically from your database or use a loop -->
+                                                                <option disabled selected>Select</option>
+                                                                @foreach ($grades as $grade)
+                                                                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                                                @endforeach
+                                                                <!-- Add more options as needed -->
+                                                            </select>
+                                                            @error('grade_id')
+                                                                    <small class="text-danger">{{ $message }}</small>
+                                                                @enderror  
+                                                        </div>
                                                     </div>
 
-                                                    <div class="form-group">
-                                                        <label for="duration">Duration:</label>
-                                                        <input type="number" id="duration" name="duration" class="form-control" required>
-                                                        @error('duration')
-                                                                <small class="text-danger">{{ $message }}</small>
-                                                            @enderror  
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label for="duration">Duration:</label>
+                                                            <input type="number" id="duration" name="duration" class="form-control" required>
+                                                            @error('duration')
+                                                                    <small class="text-danger">{{ $message }}</small>
+                                                                @enderror  
+                                                        </div>
+
                                                     </div>
 
+                                                    <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="uom">Unit of Measure:</label>
                                                         <select class="form-control" id="uom" name="uom">
@@ -256,7 +265,9 @@ background-color:#f5a524;
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror  
                                                     </div>
+                                                    </div>
 
+                                                    <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="start_date">Start Date:</label>
                                                         <input type="date" id="start_date" name="start_date" class="form-control" required>
@@ -264,7 +275,9 @@ background-color:#f5a524;
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror  
                                                     </div>
+                                                    </div>
 
+                                                    <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="end_date">End Date:</label>
                                                         <input type="date" id="end_date" name="end_date" class="form-control" required>
@@ -272,7 +285,9 @@ background-color:#f5a524;
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror  
                                                     </div>
+                                                    </div>
 
+                                                    <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="islossofpay">Loss of Pay:</label>
                                                         <select class="form-control" id="status" name="islossofpay">
@@ -284,7 +299,9 @@ background-color:#f5a524;
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
                                                     </div>
+                                                    </div>
 
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label for="employee_type">Employee Type:</label>
                                                         <select class="form-control" id="status" name="employee_type">
@@ -299,8 +316,10 @@ background-color:#f5a524;
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror  
                                                     </div>
+                                                </div>
 
-                                                    <div class="form-group md-3">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
                                                         <label for="status">Status:</label>
                                                         <select class="form-control" id="status" name="status">
                                                             <option disabled selected>Choose status:</option>
@@ -311,11 +330,15 @@ background-color:#f5a524;
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror   
                                                     </div>
+                                                </div>
                                                         <!-- Modal footer -->
                                                         <div class="modal-footer justify-content-end mt-3">
                                                         <button type="submit" class="btn btn-primary">Add Rule</button>
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                         </div>
+
+                                                    </div>
+                                                    </div>
                                                 </form>
                                             </div>
 

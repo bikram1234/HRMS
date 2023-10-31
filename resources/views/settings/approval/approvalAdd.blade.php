@@ -30,9 +30,6 @@
                     <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>
-
-   
-
         <div class="form-group">
             <label for="Type">Type</label>
             <select id="Type" name="type_id" class="form-control">

@@ -158,20 +158,23 @@ background-color:#f5a524;
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
-                                                    <label for="start_date">Start Date <span class="text-danger">*</span></label>
-                                                    <div class="cal-icon">
-                                                        <input  name="start_date" id="start_date" class="form-control datetimepicker" type="date" value="{{ old('start_date', $policy->start_date)}}" readonly>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                        <label>End Date <span class="text-danger">*</span></label>
-                                                        <div class="cal-icon">
-                                                            <input class="form-control datetimepicker" id="end_date" name="end_date"  type="date" value="{{ old('end_date', $policy->end_date)}}">
+                                                            <label for="start_date">Start Date</label>
+                                                            <input type="date" name="start_date" id="start_date" class="form-control" >
+                                                            @error('start_date')
+                                                                    <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
                                                         </div>
+                                                </div>
+                                              
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                                        <label for="end_date">End Date</label>
+                                                                        <input type="date" name="end_date" id="end_date" class="form-control" >
+                                                                        @error('end_date')
+                                                                                <small class="text-danger">{{ $message }}</small>
+                                                                        @enderror
                                                     </div>
-                                                    </div>
+                                                </div>
                                                     <div class="col-sm-12">
                                                             <div class="form-group">
                                                             <label class="col-form-label form-select-md">Status</label>
@@ -268,24 +271,21 @@ background-color:#f5a524;
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
-                    <label for="start_date">Start Date <span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                        <input  name="start_date" id="start_date" class="form-control datetimepicker" type="date">
-                        @error('start_date')
-                            <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                                <label for="start_date">Start Date</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" >
+                                @error('start_date')
+                                        <small class="text-danger">{{ $message }}</small>
+                                @enderror
                     </div>
                 </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <label>End Date <span class="text-danger">*</span></label>
-                        <div class="cal-icon">
-                            <input class="form-control datetimepicker" id="end_date" name="end_date"  type="date">
-                            @error('end_date')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
+                                <label for="end_date">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control" >
+                                @error('end_date')
+                                        <small class="text-danger">{{ $message }}</small>
+                                @enderror
                     </div>
                 </div>
             

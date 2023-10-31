@@ -44,9 +44,9 @@ background-color:#f5a524;
                         </div>
                         <div class="col-auto float-right ml-auto">
 
-                        <button type="button" class="btn add-btn" onclick="window.location.href='{{ route('show-advance-loan') }}'">
+                        <button type="button" class="btn add-btn" onclick="window.location.href='{{ route('show_advance') }}'">
                         <i class="fa fa-plus"></i>
-                            {{ __('Add Advance') }}
+                            {{ __('Apply Advance') }}
                         </button> 
 						</div>
                        
@@ -76,7 +76,7 @@ background-color:#f5a524;
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($advances as $key => $advance)
+                                    @foreach ($Advanceapplication as $key => $advance)
                                 <tr>
                                     <th style="width: 30px;">
                                         <label>
@@ -114,7 +114,7 @@ background-color:#f5a524;
 <!-- /Page Wrapper -->
 
                 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#selectAllCheckbox').change(function() {

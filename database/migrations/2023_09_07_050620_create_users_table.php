@@ -32,6 +32,9 @@ return new class extends Migration
             $table->unsignedBigInteger('grade_id')->nullable();
             $table->foreign('grade_id')->references('id')->on('grades')->onDelete('set null');
 
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
+
             $table->rememberToken();
             $table->timestamps();
         });

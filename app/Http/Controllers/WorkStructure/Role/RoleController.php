@@ -94,8 +94,12 @@ class RoleController extends Controller
     
         $permissions = $request->input('permissions', []);
         $role->syncPermissions($permissions); // Sync selected permissions with the role
-    
-        return redirect()->route('role.index')->with('success', 'Role updated successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Role Updated successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('role.index')->with($notification);
     }
     /**
      * Remove the specified resource from storage.
@@ -107,6 +111,11 @@ class RoleController extends Controller
         }
 
         $role->delete();
-        return redirect()->route('role.index')->with('success', 'Role Deleted Successfully!!!');
+        //display the message 
+        $notification = array(
+            'message' => 'Role Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('role.index')->with($notification);
     }
 }

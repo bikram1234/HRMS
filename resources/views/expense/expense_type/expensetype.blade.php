@@ -5,7 +5,7 @@
 <style>
  .status-button {
 background-color:#17c964;
- border-radius: 30px;
+ border-radius: 5px;
 }
 
 .status-button:hover{
@@ -13,7 +13,7 @@ background-color:#17c964;
 }
 .inactive-button {
 background-color:#f5a524;
- border-radius: 30px;
+ border-radius: 5px;
 }
 
 .inactive-button:hover{
@@ -28,8 +28,8 @@ background-color:#f5a524;
 </style>
 
 <!-- Page Wrapper -->
-<div class="page-wrapper"> 
-<!-- Page Content -->
+<div class="page-wrapper">        
+    <!-- Page Content -->
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -45,28 +45,33 @@ background-color:#f5a524;
                     </div>
             </div>
         </div>
-        <!-- /Page Header -->
-        <div class="row">
-            <div class="col-md-12 stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="col-md-12">
-                            <div class="container table-responsive">  
-                                <table id="example" class="table table-striped custom-table" style="width: 100%">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 30px;">
-                                                <label>
-                                                <input type="checkbox" id="selectAllCheckbox">
-                                                <span>SI</span>
-                                                </label>
-                                            </th>
-                                            <th>Expense Type</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
+        <!-- /Page Header -->  
+    <div class="row">
+    @if(session('success'))
+    <div class="mb-4 font-medium text-sm text-green-600">
+        {{ session('success') }}
+        </div>
+    @endif
+        <div class="col-md-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="container table-responsive">  
+                            <table id="example" class="table table-striped custom-table" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30px;">
+                                        <label>
+                                        <input type="checkbox" id="selectAllCheckbox">
+                                        <span>SI</span>
+                                        </label>
+                                        </th>
+                                        <th>Expense Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @foreach($expenseTypes as $key => $expenseType)
                                         <tr>
@@ -85,17 +90,20 @@ background-color:#f5a524;
                                             <td><button class="btn inactive-button " type="button">Draft</button></td>
                                             @endif
                                         </tr>
-                                </tbody>
                                     @endforeach
-                                </table>
-                            </div>
+                                </tbody>
+
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- /Page Content -->
+</div>
+<!-- /Page Content -->           
+
+
 </div>
 <!-- /Page Wrapper -->
 <!--Add Expense Type-->
@@ -120,26 +128,23 @@ background-color:#f5a524;
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
-                <label for="start_date">Start Date <span class="text-danger">*</span></label>
-                <div class="cal-icon">
-                    <input  name="start_date" id="start_date" class="form-control datetimepicker" type="date"  required>
-                    @error('start_date')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-            </div>
+                                <label for="start_date">Start Date</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" >
+                                @error('start_date')
+                                        <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                    </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
-                <label for="start_date">End Date <span class="text-danger">*</span></label>
-                <div class="cal-icon">
-                    <input  name="end_date" id="end_date" class="form-control datetimepicker" type="date" >
-                                    @error('start_date')
+                                <label for="end_date">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control" >
+                                @error('end_date')
                                         <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                            </div>
-                        </div>
-                        </div>
+                                @enderror
+                    </div>
+                </div>
+                
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label class="col-form-label form-select-md">Status</label>
@@ -160,11 +165,22 @@ background-color:#f5a524;
     </div>
 <!-- End Expense Add -->
 
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#selectAllCheckbox').change(function() {
         $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+    // Initialize datetimepicker
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Set the desired date format
+        // Add any other options you need
     });
 });
 </script>

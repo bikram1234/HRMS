@@ -31,7 +31,7 @@
            
             <!-- Modal Body -->
             <div class="modal-body">
-                <form method="POST" action="{{ route('applyleave.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('applylessave.store') }}" enctype="multipart/form-data">
                     @csrf
                         <div class="form-group">
                             <input type="hidden" id="user_id" name="user_id" class="form-control" value="{{ auth()->user()->id }}" required readonly>
@@ -142,11 +142,15 @@
                         <td>{{ $history->start_date }}</td>
                         <td>{{ $history->end_date }}</td>
                         <td>{{ $history->number_of_days }}</td>
-                        @if($history->status == 1 )
-                         <td>Active</td>
-                         @else
-                         <td>Draft</td>
-                         @endif
+                        <td>
+                        @if ($history->status === 'pending')
+                            <button class="btn btn-warning">Pending</button>
+                        @elseif ($history->status === 'approved')
+                            <button class="btn btn-success">Approved</button>
+                        @elseif ($history->status === 'rejected')
+                            <button class="btn btn-danger">Rejected</button>
+                        @endif
+                        </td>
                         <td>
                             <a href="" class="btn btn-primary btn-sm">Edit</a>
                             <a href="{{ route('leavePolicy.view', ['leave_id' => $history->leave_id])}}" class="btn btn-primary btn-sm">View</a> 

@@ -5,7 +5,7 @@
 <style>
  .status-button {
 background-color:#17c964;
- border-radius: 30px;
+ border-radius: 5px;
 }
 
 .status-button:hover{
@@ -13,7 +13,7 @@ background-color:#17c964;
 }
 .inactive-button {
 background-color:#f5a524;
- border-radius: 30px;
+ border-radius: 5px;
 }
 
 .inactive-button:hover{
@@ -134,28 +134,25 @@ background-color:#f5a524;
                         </select>
                     </div>
                 </div>
+
                 <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="start_date">Start Date <span class="text-danger">*</span></label>
-                <div class="cal-icon">
-                    <input  name="start_date" id="start_date" class="form-control datetimepicker" type="text"  required>
-                    @error('start_date')
+                    <div class="form-group">
+                        <label class="col-form-label" for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" required>
+                        @error('start_date')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-                </div>
-            </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="start_date">End Date <span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                        <input  name="end_date" id="end_date" class="form-control datetimepicker" type="text" >
-                        @error('start_date')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
                     </div>
                 </div>
-            </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-form-label" for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="start_date" class="form-control">
+                        @error('end_date')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                    </div>
+                </div>
             <div class="col-sm-12">
                 <div class="form-group">
                         <label class="col-form-label form-select-md">Status</label>

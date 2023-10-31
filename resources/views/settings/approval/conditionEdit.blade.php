@@ -1,73 +1,178 @@
-@extends('layout') 
 
+@extends('layouts.index')
 @section('content')
+<style>
+ .status-button {
+background-color:#17c964;
+ border-radius: 30px;
+}
 
-<div class="container">
-    @if(session('success'))
-        <div id="success-message" class="alert alert-success">
-            {{ session('success') }}
+.status-button:hover{
+    background-color:#17c964;
+}
+.inactive-button {
+background-color:#f5a524;
+ border-radius: 30px;
+}
+
+.inactive-button:hover{
+    background-color:#f5a524;
+}
+
+.icon-spacing {
+    margin-left: 10px; /* Adjust the value to control the spacing */
+    display: inline-block; /* Ensures the span takes up space */
+}
+
+</style>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">      
+    <!-- Page Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Approval Rules</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item active">Dashboard/Setting Management/Approval </li>
+                    </ul>
+                </div>
+                @if(session('success'))
+                    <div id="success-message" class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+            </div>
         </div>
-    @endif
-
-    <h1>Edit Condition</h1>
-    <form method="POST" action="{{ route('condition.update', $approval_condition->id) }}">
-        @csrf
-        @method('patch') 
-        <div class="form-group">
-            <label>Approval Type:</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="approval_type" id="hierarchy" value="Hierarchy" {{ $approval_condition->approval_type === 'Hierarchy' ? 'checked' : '' }}>
-                <label class="form-check-label" for="hierarchy">Hierarchy</label>
+        <!-- /Page Header -->
+        <div class="row mt-4">
+            <div class="col-md-12 stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-md-12">
+                        <form method="POST" action="{{ route('condition.store')}}">
+                            @csrf
+                            @method('patch')
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title">Edit Conditions</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="container">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="approval_type" id="hierarchy" value="Hierarchy" {{ $approval_condition->approval_type === 'Hierarchy' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="radio1">
+                                                        Hierarchy
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group" id="hierarchyFields">
+                                                    <label class="col-form-label">Hierarchy ID (optional)<span class="text-danger">*</span></label>
+                                                    <select name="hierarchy_id" id="hierarchy_id" class="form-select  form-select-md" aria-label="Default select example" style="height:45px" {{ $approval_condition->approval_type !== 'Hierarchy' ? 'disabled' : '' }}>
+                                                    <option disabled selected>Select Hiearchy</option>
+                                                    @foreach($hierarchies as $hierarchy)
+                                                    <option value="{{ $hierarchy->id }}" {{ $approval_condition->hierarchy_id == $hierarchy->id ? 'selected' : '' }}>{{ $hierarchy->name }}</option>
+                                                    @endforeach
+                                                    </select>
+                                                    @error('hierarchy_id')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                    @enderror
+                                                </div>
+                                            </div>    
+                                            <div class="col-sm-6">
+                                                <div class="form-group" id="maxLevelFields">
+                                                <label for="MaxLevel" class="col-form-label">Select Level<span class="text-danger">*</span></label>
+                                                <select name="MaxLevel" id="MaxLevel" class="form-select  form-select-md" aria-label="Default select example" style="height:45px" {{ $approval_condition->approval_type !== 'Hierarchy' ? 'disabled' : '' }} >
+                                                <!-- Options will be populated dynamically based on the selected hierarchy -->
+                                                </select>
+                                                </div>
+                                            </div> 
+                                            <div class="container mt-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="approval_type" id="single_user" value="Single User" {{ $approval_condition->approval_type === 'Single User' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="single_user">
+                                                        Single User
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group" id="employeeFields">
+                                                    <label class="col-form-label">Employee ID (Optional)<span class="text-danger">*</span></label>
+                                                    <select  name="employee_id" id="employee_id" class="form-select  form-select-md" aria-label="Default select example" style="height:45px" {{ $approval_condition->approval_type !== 'Single User' ? 'disabled' : '' }}>
+                                                    <option disabled selected>Select Employee</option>
+                                                    @foreach($users as $user)
+                                                    <option value="{{ $user->id}}" {{ $approval_condition->employee_id == $user->id ? 'selected' : '' }}>{{ $user->name}} ({{ $user->employee_id }})</option>
+                                                    @endforeach
+                                                    </select>
+                                                </div>
+                                            </div> 
+                                            <div class="container mt-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="approval_type" id="auto_approval" value="Auto Approval" {{ $approval_condition->approval_type === 'Auto Approval' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="auto_approval">
+                                                        Auto Approval
+                                                    </label>
+                                                </div>
+                                            </div> 
+                                            <div class="col-sm-6">
+                                                <div class="form-group" id="autoApprovalFields">
+                                                    <label class="col-form-label">Auto Approval (Optional)<span class="text-danger">*</span></label>
+                                                    <input type="checkbox" name="AutoApproval" id="AutoApproval" class="form-control" disabled>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        <div class="modal-footer justify-content-end mt-3">
+                                            <button type="submit" name="save" class="btn btn-primary">Submit</button>
+                                            &nbsp;  &nbsp;   &nbsp;
+                                            <button type="submit" name="cancel" class="btn btn-secondary">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Add Condition -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Hierarchy ID and Max Level Fields -->
-            <div class="form-group" id="hierarchyFields">
-                <label for="hierarchy_id">Hierarchy ID (optional)</label>
-                <select name="hierarchy_id" id="hierarchy_id" class="form-control" {{ $approval_condition->approval_type !== 'Hierarchy' ? 'disabled' : '' }}>
-                    <option disabled selected>Select Hierarchy</option>
-                    @foreach($hierarchies as $hierarchy)
-                        <option value="{{ $hierarchy->id }}" {{ $approval_condition->hierarchy_id == $hierarchy->id ? 'selected' : '' }}>{{ $hierarchy->name }}</option>
-                    @endforeach
-                </select>
-                @error('hierarchy_id')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group" id="maxLevelFields">
-                <label for="MaxLevel">Select Level</label>
-                <select name="MaxLevel" id="MaxLevel" class="form-control" {{ $approval_condition->approval_type !== 'Hierarchy' ? 'disabled' : '' }}>
-                    <!-- Options will be populated dynamically based on the selected hierarchy -->
-                </select>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="approval_type" id="single_user" value="Single User" {{ $approval_condition->approval_type === 'Single User' ? 'checked' : '' }}>
-                <label class="form-check-label" for="single_user">Single User</label>
-            </div>
-            <!-- Single User and Auto Approval Fields -->
-            <div class="form-group" id="employeeFields">
-                <label for="employee_id">Employee ID (optional)</label>
-                <select name="employee_id" id="employee_id" class="form-control" {{ $approval_condition->approval_type !== 'Single User' ? 'disabled' : '' }}>
-                    <option disabled selected>Select Employee</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ $approval_condition->employee_id == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->employee_id }})</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="approval_type" id="auto_approval" value="Auto Approval" {{ $approval_condition->approval_type === 'Auto Approval' ? 'checked' : '' }}>
-                <label class="form-check-label" for="auto_approval">Auto Approval</label>
-            </div>
-        </div>  
-
-        <div class="form-group" id="autoApprovalFields">
-        <label for="AutoApproval">Auto Approval (optional)</label>
-        <input type="checkbox" name="AutoApproval" id="AutoApproval" class="form-control" disabled>
         </div>
-        <button type="submit" class="btn btn-primary mt-4">Submit</button>
-    </form>
+       
+    </div><!-- /Page Content --> 
+</div> 
+<!-- /Page Wrapper -->
+              
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    
+<script>
+    // Listen for changes in the hierarchy select field
+    document.getElementById('hierarchy_id').addEventListener('change', function () {
+        // Get the selected hierarchy ID
+        const hierarchyId = this.value;
+
+        // Send an AJAX request to fetch levels associated with the selected hierarchy
+        fetch(`/levels/${hierarchyId}`)
+            .then(response => response.json())
+            .then(levels => {
+                const levelSelect = document.getElementById('MaxLevel');
+                levelSelect.innerHTML = ''; // Clear existing options
+
+                // Add options for each level
+                levels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = 'Level'+level.level;
+                    option.textContent = 'Level'+level.level;
+                    levelSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
     <script>
         // Add JavaScript logic for enabling/disabling fields based on radio button selection (similar to the create form)
         const radioButtons = document.querySelectorAll('input[name="approval_type"]');
@@ -96,9 +201,19 @@
             });
         });
     </script>
-</div>
-
-
-
-</div>
+<script>
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        $('input[type="checkbox"]').prop('checked', this.checked);
+    });
+});
+</script>
+<script>
+$(document).ready(function () {
+    $("#example").DataTable();
+});
+</script>
 @endsection
+
+
+

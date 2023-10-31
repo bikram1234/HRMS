@@ -13,6 +13,7 @@ use App\Models\Department;
 use Spatie\Permission\Models\Role;
 use App\Models\Designation;
 use App\Models\Grade;
+use App\Models\region;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreatedMail;
@@ -86,26 +87,29 @@ class AdminController extends Controller
          $roles = Role::all();
          $designations = Designation::all();
          $grades = Grade::all();
- 
-         return view('admin.adduser', compact('departments', 'sections', 'roles', 'designations', 'grades'));
+         $region = region::all();
+         return view('settings.systemuser.adduser', compact('departments', 'sections', 'roles', 'designations', 'grades','region'));
      }
 
-    //  Add User Method
-    public function storeUser(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'employee_id' => 'required|unique:users,employee_id',
-            'department' => ['required', 'exists:departments,id'], // Validate department
-            'section' => ['required', 'exists:sections,id'], // Validate section
-            'designation' => ['required', 'exists:designations,id'],
-            'grade' => ['required', 'exists:grades,id'],
-        ],
-        [
-            'employee_id.unique' => 'The employee ID must be unique.',
-        ]
-    );
+   //  Add User Method
+   public function storeUser(Request $request)
+   {
+       $validated = $request->validate([
+           'name' => 'required|string|max:255',
+           'email' => 'required|string|email|max:255|unique:users',
+           'employee_id' => 'required|unique:users,employee_id',
+           'department_id' => ['required', 'exists:departments,id'], // Validate department
+           'designation_id' => ['required', 'exists:designations,id'],
+           'grade_id' => ['required', 'exists:grades,id'],
+           'region_id' => ['required', 'exists:regions,id'],
+           'gender' => ['required'],
+           'employment_type' => ['required']
+       ],
+       [
+           'employee_id.unique' => 'The employee ID must be unique.',
+       ]
+   );
+
     
         // Generate a random password
         $randomPassword = Str::random(10);
@@ -116,18 +120,26 @@ class AdminController extends Controller
             'email' => $validated['email'],
             'employee_id' => $validated['employee_id'],
             'password' => Hash::make($randomPassword), // Hash the random password
-            'department' => $request->department,
-            'section' => $request->section,
-            'designation' => $request->designation,
-            'grade' => $request->grade,
+            'department_id' => $request->department_id,
+            'section_id' => $request->section_id,
+            'designation_id' => $request->designation_id,
+            'grade_id' => $request->grade_id,
+            'region_id' => $request->region_id,
+            'gender' => $request->gender,
+            'employment_type' => $request->employment_type,
         ]);
     
         $role = Role::findOrFail($request->role); // Get the selected role by ID
         $user->assignRole($role);
         // Send email with random password
         Mail::to($user->email)->send(new UserCreatedMail($user, $randomPassword));
-    
-        return redirect()->route('users.create')->with('success', 'User created successfully.');
+        //display the message 
+        // dd($randomPassword);
+        $notification = array(
+            'message' => 'User created successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->route('users.create')->with($notification);
     }
     
 

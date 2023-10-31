@@ -52,7 +52,8 @@ background-color:#f5a524;
                     </div>
                 </div>
                 <!-- /Page Header -->
-<style>.word-container {
+<style>
+.word-container {
     display: flex;
     gap: 50px; /* Adjust the gap as needed */
 }

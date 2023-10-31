@@ -99,63 +99,63 @@ background-color:#f5a524;
                                         </div>
                                     </td>
                                 </tr>
- <!-- Edit Department-->
-<div id="edit_type{{$department->id}}" class="modal custom-modal fade" role="dialog">
-    <form method="POST" action="{{ route ('department.update',  $department->id) }}">
-        @csrf
-        @method('patch')
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Department</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Department Name<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text"  id="name" name="name" value="{{old('name', $department->name)}}" required>
-                                        @error('name')
-                                             <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                            <!-- Edit Department-->
+                            <div id="edit_type{{$department->id}}" class="modal custom-modal fade" role="dialog">
+                                <form method="POST" action="{{ route ('department.update',  $department->id) }}">
+                                    @csrf
+                                    @method('patch')
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Department</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">Department Name<span class="text-danger">*</span></label>
+                                                                <input class="form-control" type="text"  id="name" name="name" value="{{old('name', $department->name)}}" required>
+                                                                    @error('name')
+                                                                        <small class="text-danger">{{ $message }}</small>
+                                                                    @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">Department Head</label>
+                                                                <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
+                                                                    <option value="0">24(Sangay Tenzin)</option>
+                                                                    <option value="1">24(Sangay Tenzin)</option>
+                                                                    <option value="2">24(Sangay Tenzin)</option>
+                                                                    <option value="3">24(Sangay Tenzin)</option>
+                                                                </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label form-select-md">Status</label>
+                                                                <select class="form-select" aria-label="Default select example" style="height:45px" name="status">
+                                                                    <option value="1">Active</option>
+                                                                    <option value="0">Inactive</option>
+                                                                </select>
+                                                            @error('status')
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer justify-content-start">
+                                                <button type="submit" class="btn btn-primary">Update Department</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Department Head</label>
-                                    <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px">
-                                        <option value="0">24(Sangay Tenzin)</option>
-                                        <option value="1">24(Sangay Tenzin)</option>
-                                        <option value="2">24(Sangay Tenzin)</option>
-                                        <option value="3">24(Sangay Tenzin)</option>
-                                    </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="col-form-label form-select-md">Status</label>
-                                    <select class="form-select" aria-label="Default select example" style="height:45px" name="status">
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                @error('status')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-start">
-                    <button type="submit" class="btn btn-primary">Update Department</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
- <!-- /Edit Department -->  
+                            <!-- /Edit Department -->  
                                 @endforeach
                                 @endif
                                 </tbody>

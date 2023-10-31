@@ -20,6 +20,10 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Settings\RolesAndPermission\PermissionController;
 use App\Http\Controllers\Settings\Hierarchy\HierarchyController;
 use App\Http\Controllers\Settings\Approval\ApprovalRuleController;
+use App\Http\Controllers\Settings\Approval\AdvanceApprovalRuleController;
+use App\Http\Controllers\Settings\Approval\ExpenseApprovalRuleController;
+use App\Http\Controllers\Settings\Approval\AdvanceApprovalConditionController;
+use App\Http\Controllers\Settings\Approval\ExpenseApprovalConditionController;
 use App\Http\Controllers\Settings\Approval\ApprovalConditionController;
 use App\Http\Controllers\Settings\Formula\FormulaController;
 use App\Http\Controllers\Leave\Type\LeavetypeController;
@@ -28,15 +32,25 @@ use App\Http\Controllers\Leave\Plan\LeavePlanController;
 use App\Http\Controllers\Leave\Rule\LeaveRuleController;
 use App\Http\Controllers\Leave\YearEnd\LeaveYearendProcessingController;
 use App\Http\Controllers\Leave\Apply\AppliedLeaveController;
+use App\Http\Controllers\Leave\Approval\LeaveApprovalController;
 use App\Http\Controllers\Expense\expense_type\expense_type;
 use App\Http\Controllers\Expense\policy\add_policy;
 use App\Http\Controllers\Expense\policy\view_policy;
 use App\Http\Controllers\Expense\policy\edit_policy;
 use App\Http\Controllers\Expense\expense_apply\apply;
+use App\Http\Controllers\Expense\expense_approval\expense_approval_Controller;
 use App\Http\Controllers\Advance\advance_type\advance_type;
+use App\Http\Controllers\Advance\advance_approval\advance_approval_Controller;
+use App\Http\Controllers\Advance\add_device_emi\device_emiController;
 use App\Http\Controllers\Advance\apply\advance_apply;
 use App\Http\Controllers\Expense\dsa_claim\dsa_settlement;
-
+use App\Http\Controllers\Expense\dsa_approval\dsa_approval_Controller;
+use App\Http\Controllers\Expense\Add_Vehicle\add_vehicle_Controller;
+use App\Http\Controllers\Expense\expense_fuel\fuel_claim;
+use App\Http\Controllers\Expense\Fuel_approval\fuel_approval_Controller;
+use App\Http\Controllers\Expense\transfer_claim\transfer_claim;
+use App\Http\Controllers\Expense\transfer_claim_approval\transfer_claim_approval_Controller;
+use App\Http\Controllers\WorkStructure\basic_pay\basic_payController;
 
 /*
 |--------------------------------------------------------------------------
@@ -172,12 +186,54 @@ Route::namespace('Settings')->group(function () {
     Route::patch('/approval/{approvalRule}', [ApprovalRuleController::class, 'update'])->name('approval.update');
     Route::get('/fetch-types/{for}', [ApprovalRuleController::class, 'fetchTypes'])->name('fetch-types');
 
+    //Expense_Approval Route
+Route::get('/expense-approval', [expense_approval_Controller::class,'show_pending_expense_application'])->name('expense.approval.index');
+Route::get('/expense_details/{id}', [expense_approval_Controller::class, 'view_details'])
+    ->name('expense_details.view'); 
+Route::post('/expense-approval/{id}', [expense_approval_Controller::class, 'approveexpense'])->name('expense.approve');
+Route::post('/expense-reject/{id}', [expense_approval_Controller::class, 'rejectexpense'])->name('expense.reject');
 
+
+  
+    // Expense approval rule route
+    Route::get('/expense-approvalrule', [ExpenseApprovalRuleController::class, 'index'])->name('expense-approvalrule.index');
+    Route::get('/expense-approvalAdd', [ExpenseApprovalRuleController::class, 'create'])->name('expense-approval.create');
+    Route::post('/expense-approval', [ExpenseApprovalRuleController::class, 'store'])->name('expense-approval.store');
+    Route::get('/expense-approval/{approvalRule}', [ExpenseApprovalRuleController::class, 'show'])->name('expense-approval.show');
+    Route::patch('/expense-approval/{approvalRule}', [ExpenseApprovalRuleController::class, 'update'])->name('expense-approval.update');
+    Route::get('/expense-fetch-types/{for}', [ExpenseApprovalRuleController::class, 'fetchTypes'])->name('expense-fetch-types');
+
+
+
+    // Advance approval rule route
+    Route::get('/advance-approvalrule', [AdvanceApprovalRuleController::class, 'index'])->name('advance-approvalrule.index');
+    Route::get('/advance-approvalAdd', [AdvanceApprovalRuleController::class, 'create'])->name('advance-approval.create');
+    Route::post('/advance-approval', [AdvanceApprovalRuleController::class, 'store'])->name('advance-approval.store');
+    Route::get('/advance-approval/{approvalRule}', [AdvanceApprovalRuleController::class, 'show'])->name('advance-approval.show');
+    Route::patch('/advance-approval/{approvalRule}', [AdvanceApprovalRuleController::class, 'update'])->name('advance-approval.update');
+    Route::get('/advance-fetch-types/{for}', [AdvanceApprovalRuleController::class, 'fetchTypes'])->name('advance-fetch-types');
+
+
+
+    // Condition
     Route::get('/condition/{approval_rule_id}', [ApprovalConditionController::class, 'create'])->name('condition.create');
     Route::post('/condition', [ApprovalConditionController::class, 'store'])->name('condition.store');
     Route::get('/approval_condition/{approval_condition}/edit', [ApprovalConditionController::class, 'edit'])->name('approval_condition.edit');
     Route::patch('/condition/{approval_condition}', [ApprovalConditionController::class, 'update'])->name('condition.update');
 
+    // Advance condition 
+    Route::get('/advanceCondition/{approval_rule_id}', [AdvanceApprovalConditionController::class, 'create'])->name('advance-condition.create');
+    Route::post('/advance-condition', [AdvanceApprovalConditionController::class, 'store'])->name('advance-condition.store');
+    Route::get('/advance-approval_condition/{approval_condition}/edit', [AdvanceApprovalConditionController::class, 'edit'])->name('advance-approval_condition.edit');
+    Route::patch('/advance-condition/{approval_condition}', [AdvanceApprovalConditionController::class, 'update'])->name('advance-condition.update');
+   
+    //Expense condition 
+    Route::get('/expenseCondition/{approval_rule_id}', [ExpenseApprovalConditionController::class, 'create'])->name('expense-condition.create');
+    Route::post('/expense-condition', [ExpenseApprovalConditionController::class, 'store'])->name('expense-condition.store');
+    Route::get('/expense-approval_condition/{approval_condition}/edit', [ExpenseApprovalConditionController::class, 'edit'])->name('expense-approval_condition.edit');
+    Route::patch('/expense-condition/{approval_condition}', [ExpenseApprovalConditionController::class, 'update'])->name('expense-condition.update');
+
+    // Formula
     Route::get('/formula/create-for-approval-condition/{approvalConditionId}', [FormulaController::class, 'createForApprovalCondition'])
     ->name('formula.createForApprovalCondition');
     Route::post('/formula', [FormulaController::class, 'store'])->name('formula.store');
@@ -202,7 +258,6 @@ Route::namespace('Leave')->group(function () {
     Route::post('/leaveplanAdd', [LeavePlanController::class, 'store'])->name('leaveplan.store');
     Route::post('/leaveruleAdd', [LeaveRuleController::class, 'store'])->name('leaverule.store');
 
-
     Route::get('/yearendAdd/{leave_id}', [LeaveYearendProcessingController::class, 'create'])->name('yearendprocessing.create');
     Route::post('/yearendprocessing', [LeaveYearendProcessingController::class, 'store'])->name('yearendprocessing.store');
     Route::get('/summary/{leave_id}', [LeaveYearendProcessingController::class, 'showSummary'])->name('showSummary.show');
@@ -215,8 +270,15 @@ Route::namespace('Leave')->group(function () {
     Route::get('/apply-leave', [AppliedLeaveController::class, 'create'])->name('leaveapply.create');
     Route::post('/apply-leave', [AppliedLeaveController::class, 'store'])->name('applyleave.store');
     Route::get('/fetch-include-weekends/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludeWeekends'])->name('fetch-include-weekends');
+    Route::get('/fetch-include-public-holidays/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludePublicHolidays'])->name('fetch-include-public-holidays');
+    Route::get('/fetch-can-be-half-day/{leaveTypeId}', [AppliedLeaveController::class, 'fetchCanBeHalfDay'])->name('fetch-can-be-half-day');
 
-    
+
+    //Leave Approval
+    Route::get('/leaveApproval', [LeaveApprovalController::class,'index'])->name('leaveApproval.index');
+    Route::post('/leave-approval/{id}', [LeaveApprovalController::class, 'approveLeave'])->name('leave.approve');
+    Route::post('/leave-decline/{id}', [LeaveApprovalController::class, 'declineLeave'])->name('leave.decline');
+    Route::post('/leave-cancel/{id}', [LeaveApprovalController::class, 'cancelLeave'])->name('leave.cancel');
 });
 
 
@@ -281,22 +343,126 @@ Route::post('/submit-application', [apply::class, 'submitApplication']) ->name('
 Route::get('/admin/advance/add', [advance_type::class, 'showAdvanceForm'])->name('show-advance-form');
 Route::post('/admin/advance/add', [advance_type::class, 'addAdvance'])->name('add-advance');
 
-// Route to show the advance form
-Route::get('/advance-details', [advance_apply::class, 'advance_details'])->name('show-advance-details');
-Route::get('/advance-form', [advance_apply::class, 'showAdvance'])->name('show-advance-loan');
+
+
+Route::get('/details', [advance_apply::class, 'details'])->name('advance-details');
+Route::get('/advance_form', [advance_apply::class, 'show_Advance'])->name('show_advance');
 // Route to handle the advance submission
-Route::post('/Add-Advance', [advance_apply::class, 'addAdvanceLoan'])->name('Add-Advance');
+Route::post('/Add_Advance', [advance_apply::class, 'store_advance'])->name('Add_Advance');
+
+
+
+//Advance Approval Route
+Route::get('/advance-approval', [advance_approval_Controller::class, 'advance_approval_show'])
+    ->name('advance.approval.index');
+Route::get('/advance/{id}', [advance_approval_Controller::class, 'advance_details'])
+    ->name('advance.view');
+Route::post('/advance-approval/{id}', [advance_approval_Controller::class, 'approveadvance'])->name('advance.approve');
+Route::post('/advance-reject/{id}', [advance_approval_Controller::class, 'rejectadvance'])->name('advance.reject');
+
+
+
 
 // Route to display the DSA settlement form
 Route::get('/dsa-data', [dsa_settlement::class,'getdsa'])->name('dsa-data');
 Route::get('dsa-settlement', [dsa_settlement::class, 'dsaSettlementForm'])
     ->name('dsa-settlement-form');
 
+//Dsa Approval Route
+Route::get('/dsa-approval', [dsa_approval_Controller::class,'show_dsa_approval_application'])->name('dsa.approval.index');
+Route::get('/dsa-settlement/{id}', [dsa_approval_Controller::class, 'view_DsaSettlement_detail'])
+    ->name('dsa-settlement.view'); 
+Route::post('/dsa-approval/{id}', [dsa_approval_Controller::class, 'approvedsa'])->name('dsa.approve');
+Route::post('/dsa-reject/{id}', [dsa_approval_Controller::class, 'rejectdsa'])->name('dsa.reject');
+
+
 // Route to calculate and display the DSA settlement
 Route::post('calculate-dsa-settlement', [dsa_settlement::class, 'calculateDsaSettlement'])
     ->name('calculate-dsa-settlement');
 // Route to retrive allthe dsa settlement 
 Route::get('/retrieve-dsa-data', [dsa_settlement::class,'DSAretrieveData'])->name('retrieve-dsa-data');
+
+//Add Vehicle Type Route
+Route::get('/vehicles', [add_vehicle_Controller::class, 'index'])->name('vehicles.index');
+Route::get('/vehicles/create', [add_vehicle_Controller::class, 'create'])->name('vehicles.create');
+Route::post('/vehicles', [add_vehicle_Controller::class, 'store'])->name('vehicles.store');
+Route::get('/vehicles/{vehicle}/edit', [add_vehicle_Controller::class, 'edit'])->name('vehicles.edit');
+Route::put('/vehicles/{vehicle}', [add_vehicle_Controller::class, 'update'])->name('vehicles.update');
+
+
+
+
+// Show all fuels
+Route::get('fuels', [fuel_claim::class, 'index'])->name('fuels.index');
+// Display the form to create a new fuel
+Route::get('fuels/create', [fuel_claim::class, 'create'])->name('fuels.create');
+
+// Store a newly created fuel
+Route::post('fuels', [fuel_claim::class, 'store'])->name('fuels.store');
+
+// Display the form to edit a fuel
+Route::get('fuels/{fuel}/edit', [fuel_claim::class, 'edit'])->name('fuels.edit');
+
+// Update a fuel
+Route::put('fuels/{fuel}', [fuel_claim::class, 'update'])->name('fuels.update');
+
+//show a fuel
+// Show a single fuel claim
+Route::get('fuels/{fuel}', [fuel_claim::class, 'show'])->name('fuels.show');
+
+// Delete a fuel
+Route::delete('fuels/{fuel}', [FuelClaim::class, 'destroy'])->name('fuels.destroy');
+
+//Fuel Approval Route
+Route::get('/fuel-approval', [fuel_approval_Controller::class, 'fuel_approval'])
+    ->name('fuel.approval.index');
+Route::get('/fuel/{id}', [fuel_approval_Controller::class, 'show_details'])
+    ->name('fuel.view'); 
+Route::post('/fuel-approval/{id}', [fuel_approval_Controller::class, 'approvefuel'])->name('fuel.approve');
+Route::post('/fuel-reject/{id}', [fuel_approval_Controller::class, 'rejectfuel'])->name('fuel.reject');
+
+// Show all products
+Route::get('products', [transfer_claim::class, 'index'])->name('products.index');
+
+// Display the form to create a new product
+Route::get('products/create', [transfer_claim::class, 'create'])->name('products.create');
+
+// Store a newly created product
+Route::post('products', [transfer_claim::class, 'store'])->name('products.store');
+
+// Display the form to edit a product
+Route::get('products/{product}/edit', [transfer_claim::class, 'edit'])->name('products.edit');
+
+// Update a product
+Route::put('products/{product}', [transfer_claim::class, 'update'])->name('products.update');
+
+// Delete a product
+Route::delete('products/{product}', [transfer_claim::class, 'destroy'])->name('products.destroy');
+
+// Show a single fuel claim
+Route::get('products/{product}', [transfer_claim::class, 'show'])->name('products.show');
+
+//transfer Approval Route
+Route::get('/transfer-approval', [transfer_claim_approval_Controller::class, 'transfer_claim_approval_show'])
+    ->name('transfer.approval.index');
+Route::get('/transfer/{id}', [transfer_claim_approval_Controller::class, 'details'])
+    ->name('transfer.view');
+Route::post('/transfer-approval/{id}', [transfer_claim_approval_Controller::class, 'approvetransfer'])->name('transfer.approve');
+Route::post('/transfer-reject/{id}', [transfer_claim_approval_Controller::class, 'rejecttransfer'])->name('transfer.reject');
+
+//Add Basic
+Route::get('/basic_pay', [basic_payController::class, 'index'])->name('basic_pay.index');
+Route::get('/basic_pay/create', [basic_payController::class, 'create'])->name('basic_pay.create');
+Route::post('/basic_pay', [basic_payController::class, 'store'])->name('basic_pay.store');
+
+// Edit and Update
+Route::get('/basic_pay/{basicPay}/edit', [basic_payController::class, 'edit'])->name('basic_pay.edit');
+Route::put('/basic_pay/{basicPay}', [basic_payController::class, 'update'])->name('basic_pay.update');
+
+// Delete
+Route::get('/basic_pay/{basicPay}/confirm-delete', [basic_payController::class, 'delete'])->name('basic_pay.confirm_delete');
+Route::delete('/basic_pay/{basicPay}', [basic_payController::class, 'destroy'])->name('basic_pay.destroy');
+
 
 
 
@@ -313,5 +479,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
+
+//ADD Device_emi Route
+Route::get('/devices', [device_emiController::class, 'show'])->name('device.index');
+Route::get('/devices/create', [device_emiController::class, 'create'])->name('device.create');
+Route::post('/devices', [device_emiController::class, 'store'])->name('device.store');
+Route::get('/devices/{device}/edit', [device_emiController::class, 'edit'])->name('device.edit');
+Route::patch('/devices/{device}', [device_emiController::class, 'update'])->name('device.update');
+Route::delete('/devices/{device}', [device_emiController::class, 'destroy'])->name('device.destroy');
 
 require __DIR__.'/auth.php';

@@ -189,25 +189,21 @@ background-color:#f5a524;
                                         </div>
                                         <div class="col-sm-12">
                                         <div class="form-group">
-										<label for="start_date">Start Date <span class="text-danger">*</span></label>
-										<div class="cal-icon">
-											<input  name="start_date" id="start_date" class="form-control datetimepicker" type="date">
-                                            @error('start_date')
+                                        <label for="start_date">Start Date</label>
+                                        <input type="date" name="start_date" id="start_date" class="form-control" >
+                                        @error('start_date')
                                                 <small class="text-danger">{{ $message }}</small>
-                                             @enderror
-										</div>
-									</div>
+                                        @enderror
+                                        </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-										<label>End Date <span class="text-danger">*</span></label>
-										<div class="cal-icon">
-											<input class="form-control datetimepicker" id="end_date" name="end_date"  type="date">
-                                            @error('end_date')
+                                        <label for="end_date">End Date</label>
+                                        <input type="date" name="end_date" id="end_date" class="form-control" >
+                                        @error('end_date')
                                                 <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-										</div>
-									</div>
+                                        @enderror
+                                        </div>
                                     </div>
                                     <div class="col-sm-12">
                                             <div class="form-group">
@@ -231,13 +227,12 @@ background-color:#f5a524;
                                         @enderror
                                         </label>
 
-                                         <!-- Modal footer -->
-                                        <div class="modal-footer justify-content-end mt-3">
-                                            <button type="submit" class="btn btn-primary">Previous</button>
-                                            <button type="submit" class="btn btn-primary">Add Policy</button>
-                                            <button type="button" class="btn btn-secondary"data-dismiss="modal">Cancel</button>
-                                        </div>
-                                       
+                            </div>
+                             <!-- Modal footer -->
+                             <div class="modal-footer justify-content-end ">
+                                <button type="submit" class="btn btn-primary">Previous</button>
+                                <button type="submit" class="btn btn-primary">Add Policy</button>
+                                <button type="button" class="btn btn-secondary"data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                         </form>

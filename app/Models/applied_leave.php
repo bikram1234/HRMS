@@ -16,6 +16,10 @@ class applied_leave extends Model
         'end_date',
         'number_of_days',
         'remark',
+        'level1',
+        'level2',
+        'level3',
+        'status'
     ];
     
 
@@ -25,5 +29,10 @@ class applied_leave extends Model
 
     public function leavetype(){
         return $this->belongsTo(leavetype::class, 'leave_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

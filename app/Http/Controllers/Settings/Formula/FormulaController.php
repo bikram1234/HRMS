@@ -31,6 +31,7 @@ class FormulaController extends Controller
         $users = User::all();
         $formulas = Formula::where('condition_id', $approvalConditionId)->get();
         // Logic for creating a formula for the given approval condition
+        
         return view('settings.approval.formula.formulaAdd', compact('approvalConditionId', 'formulas', 'users'));
     }
 
@@ -41,7 +42,12 @@ class FormulaController extends Controller
     public function store(StoreformulaRequest $request)
     {
         formula::create($request->validated());
-        return redirect()->back()->with('success', 'Formula added successfully.');
+         //display the message 
+         $notification = array(
+            'message' => 'Formula Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -74,6 +80,11 @@ class FormulaController extends Controller
     public function destroy(formula $formula)
     {
         $formula->delete();
-        return redirect()->back()->with('success', 'Formula Deleted Successfully');
+         //display the message 
+         $notification = array(
+            'message' => 'Formula Deleted successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 }

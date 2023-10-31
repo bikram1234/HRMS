@@ -1564,7 +1564,7 @@ table.dataTable thead > tr > td.sorting {
 	text-decoration: underline;
 }
 .mobile-user-menu {
-    color: #fff;
+    color: #000;
     display: none;
     float: right;
     font-size: 24px;
@@ -1579,11 +1579,11 @@ table.dataTable thead > tr > td.sorting {
     z-index: 10;
 }
 .mobile-user-menu > a {
-    color: #fff;
+    color: #0000;
     padding: 0;
 }
 .mobile-user-menu a:hover {
-	color: #fff;
+	color: #000;
 }
 .mobile-user-menu > .dropdown-menu {
 	min-width: 130px;
@@ -1600,6 +1600,10 @@ table.dataTable thead > tr > td.sorting {
 .mobile_btn {
 	display: none;
 	float: left;
+	
+}
+#mobile_btn{
+	color: #000;
 }
 .sidebar .sidebar-menu > ul > li > a span {
 	transition: all 0.2s ease-in-out 0s;
@@ -7763,6 +7767,7 @@ ul.comment-list li ul.children {
 	64. Responsive
 -----------------------*/
 
+
 @media only screen and (min-width: 991px) {
 	#toggle_btn {
 		color: #999;
@@ -8025,7 +8030,7 @@ ul.comment-list li ul.children {
 		padding-right: 0;
 	}
 	a.mobile_btn {
-		color: #fff;
+		color: #000;
 		font-size: 24px;
 		height: 60px;
 		left: 0;

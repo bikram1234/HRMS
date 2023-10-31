@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\leaveBalance;
 use Spatie\Permission\Traits\HasRoles; // Add this line
 
 class User extends Authenticatable
@@ -21,7 +22,10 @@ class User extends Authenticatable
         'department_id',
         'section_id',
         'designation_id',
-        'grade_id'
+        'grade_id',
+        'region_id',
+        'gender',
+        'employment_type'
     ];
 
     protected $hidden = [
@@ -49,6 +53,10 @@ class User extends Authenticatable
         return $this->belongsTo(Designation::class, 'designation_id');
     }
 
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    } 
+
     public function grade()
     {
         return $this->belongsTo(Grade::class, 'grade_id');
@@ -61,6 +69,28 @@ class User extends Authenticatable
             $this->assignRole($role);
         }
     }
+   
+    public function appliedLeaves()
+    {
+        return $this->hasMany(AppliedLeave::class);
+    }
+
+    public function leaveBalance()
+    {
+        return $this->hasOne(LeaveBalance::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            LeaveBalance::create(['user_id' => $user->id]);
+        });
+    }
+
+
+
     public function policies()
     {
         return $this->hasMany(Policy::class);

@@ -159,6 +159,7 @@ background-color:#f5a524;
                         <div class="form-group">
                             <label class="col-form-label">Expense Type<span class="text-danger">*</span></label>
                             <select class="form-select  form-select-md" aria-label="Default select example" style="height:45px" name="expense_type_id" id="expense_type_id">
+                            <option value="" selected disabled>Select Type</option>
                             @foreach ($expenseTypes as $expenseType)
                             <option value="{{ $expenseType->id}}">{{ $expenseType->name}}</option>
                             @endforeach
@@ -168,19 +169,21 @@ background-color:#f5a524;
                     <!-- Expense date -->
                     <div class="col-sm-12">
                         <div class="form-group">
-                        <label>Expense Date<span class="text-danger">*</span></label>
-                        <div class="cal-icon">
-                            <input class="form-control datetimepicker" type="text" name="application_date" id="application_date">
+                            <label class="col-form-label" for="start_date">Expense Date<span class="text-danger">*</span></label>
+                            <input type="date" id="application_date" name="application_date" class="form-control" required>
+                            @error('application_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror  
                         </div>
+                    </div>
+
+                    <!-- Expense Amount -->
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label">Expense Amount<span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" name="total_amount" id="total_amount" >
                         </div>
-                        </div>
-                        <!-- Expense Amount -->
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Expense Amount<span class="text-danger">*</span></label>
-                                <input class="form-control" type="number" name="total_amount" id="total_amount" >
-                            </div>
-                        </div>
+                    </div>
                         <!-- Description -->
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -190,6 +193,70 @@ background-color:#f5a524;
                                 </div>
                             </div>
                         </div>
+
+                    <!-- Extra Field for Conveyance Expense (initially hidden) -->
+                    <!-- Travel Type -->
+                <div id="conveyanceFields" style="display: none">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label">Travel Type<span class="text-danger">*</span></label>
+                            <select  name="travel_type" id="travel_type" class="form-select  form-select-md" aria-label="Default select example" style="height:45px" >
+                            <option value="Domestic">Domestic</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Travel Mode -->
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label">Travel Type<span class="text-danger">*</span></label>
+                            <select  name="travel_mode" id="travel_mode" class="form-select  form-select-md" aria-label="Default select example" style="height:45px" >
+                            <option value="car">Car</option>
+                            <option value="bike">Bike</option>
+                            <option value="plane">Plane</option>
+                            <option value="train">Train</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Travel from date -->
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label" for="start_date">Travel From Date<span class="text-danger">*</span></label>
+                            <input type="date" id="travel_from_date" name="travel_from_date" class="form-control" required>
+                            @error('travel_from_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror  
+                        </div>
+                    </div>
+                      <!-- Travel to date -->
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label" for="start_date">Travel To Date<span class="text-danger">*</span></label>
+                            <input type="date" id="travel_to_date" name="travel_to_date" class="form-control" required>
+                            @error('travel_to_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror  
+                        </div>
+                    </div>
+
+                     <!-- Travel From -->
+                     <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label">Travel From<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="travel_from" id="travel_from" >
+                        </div>
+                    </div>
+
+                     <!-- Travel To-->
+                     <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-form-label">Travel To<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="travel_to" id="travel_to" >
+                        </div>
+                    </div>
+                </div>
+
                         <!-- Upload Attachment -->
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -201,7 +268,7 @@ background-color:#f5a524;
                     </div>
                     <div class="modal-footer justify-content-end mt-2">
                     <button type="submit" name="save" class="btn btn-primary">Apply Expense</button>
-                    <!-- <button type="submit" name="cancel" class="btn btn-secondary"data-dismiss="modal">Reset</button> -->
+                    <button type="submit" name="cancel" class="btn btn-secondary"data-dismiss="modal">Cancel</button>
                     </div> 
                 </div>
                
@@ -225,6 +292,53 @@ $(document).ready(function () {
     $("#example").DataTable();
 });
 </script>
+
+{{-- <script>
+        document.getElementById('expense_type_id').addEventListener('change', function () {
+            var selectedValue = this.value; // Get the selected option's value (id)
+            var conveyanceFields = document.getElementById('conveyanceFields');
+            
+            // Determine the name of the selected option based on its value
+            var selectedName = document.querySelector('#expense_type_id [value="' + selectedValue + '"]').text;
+    
+            if (selectedName === 'Conveyance Expense') { // Check for the name 'Conveyance Expense'
+                conveyanceFields.style.display = 'block';
+            } else {
+                conveyanceFields.style.display = 'none';
+            }
+        });
+    </script> --}}
+    <script>
+        document.getElementById('expense_type_id').addEventListener('change', function () {
+            var selectedValue = this.value; // Get the selected option's value (id)
+            var conveyanceFields = document.getElementById('conveyanceFields');
+            
+            // Determine the name of the selected option based on its value
+            var selectedName = document.querySelector('#expense_type_id [value="' + selectedValue + '"]').text;
+    
+            if (selectedName === 'Conveyance Expense') {
+                conveyanceFields.style.display = 'block';
+                // Add the 'required' attribute to the necessary fields
+                document.getElementById('travel_type').setAttribute('required', 'required');
+                document.getElementById('travel_mode').setAttribute('required', 'required');
+                document.getElementById('travel_from_date').setAttribute('required', 'required');
+                document.getElementById('travel_to_date').setAttribute('required', 'required');
+                document.getElementById('travel_from').setAttribute('required', 'required');
+                document.getElementById('travel_to').setAttribute('required', 'required');
+                // Add required attribute to other fields as needed
+            } else {
+                conveyanceFields.style.display = 'none';
+                // Remove the 'required' attribute from the fields
+                document.getElementById('travel_type').removeAttribute('required');
+                document.getElementById('travel_mode').removeAttribute('required');
+                document.getElementById('travel_from_date').removeAttribute('required');
+                document.getElementById('travel_to_date').removeAttribute('required');
+                document.getElementById('travel_from').removeAttribute('required');
+                document.getElementById('travel_to').removeAttribute('required');
+                // Remove required attribute from other fields as needed
+            }
+        });
+    </script>
 
 
 @endsection

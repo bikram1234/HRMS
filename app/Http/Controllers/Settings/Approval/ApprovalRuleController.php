@@ -17,8 +17,9 @@ class ApprovalRuleController extends Controller
      */
     public function index()
     {
+        $leavetypes = leavetype::all();
         $approvals = ApprovalRule::all();
-        return view('settings.approval.ApprovalRule', compact('approvals')); 
+        return view('settings.approval.ApprovalRule', compact('leavetypes', 'approvals')); 
     }
 
     /**
@@ -29,7 +30,7 @@ class ApprovalRuleController extends Controller
         $leavetypes = leavetype::all();
         $expenses = [];
         $loans = [ ];
-        return view('settings.approval.ApprovalAdd', compact('leavetypes', 'expenses', 'loans'));
+        return view('settings.approval.ApprovalRule', compact('leavetypes', 'expenses', 'loans'));
     }
 
     /**
@@ -38,7 +39,12 @@ class ApprovalRuleController extends Controller
     public function store(StoreApprovalRuleRequest $request)
     {
         ApprovalRule::create($request->validated());
-        return redirect()->back()->with('success', 'Approval added successfully.');
+        //display the message 
+        $notification = array(
+            'message' => 'Approval Added successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -87,7 +93,12 @@ class ApprovalRuleController extends Controller
     public function update(UpdateApprovalRuleRequest $request, ApprovalRule $approvalRule)
     {
         $approvalRule->update($request->validated());
-        return redirect()->back()->with('success', 'Approval Updated Successfully');
+         //display the message 
+         $notification = array(
+            'message' => 'Approval Updated successfully',
+            'alert-type' =>'success'
+        );
+        return redirect()->back()->with($notification);
         
     }
 

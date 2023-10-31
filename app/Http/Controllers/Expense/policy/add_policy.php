@@ -100,12 +100,14 @@ class add_policy  extends Controller
  
      $validatedData = $request->validate([
          'policy_id' => 'required|exists:policies,id',
-         'attachment_required' => 'required|boolean',
+         'attachment_required' => 'nullable|boolean',
          'travel_type' => 'required|in:domestic',
          'type' => 'required|in:Single Currency',
          'name' => 'required|in:Nu',
          'rate_limit' => 'required|in:daily,monthly,yearly',
      ]);
+    // $attachmentRequired = $request->has('attachment_required') ? 1 : 0;
+
   
      // Create a new RateDefinition
      $rateDefinition = RateDefinition::create($validatedData);

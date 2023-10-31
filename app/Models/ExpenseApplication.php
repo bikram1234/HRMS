@@ -16,7 +16,17 @@ class ExpenseApplication extends Model
         'total_amount',
         'description',
         'attachment',
-        'status'
+        'travel_type',
+        'travel_mode',
+        'travel_from_date',
+        'travel_to_date',
+        'travel_from',
+        'travel_to',
+        'level1',
+        'level2',
+        'level3',
+        'status',
+        'remark',
     ];
 
     public function user()
@@ -26,6 +36,6 @@ class ExpenseApplication extends Model
 
     public function expenseType()
     {
-        return $this->belongsTo(ExpenseType::class);
+        return $this->belongsTo(ExpenseType::class,'expense_type_id');
     }
 }
