@@ -31,7 +31,7 @@
 </div>
 @endif
        
-        <form action="{{ route('products.store') }}" method="POST">
+        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
           
             <div class="row">
@@ -104,13 +104,14 @@
                     </div>
                 </div>
                   <!-- Upload Attachment -->
-         <div class="col-md-6 mt-3">
-            <label for="attachment" class="block text-gray-700 text-sm font-bold mb-2">
-                {{ __('Upload Attachment (Max 2MB)') }}
-            </label>
-            <input type="file" name="attachment" id="attachment"
-                class="form-input rounded-md shadow-sm mt-1 block w-full">
-        </div>
+            <div class="col-md-6 mt-3">
+        <label for="attachment" class="block text-gray-700 text-sm font-bold mb-2">
+            {{ __('Upload Attachment (Max 2MB)') }}
+        </label>
+        <input type="file" name="attachment" id="attachment" accept=".pdf"
+            class="form-input rounded-md shadow-sm mt-1 block w-full">
+    </div>
+
     </div>
            
             <div class="row mt-5 justify-content-center">

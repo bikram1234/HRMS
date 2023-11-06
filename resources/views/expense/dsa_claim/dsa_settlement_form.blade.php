@@ -20,7 +20,7 @@
             <label for="advance_number" class="block text-sm font-medium text-gray-700">Select Advance Number:</label>
             <select name="advance_number" id="advance_number" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                 @foreach($userAdvances as $advanceId => $advanceNo)
-                 <option value="{{ $advanceNo }}" data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo }}</option> --}}
+                 <option value="{{ $advanceNo }}" data-amount="{{ $advanceAmounts[$advanceId] }}">{{ $advanceNo }}</option>
                 {{-- <option value="{{ $advanceNo }}" data-amount="{{ isset($advanceAmounts[$advanceId]) ? $advanceAmounts[$advanceId] : 'Default Value' }}">{{ $advanceNo }}</option> --}}
 
                 @endforeach
@@ -44,10 +44,10 @@
                 <label for="balance_amount_with_advance" class="block text-sm font-medium text-gray-700">Balance Amount:</label>
                 <input type="text" name="balance_amount_with_advance" id="balance_amount_with_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
             </div>
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <label for="upload_file_with_advance" class="block text-sm font-medium text-gray-700">Upload PDF:</label>
                 <input type="file" name="upload_file_with_advance" id="upload_file_with_advance" accept=".pdf" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
+            </div> --}}
         </div>
 
         <div id="dsa_settlement_fields_without_advance" style="display: none;">
@@ -67,10 +67,14 @@
                 <label for="balance_amount_without_advance" class="block text-sm font-medium text-gray-700">Balance Amount:</label>
                 <input type="text" name="balance_amount_without_advance" id="balance_amount_without_advance" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
             </div>
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <label for="upload_file_without_advance" class="block text-sm font-medium text-gray-700">Upload PDF:</label>
                 <input type="file" name="upload_file_without_advance" id="upload_file_without_advance" accept=".pdf" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-            </div>
+            </div> --}}
+        </div>
+        <div class="mb-4">
+            <label for="upload_file" class="block text-sm font-medium text-gray-700">Upload PDF:</label>
+            <input type="file" name="upload_file" id="upload_file" accept=".pdf" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
         </div>
 
         <table id="manual_settlement_container" class="manual-settlement">

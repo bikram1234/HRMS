@@ -78,6 +78,7 @@ public function store(Request $request): RedirectResponse
 
     ], [
         'attachment.max' => 'The attachment file size must not exceed 2MB.',
+
     ]);
     // Fetch the current user's grade_id from the users table
     $currentUser = Auth::user();
@@ -129,14 +130,18 @@ public function store(Request $request): RedirectResponse
                 ->withErrors(['attachment' => 'The attachment file size must not exceed 2MB.'])
                 ->withInput();
         }
-
-        $attachmentPath = $attachment->store('attachments', 'public');
-        $validatedData['attachment'] = $attachmentPath;
-    } else {
-        // Attachment is not required
-        $validatedData['attachment'] = null;
+        // $attachmentPath = $attachment->store('attachments', 'public');
+        // $validatedData['attachment'] = $attachmentPath;
     }
-
+    $validated = $request->all();
+    if ($request->hasFile('attachment')) {
+        $attachment = $request->file('attachment');
+        $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+        $validated['attachment'] = $attachmentPath;
+    }else{
+        
+        $attachmentPath= null;
+    }
     $validated['user_id'] = Auth::id(); // Assign the current user's ID
 
     $expense_id = $expenseTypeId;
@@ -155,6 +160,10 @@ public function store(Request $request): RedirectResponse
 
     $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
     $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+    if(!$approvalType || !$approvalType->hierarchy_id){
+        return back()->withInput()
+            ->with('success', 'There is no approval for this Advance type');  
+    }
     $hierarchy_id = $approvalType->hierarchy_id;
     $currentUser = auth()->user();
 
@@ -180,7 +189,7 @@ public function store(Request $request): RedirectResponse
         }
     } 
     // Create the product record with the updated request data
-    Product::create($request->all());
+    Product::create($validated);
 
     return redirect()->route('products.index')
         ->with('success', 'Product created successfully.');

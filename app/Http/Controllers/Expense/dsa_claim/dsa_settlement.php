@@ -151,6 +151,8 @@ public function dsaSettlementForm() {
         'dsa_settlement.net_payable_amount' => 'required_if:advance_number,null|numeric',
         'dsa_settlement.balance_amount' => 'required_if:advance_number,null|numeric',
         'dsa_settlement.status' => 'required_if:advance_number,null|string',
+        'dsa_settlement.upload_file' => 'nullable|mimes:pdf|max:2048', // Max 2 MB PDF file
+
             ]);
             
             if ($request->has('advance_number')) {
@@ -181,7 +183,7 @@ public function dsaSettlementForm() {
             //     ->where('user_id', $user_id) // Assuming user_id is the column in the AdvanceApplication table that corresponds to the user
             //     ->where('advance_no', $advanceNumber)
             //     ->first();
-    
+
             if (!$selectedAdvance || !$advanceNumber) {
                 $manualTa = $request->input('manual_ta', []);
                 $manualFromDate = $request->input('manual_from_date', []);
@@ -209,9 +211,46 @@ public function dsaSettlementForm() {
                     'net_payable_amount' => array_sum($manualTotalAmount),
                     'balance_amount' => 0,
                     'status' => 'pending',
+                    'upload_file' => $request->file('upload_file'), // Max 2 MB PDF file
 
 
                 ]);
+                            // Check if expense_type exists
+                             $expenseType = ExpenseType::find($expenseTypeId);
+                             if (!$expenseType) {
+                                 return redirect()->back()
+                                     ->with('success', 'Invalid expense type.');
+                             }
+                                         // Retrieve the associated policy for the selected expense type
+                             $policy = $expenseType->policies->first(); // Assuming you want the first associated policy
+                         
+                             if (!$policy) {
+                                 return redirect()->back()
+                                     ->with('success', 'There is no policy defined for this Expense Type.');
+                             }
+                                         // Find the rate definition associated with the policy_id
+                             $rateDefinition = $policy->rateLimits->first()->rateDefinition; // Assuming you want the first associated rate definition
+                         
+                             if (!$rateDefinition) {
+                                 return redirect()->back()
+                                     ->with('success', 'This policy have not yet any Rate Definitions at all.');
+                             }
+                             // Check if attachment is required based on the rate definition
+                             if ($rateDefinition->attachment_required == 1) {
+                                 // Attachment is required
+                                 if (!$request->hasFile('upload_file')) {
+                                     return redirect()->back()
+                                         ->with('success', 'Attachment is required.');
+                                 }
+                                     $attachment = $request->file('upload_file');
+                                 if ($attachment->getSize() > 2048000) { // 2MB in bytes
+                                     return redirect()->back()
+                                         ->with('success', 'The attachment file size must not exceed 2MB.');
+                                 } 
+                                 $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+                                 $validatedData['upload_file'] = $attachmentPath;
+                                 
+                             }
                 
                 $dsaSettlement->save();
                 
@@ -263,7 +302,6 @@ public function dsaSettlementForm() {
                         'total_amount' => ($da * $totalDays) + $ta,
                         'remark' => $manualRemark[$index],
                     ];
-
                     $expense_id = $expenseTypeId;
                     $sectionId = auth()->user()->section_id;
                     $sectionHead = User::where('section_id', $sectionId)
@@ -280,6 +318,10 @@ public function dsaSettlementForm() {
 
                     $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
                     $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                    if(!$approvalType || !$approvalType->hierarchy_id){
+                        return back()->withInput()
+                            ->with('success', 'There is no approval for this Advance type');  
+                    }
                     $hierarchy_id = $approvalType->hierarchy_id;
                     $currentUser = auth()->user();
 
@@ -330,15 +372,49 @@ public function dsaSettlementForm() {
                     'net_payable_amount' => $advanceAmount,
                     'balance_amount' => 0,
                     'status' => 'pending',
+                    'upload_file' => $request->file('upload_file'), // Max 2 MB PDF file
+
 
 
                 ]);
-            
-                $selectedAdvance->dsaSettlement()->save($dsaSettlement);
-            
-                if ($request->hasFile('upload_file')) {
-                    // Handle file upload here if needed
+                $expenseType = ExpenseType::find($expenseTypeId);
+                if (!$expenseType) {
+                    return redirect()->back()
+                        ->with('success', 'Invalid expense type.');
                 }
+                            // Retrieve the associated policy for the selected expense type
+                $policy = $expenseType->policies->first(); // Assuming you want the first associated policy
+            
+                if (!$policy) {
+                    return redirect()->back()
+                        ->with('success', 'There is no policy defined for this Expense Type.');
+                }
+                            // Find the rate definition associated with the policy_id
+                $rateDefinition = $policy->rateLimits->first()->rateDefinition; // Assuming you want the first associated rate definition
+            
+                if (!$rateDefinition) {
+                    return redirect()->back()
+                        ->with('success', 'This policy have not yet any Rate Definitions at all.');
+                }
+                // Check if attachment is required based on the rate definition
+                if ($rateDefinition->attachment_required == 1) {
+                    // Attachment is required
+                    if (!$request->hasFile('upload_file')) {
+                        return redirect()->back()
+                            ->with('success', 'Attachment is required.');
+                    }
+                        $attachment = $request->file('upload_file');
+                    if ($attachment->getSize() > 2048000) { // 2MB in bytes
+                        return redirect()->back()
+                            ->with('success', 'The attachment file size must not exceed 2MB.');
+                    } 
+                    $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+                    $dsaSettlement['upload_file'] = $attachmentPath;
+                    
+
+                }
+                $selectedAdvance->dsaSettlement()->save($dsaSettlement);
+        
                 
                 // Set the fields in the "dsa_manual_settlements" table to null
                 // Based on your table structure, update these fields as needed
@@ -352,7 +428,6 @@ public function dsaSettlementForm() {
                     'total_amount' => null,
                     'remark' => null,
                 ];
-
                 $expense_id = $expenseTypeId;
                 $sectionId = auth()->user()->section_id;
                 $sectionHead = User::where('section_id', $sectionId)
@@ -369,6 +444,10 @@ public function dsaSettlementForm() {
 
                 $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
                 $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                if(!$approvalType || !$approvalType->hierarchy_id){
+                    return back()->withInput()
+                        ->with('success', 'There is no approval for this Advance type');  
+                }
                 $hierarchy_id = $approvalType->hierarchy_id;
                 $currentUser = auth()->user();
 

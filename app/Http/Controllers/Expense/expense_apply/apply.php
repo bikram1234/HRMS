@@ -93,23 +93,26 @@ class apply  extends Controller
     public function submitApplication(Request $request)
     {
         try{
+
+        //dd($request->all()); 
         $validatedData = $request->validate([
             'expense_type_id' => 'required|exists:expense_types,id',
             'total_amount' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'attachment' => 'nullable|mimes:pdf|max:2048', // Max 2 MB PDF file
             'travel_type'=> 'nullable|string',
             'travel_mode'=> 'nullable|string',
             'travel_from_date'=>'nullable|date',
             'travel_to_date'=>'nullable|date|after:travel_from_date',
             'travel_from'=> 'nullable|string',
             'travel_to'=> 'nullable|string',
+            'attachment' => 'nullable|mimes:pdf|max:2048', // Max 2 MB PDF file
+
+
 
 
         ], [
             'attachment.max' => 'The attachment file size must not exceed 2MB.',
         ]);
-    
         // Check if expense_type exists
         $expenseType = ExpenseType::find($validatedData['expense_type_id']);
         if (!$expenseType) {
@@ -133,28 +136,33 @@ class apply  extends Controller
                 ->with('success', 'This policy have not yet any Rate Definitions at all.');
         }
     
-        // Check if attachment is required based on the rate definition
-        if ($rateDefinition->attachment_required == 1) {
-            // Attachment is required
-            if (!$request->hasFile('attachment')) {
-                return redirect()->route('show-application-form')
-                    ->with('success', 'Attachment is required.');
-            }
-    
-            $attachment = $request->file('attachment');
-            if ($attachment->getSize() > 2048000) { // 2MB in bytes
-                return redirect()->route('show-application-form')
-                    ->withErrors(['attachment' => 'The attachment file size must not exceed 2MB.'])
-                    ->withInput();
-            }
-    
-            $attachmentPath = $attachment->store('attachments', 'public');
-            $validatedData['attachment'] = $attachmentPath;
-        } else {
-            // Attachment is not required
-            $validatedData['attachment'] = null;
+           // Check if attachment is required based on the rate definition
+    // Check if attachment is required based on the rate definition
+    if ($rateDefinition->attachment_required == 1) {
+        // Attachment is required
+        if (!$request->hasFile('attachment')) {
+            return redirect()->back()
+                            ->with('success', 'Attachment is required.');
         }
-    
+        $attachment = $request->file('attachment');
+        if ($attachment->getSize() > 2048000) { // 2MB in bytes
+            return redirect()->back()
+                ->withErrors(['attachment' => 'The attachment file size must not exceed 2MB.'])
+                ->withInput();
+        }
+
+        // $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+        // $validatedData['attachment'] = $attachmentPath;
+    }
+    if ($request->hasFile('attachment')) {
+
+        $attachment = $request->file('attachment');
+        $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+        $validatedData['attachment'] = $attachmentPath;
+    }else{
+        
+        $attachmentPath= null;
+    }
         $validatedData['user_id'] = Auth::id(); // Assign the current user's ID
         $validatedData['application_date'] = now(); // Current date
         $validatedData['status'] = 'pending'; // Set status to pending
@@ -176,6 +184,10 @@ class apply  extends Controller
 
         $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
         $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+        if(!$approvalType || !$approvalType->hierarchy_id){
+            return back()->withInput()
+                ->with('success', 'There is no approval for this Advance type');  
+        }
         $hierarchy_id = $approvalType->hierarchy_id;
         $currentUser = auth()->user();
 
@@ -204,16 +216,13 @@ class apply  extends Controller
         
     }
 
-
-
-    
         ExpenseApplication::create($validatedData);
     
         return redirect()->route('show-application-form')
             ->with('success', 'Expense application submitted successfully.');
 
         } catch (\Exception $e) {
-            $errorMessage = 'An error occurred while saving the settlement';
+            $errorMessage = 'An error occurred while saving the Expense';
             \Log::error($errorMessage . ': ' . $e->getMessage());
             \Log::error('Stack Trace: ' . $e->getTraceAsString());
     

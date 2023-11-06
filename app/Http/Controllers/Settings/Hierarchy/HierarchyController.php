@@ -84,13 +84,8 @@ class HierarchyController extends Controller
             $level = Level::create($levelData);
 
             return redirect()->back()->with('success', 'Level added successfully to the hierarchy.');
-}
+        }
 
-
-
-    /**
-     * Display the specified resource.
-     */
     public function show($hierarchy_id)
     {
         $users = User::all();

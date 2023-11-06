@@ -108,14 +108,19 @@ class fuel_claim extends Controller
                 ->withInput();
         }
 
-        $attachmentPath = $attachment->store('attachments', 'public');
-        $validatedData['attachment'] = $attachmentPath;
-    } else {
-        // Attachment is not required
-        $validatedData['attachment'] = null;
-    }
-
-    $expense_id = $expenseTypeId;
+    //  $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+    // $validatedData['attachment'] = $attachmentPath;
+     }
+     if ($request->hasFile('attachment')) {
+     $attachment = $request->file('attachment');
+         $attachmentPath = $attachment->storeAs('uploads', $attachment->getClientOriginalName(), 'local');
+         $validated['attachment'] = $attachmentPath;
+        }else{
+        
+            $attachmentPath= null;
+        }
+    
+                $expense_id = $expenseTypeId;
                 $sectionId = auth()->user()->section_id;
                 $sectionHead = User::where('section_id', $sectionId)
                 ->whereHas('designation', function($query) {
@@ -131,6 +136,10 @@ class fuel_claim extends Controller
 
                 $approvalRuleId = approvalRule::where('type_id', $expense_id)->value('id');
                 $approvalType = approval_condition::where('approval_rule_id', $approvalRuleId)->first();
+                if(!$approvalType || !$approvalType->hierarchy_id){
+                    return back()->withInput()
+                        ->with('success', 'There is no approval for this Advance type');  
+                }
                 $hierarchy_id = $approvalType->hierarchy_id;
                 $currentUser = auth()->user();
 
